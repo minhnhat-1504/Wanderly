@@ -13,6 +13,7 @@
 - **Frontend:** Blade + Tailwind CSS 3 + Alpine.js 3, Vite, Node 20
 - **Database:** MySQL 8.0 (InnoDB, `utf8mb4`, `utf8mb4_unicode_ci`)
 - **Libraries:** SortableJS (Drag & Drop), Chart.js
+- **Đa ngôn ngữ (Localization):** Tiếng Anh (`en`) là ngôn ngữ chính. Toàn bộ UI và thông báo bọc trong `__('...')`, cấu trúc sẵn sàng mở rộng sang Tiếng Việt (`vi`) qua JSON translation.
 - **Khác:** Nginx + PHP-FPM, PHPUnit/Pest, Laravel Pint, Git
 
 ---

@@ -26,14 +26,16 @@
 
 1. **Thiết lập nền tảng kỹ thuật (Base Code Skeleton):** Khởi tạo khung dự án chuẩn mực trên Laravel 11, cấu hình môi trường chạy PHP 8.2+, Node 20+, MySQL 8 (InnoDB, collation `utf8mb4_unicode_ci`), tích hợp sẵn Vite, Tailwind CSS 3, Alpine.js 3, SortableJS, Chart.js và công cụ chuẩn hóa code Laravel Pint.
 2. **Module 1 (M1) — Auth và tài khoản:** Xây dựng tính năng đăng ký, đăng nhập, hồ sơ cá nhân với mã hóa Bcrypt, cơ chế Rate Limiting chống brute-force (giới hạn 5 lần/phút) và phân quyền vai trò hệ thống (`traveler`, `provider`, `admin`).
-3. **Module 2 (M2) — Quản lý chuyến đi (Trip Management):** Triển khai luồng nghiệp vụ tạo, sửa, xóa, xem danh sách chuyến đi (CRUD); tự động tính toán khoảng ngày; hiển thị giao diện Dashboard với thẻ đếm ngược ngày đi và thanh tiến trình ngân sách trực quan.
+3. **Module 2 (M2) — Quản lý chuyến đi (Trip Management):** Triển khai luồng nghiệp vụ tạo, sửa, xóa, xem danh sách chuyến đi (CRUD); tự động tính toán khoảng ngày; hiển thị giao diện Dashboard với thẻ đếm ngược ngày đi và thanh tiến trình ngân sách trực quan (ngôn ngữ Tiếng Anh).
 4. **Module 16 (M16) — Dữ liệu hệ thống ban đầu (Text-based POIs):** Xây dựng cấu trúc lưu trữ và Seeder dữ liệu điểm đến (Destinations), khu vực (Zones), địa điểm (POIs) thuần văn bản (text), tuyệt đối không phụ thuộc vào bất kỳ API bản đồ nào.
-5. **Chuẩn hóa chất lượng và kiểm thử:** Đạt tỷ lệ bao phủ kiểm thử tự động (Feature/Unit Test) cho các luồng xác thực và quản lý chuyến đi, đảm bảo 100% mã nguồn vượt qua kiểm tra `php artisan pint` và `php artisan test`.
+5. **Chiến lược Đa ngôn ngữ (English First, i18n Ready):** Toàn bộ giao diện Blade (tiêu đề, nhãn, nút bấm) và thông báo hệ thống (Validation, Flash message) được viết bằng Tiếng Anh và bắt buộc bọc trong hàm `__('...')`, chuẩn bị sẵn cấu trúc mở rộng Tiếng Việt qua JSON translation.
+6. **Chuẩn hóa chất lượng và kiểm thử:** Đạt tỷ lệ bao phủ kiểm thử tự động (Feature/Unit Test) cho các luồng xác thực và quản lý chuyến đi, đảm bảo 100% mã nguồn vượt qua kiểm tra `php artisan pint` và `php artisan test`.
 
 ---
 
 ## 3. Quy tắc Chung Sprint 1 (Sprint Ground Rules)
 
+- **Ngôn ngữ chính thức (English First & i18n):** Toàn bộ text trên giao diện người dùng và thông báo phản hồi từ Backend sử dụng **Tiếng Anh**. Bắt buộc bọc tất cả chuỗi hiển thị trong hàm helper `__('Text here')` để hệ thống sẵn sàng dịch sang Tiếng Việt sau này mà không cần sửa mã nguồn.
 - **Nhánh phát triển chuẩn:** Toàn bộ thành viên bắt đầu nhánh mới từ nhánh `develop` theo cú pháp quy định: `feature/ten-tinh-nang`. Nhánh `main` bị khóa, chỉ dùng cho bản phát hành ổn định.
 - **Kiến trúc phân tầng nghiêm ngặt (Skinny Controller, Fat Service):** Controller chỉ làm nhiệm vụ tiếp nhận Request, ủy quyền phân quyền qua Policy, gọi Service xử lý nghiệp vụ và trả về View/JSON. Nghiệp vụ xử lý dữ liệu và tính toán phải nằm hoàn toàn trong `app/Services/`.
 - **Quy tắc cơ sở dữ liệu bất biến:** Tuyệt đối không chỉnh sửa các file migration đã merge vào `develop`. Mọi thay đổi cấu trúc bảng bắt buộc tạo file migration mới. Kiểu dữ liệu tiền tệ/ngân sách bắt buộc dùng `DECIMAL(12, 2)`, không dùng `float` hoặc `double`.
@@ -101,7 +103,7 @@ flowchart TD
 
 | Task ID | Tên công việc | Vị trí thư mục | Tên file & Outcome chi tiết |
 | :--- | :--- | :--- | :--- |
-| **D2-01** | FormRequest xác thực chuyến đi | `app/Http/Requests/Trip/` | • `StoreTripRequest.php`: Định nghĩa rules: `'name' => ['required', 'string', 'max:255']`, `'destination' => ['required', 'string', 'max:255']`, `'start_date' => ['required', 'date']`, `'end_date' => ['required', 'date', 'after_or_equal:start_date']`, `'budget' => ['required', 'numeric', 'min:0']`, `'privacy' => ['required', Rule::in(['private', 'group', 'public'])]`, `'cover' => ['nullable', 'image', 'max:3072']`. Tùy biến thông báo lỗi tiếng Việt thân thiện.<br>• `UpdateTripRequest.php`: Tái sử dụng các rules trên kèm kiểm tra trạng thái `'status' => ['sometimes', Rule::in(['planning', 'ongoing', 'completed'])]`. |
+| **D2-01** | FormRequest xác thực chuyến đi | `app/Http/Requests/Trip/` | • `StoreTripRequest.php`: Định nghĩa rules: `'name' => ['required', 'string', 'max:255']`, `'destination' => ['required', 'string', 'max:255']`, `'start_date' => ['required', 'date']`, `'end_date' => ['required', 'date', 'after_or_equal:start_date']`, `'budget' => ['required', 'numeric', 'min:0']`, `'privacy' => ['required', Rule::in(['private', 'group', 'public'])]`, `'cover' => ['nullable', 'image', 'max:3072']`. Thông báo lỗi bằng Tiếng Anh chuẩn mực, bọc trong `__('...')` để sẵn sàng i18n.<br>• `UpdateTripRequest.php`: Tái sử dụng các rules trên kèm kiểm tra trạng thái `'status' => ['sometimes', Rule::in(['planning', 'ongoing', 'completed'])]`. |
 | **D2-02** | Xây dựng Service xử lý nghiệp vụ Trip | `app/Services/` | • `TripService.php`:<br>  - `createTrip(array $data, User $owner): Trip`: Mở `DB::beginTransaction()`, lưu chuyến đi mới với `owner_id = $owner->id`, tự động tạo bản ghi trong bảng `trip_members` với `user_id = $owner->id`, `trip_id = $trip->id` và `role = 'leader'`, thực hiện `DB::commit()`, rollback nếu có ngoại lệ.<br>  - `calculateTripDays(Trip $trip): int`: Trả về số lượng ngày của chuyến đi dựa trên `Carbon::parse($trip->start_date)->diffInDays($trip->end_date) + 1`.<br>  - `getDashboardTrips(User $user, ?string $search = null)`: Truy vấn danh sách chuyến đi mà user làm chủ sở hữu hoặc là thành viên, hỗ trợ tìm kiếm theo tên hoặc điểm đến, eager loading các quan hệ `members.user`.<br>  - `deleteTrip(Trip $trip): bool`: Xóa chuyến đi (kích hoạt cascade xóa các quan hệ con). |
 | **D2-03** | Xây dựng Policy kiểm soát phân quyền | `app/Policies/` | • `TripPolicy.php`: Khai báo các Gate phân quyền chặt chẽ:<br>  - `view(User $user, Trip $trip)`: Cho phép nếu trip là `public`, hoặc user là owner/thành viên trong `trip_members`.<br>  - `update(User $user, Trip $trip)`: Chỉ cho phép nếu user có vai trò `leader` hoặc `editor` trong trip.<br>  - `delete(User $user, Trip $trip)`: Duy nhất user có vai trò `leader` mới có quyền xóa. Ném HTTP 403 Forbidden nếu không đủ quyền. |
 | **D2-04** | Xây dựng Controller điều phối Chuyến đi | `app/Http/Controllers/Trip/` | • `TripController.php`: Áp dụng chuẩn Skinny Controller:<br>  - `index(Request $request)`: Nhận tham số tìm kiếm, gọi `TripService::getDashboardTrips()`, trả về view `trips.index`.<br>  - `create()`: Trả về view `trips.create` kèm danh sách gợi ý điểm đến.<br>  - `store(StoreTripRequest $request)`: Lấy dữ liệu validated, gọi `TripService::createTrip()`, chuyển hướng về `trips.show` kèm flash message thành công.<br>  - `show(Trip $trip)`: Kiểm tra `$this->authorize('view', $trip)`, tính toán số ngày qua `TripService`, trả về view `trips.show`.<br>  - `edit(Trip $trip)`: Kiểm tra `$this->authorize('update', $trip)`, trả về view `trips.edit`.<br>  - `update(UpdateTripRequest $request, Trip $trip)`: Kiểm tra policy, cập nhật trip, redirect kèm thông báo.<br>  - `destroy(Trip $trip)`: Kiểm tra `$this->authorize('delete', $trip)`, gọi `TripService::deleteTrip()`, redirect về danh sách chuyến đi. |
@@ -119,8 +121,8 @@ flowchart TD
 | **D3-01** | Cấu hình Theme & Layouts Master | `tailwind.config.js`,<br>`resources/views/layouts/` | • `tailwind.config.js`: Cấu hình màu thương hiệu teal primary `#0F766E`, font chữ mặc định `Be Vietnam Pro`, định nghĩa các breakpoint responsive.<br>• `resources/views/layouts/app.blade.php`: Khung HTML5 hoàn chỉnh nạp `@vite(['resources/css/app.css', 'resources/js/app.js'])`; Top Navbar gồm logo Wanderly, điều hướng, chuông thông báo, avatar dropdown (Profile, Đăng xuất); Toast container toàn cục; Modal container toàn cục; `@yield('content')`.<br>• `resources/views/layouts/guest.blade.php`: Khung giao diện căn giữa màn hình dành riêng cho các trang xác thực (Login/Register). |
 | **D3-02** | Bộ thành phần UI dùng chung (Blade Components) | `resources/views/components/` | • `button.blade.php`: Hỗ trợ các biến thể `variant="primary"` (nền teal `#0F766E`, chữ trắng), `secondary`, `danger` (đỏ), `outline`; trạng thái disabled và spinner loading.<br>• `input.blade.php`: Gồm label, input field styled chuẩn Tailwind, tự động hiển thị viền đỏ và thông báo lỗi `@error`.<br>• `modal.blade.php`: Thành phần modal dùng Alpine.js (`x-data="{ open: false }"`), backdrop mờ, đóng khi bấm ESC hoặc click outside, slot header, body, footer.<br>• `toast.blade.php`: Thành phần hiển thị thông báo flash message hoặc phản hồi AJAX, tự động ẩn sau 3 giây hoặc đóng thủ công. |
 | **D3-03** | Màn hình Giao diện Xác thực | `resources/views/auth/` | • `login.blade.php`: Kế thừa `layouts.guest`; form đăng nhập gồm Email, Password, checkbox "Ghi nhớ đăng nhập", nút Đăng nhập, liên kết sang trang Đăng ký; hiển thị lỗi validate.<br>• `register.blade.php`: Form đăng ký gồm Họ tên, Email, Mật khẩu, Xác nhận mật khẩu, nút Đăng ký, hiển thị chi tiết các lỗi kiểm tra dữ liệu. |
-| **D3-04** | Thành phần Thẻ chuyến đi (Trip Card Component) | `resources/views/components/` | • `trip-card.blade.php`: Nhận `$trip` làm prop; thiết kế bo góc shadow nhẹ; ảnh bìa (fallback ảnh mặc định nếu null); nhãn đếm ngược số ngày ("Còn X ngày" nếu ở tương lai, "Đang diễn ra" nếu trong khoảng ngày, "Đã kết thúc" nếu quá hạn); tên chuyến đi, điểm đến dạng text; thanh tiến trình ngân sách (`<div class="h-2 rounded-full">`) với màu sắc động: xanh lá (<80%), vàng hổ phách (80-95%), đỏ (>95%); tag trạng thái và quyền riêng tư (`private`, `group`, `public`). |
-| **D3-05** | Giao diện Dashboard danh sách Chuyến đi | `resources/views/trips/` | • `index.blade.php`: Kế thừa `layouts.app`; Header gồm câu chào, nút "Tạo chuyến đi mới" nổi bật (`x-button variant="primary"`); Thanh tìm kiếm lọc trip theo tên/điểm đến; Lưới hiển thị trip dạng grid responsive (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6`); Trạng thái Empty State trực quan khi chưa có chuyến đi nào (icon minh họa, text kêu gọi hành động). |
+| **D3-04** | Thành phần Thẻ chuyến đi (Trip Card Component) | `resources/views/components/` | • `trip-card.blade.php`: Nhận `$trip` làm prop; thiết kế bo góc shadow nhẹ; ảnh bìa (fallback ảnh mặc định nếu null); nhãn đếm ngược số ngày ("X days left" nếu ở tương lai, "Ongoing" nếu trong khoảng ngày, "Completed" nếu quá hạn, đều bọc trong `__('...')`); tên chuyến đi, điểm đến dạng text; thanh tiến trình ngân sách (`<div class="h-2 rounded-full">`) với màu sắc động: xanh lá (<80%), vàng hổ phách (80-95%), đỏ (>95%); tag trạng thái và quyền riêng tư (`private`, `group`, `public`). |
+| **D3-05** | Giao diện Dashboard danh sách Chuyến đi | `resources/views/trips/` | • `index.blade.php`: Kế thừa `layouts.app`; Header gồm câu chào, nút `{{ __('Create New Trip') }}` nổi bật (`x-button variant="primary"`); Thanh tìm kiếm lọc trip theo tên/điểm đến (`placeholder="{{ __('Search trips or destinations...') }}"`); Lưới hiển thị trip dạng grid responsive (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6`); Trạng thái Empty State trực quan khi chưa có chuyến đi nào (icon minh họa, text `{{ __('You haven\'t created any trips yet') }}` và nút kêu gọi hành động). |
 
 ---
 
@@ -147,6 +149,7 @@ Dự án chỉ được coi là hoàn thành Sprint 1 khi đạt đủ **100% c�
 - [ ] Chạy `php artisan test` đạt **100% Pass** (bao gồm `AuthTest` và `TripCrudTest`).
 - [ ] Chạy `php artisan pint` không báo bất kỳ lỗi vi phạm định dạng mã nguồn nào.
 - [ ] Chạy `GET /healthz` trả về JSON trạng thái `200 OK` với thông tin kết nối Database.
+- [ ] Toàn bộ UI Blade views, nhãn, nút bấm và thông báo (Flash, Validation) đều viết bằng Tiếng Anh chuẩn mực và bọc trong hàm `__('...')`.
 - [ ] Cơ chế Rate Limiting hoạt động chính xác: Thử đăng nhập sai 5 lần sẽ kích hoạt throttle bảo vệ.
 - [ ] Tạo chuyến đi mới thành công và người tạo tự động được gán vai trò `leader` trong bảng `trip_members`.
 - [ ] Giao diện Dashboard responsive mượt mà trên Desktop và Mobile, các thẻ chuyến đi hiển thị đúng màu cảnh báo ngân sách và đếm ngược ngày đi.
@@ -157,15 +160,15 @@ Dự án chỉ được coi là hoàn thành Sprint 1 khi đạt đủ **100% c�
 ## 7. Kịch bản Demo Cuối Sprint 1 (End-to-End Demo Flow)
 
 ```text
-[1. Truy cập /register] -> Đăng ký tài khoản traveler mới
-        ↓
-[2. Tự động Login]      -> Chuyển hướng về Dashboard /trips (Thấy trạng thái Empty State)
-        ↓
-[3. Bấm Tạo Chuyến Đi]  -> Mở form /trips/create, chọn điểm đến gợi ý "Đà Lạt", nhập ngày & ngân sách
-        ↓
-[4. Submit Thành Công]  -> Điều hướng về trang chi tiết /trips/{id}, kiểm tra DB thấy vai trò leader
-        ↓
-[5. Quay lại Dashboard] -> Thấy Thẻ chuyến đi hiển thị: tên, điểm đến text, đếm ngược ngày, tiến độ budget
-        ↓
-[6. Thử Logout]         -> Đăng xuất an toàn, kiểm tra truy cập lại /trips bị chuyển hướng về /login
+[1. Visit /register]        -> Register new traveler account (Form in English)
+          ↓
+[2. Auto Login]             -> Redirect to Dashboard /trips (Displays Empty State: "You haven't created any trips yet")
+          ↓
+[3. Click "Create Trip"]    -> Open form /trips/create, choose destination "Da Lat", enter dates & budget
+          ↓
+[4. Submit Successfully]    -> Redirect to /trips/{id} with flash message "Trip created successfully", verify leader role in DB
+          ↓
+[5. Return to Dashboard]    -> Trip card visible: title, text destination, "X days left" countdown, budget progress bar
+          ↓
+[6. Test Logout]            -> Log out safely, verify unauthenticated access to /trips redirects to /login
 ```

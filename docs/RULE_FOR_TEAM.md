@@ -79,6 +79,28 @@
 
 ---
 
+### 2.5. Chiến lược Đa ngôn ngữ (Localization & i18n Strategy — English First)
+
+Dự án áp dụng chiến lược **Tiếng Anh làm ngôn ngữ chính (English First)**, cấu trúc sẵn sàng để mở rộng sang Tiếng Việt (`vi`) hoặc các ngôn ngữ khác trong tương lai:
+
+- **Ngôn ngữ mặc định:** Toàn bộ hệ thống chạy Tiếng Anh (`en`) theo cấu hình chuẩn Laravel.
+- **Quy tắc Vàng cho Giao diện & Thông báo:**
+  - **Tuyệt đối không hardcode chuỗi ký tự trần** trên file Blade views, Controllers hay FormRequests.
+  - Mọi nhãn nút bấm, tiêu đề, placeholder, thông báo flash và câu thông báo lỗi validate **bắt buộc bọc trong hàm helper đa ngôn ngữ của Laravel**:
+    ```php
+    // Trong Blade View:
+    <button>{{ __('Create Trip') }}</button>
+    <h1>{{ __('Welcome back, :name', ['name' => auth()->user()->name]) }}</h1>
+
+    // Trong Controller / FormRequest / Service:
+    session()->flash('success', __('Trip created successfully.'));
+    'name.required' => __('The trip name field is required.'),
+    ```
+- **Quy trình mở rộng Đa ngôn ngữ sau này:**
+  - Khi cần bổ sung Tiếng Việt, team chỉ cần tạo file `lang/vi.json` chứa các cặp key-value (ví dụ: `"Create Trip": "Tạo chuyến đi"`), hoàn toàn không cần phải sửa đổi hay refactor lại cấu trúc mã nguồn.
+
+---
+
 ## 3. Quy chuẩn Git & Quy trình Quản lý Mã nguồn
 
 Dự án áp dụng mô hình **Git Feature Branch** với nguyên tắc cốt lõi: **LÀM VIỆC TRÊN NHÁNH `develop`, NHÁNH `main` CHỈ DÀNH CHO BẢN PRODUCTION ỔN ĐỊNH**.
@@ -249,7 +271,8 @@ Xung đột xảy ra khi 2 người cùng sửa chung một vị trí code trong
 
 Một Task/Feature chỉ được coi là hoàn tất và đủ điều kiện để tạo PR khi thỏa mãn **100% các tiêu chí** sau:
 
-- [ ] **Chức năng:** Nghiệp vụ chạy đúng theo yêu cầu của [PLAN.md](file:///d:/laragon/www/Wanderly/PLAN.md) và thiết kế.
+- [ ] **Chức năng:** Nghiệp vụ chạy đúng theo yêu cầu của [PLAN.md](file:///d:/laragon/www/Wanderly/docs/PLAN.md) và thiết kế.
+- [ ] **Đa ngôn ngữ (i18n):** Toàn bộ text giao diện (Blade views), nhãn, placeholder và thông báo (Flash, Validation) đều viết bằng Tiếng Anh chuẩn mực và được bọc đúng quy cách trong hàm `__('...')`.
 - [ ] **Không lỗi Terminal / Console:** Không có Exception (500), không có Warning PHP, không có lỗi đỏ ở F12 Developer Tools.
 - [ ] **Format chuẩn:** Đã chạy `php artisan pint` và không còn lỗi linting.
 - [ ] **Database an toàn:**
