@@ -23,7 +23,7 @@ return new class extends Migration
             $table->enum('privacy', ['private', 'group', 'public'])->default('private');
             $table->enum('status', ['planning', 'ongoing', 'completed'])->default('planning');
             $table->timestamps();
-            
+
             $table->index('owner_id');
         });
     }
