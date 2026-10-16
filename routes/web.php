@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
-use App\Models\Trip;
+use App\Http\Controllers\Trip\TripController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -37,9 +37,5 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/trips', function () {
-        $trips = Trip::where('owner_id', auth()->id())->get();
-
-        return view('trips.index', compact('trips'));
-    })->name('trips.index');
+    Route::resource('trips', TripController::class);
 });
