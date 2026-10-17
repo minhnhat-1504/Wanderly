@@ -16,4 +16,15 @@ class ExampleTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_healthz_endpoint_returns_ok_status(): void
+    {
+        $response = $this->get('/healthz');
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'status' => 'ok',
+                'database' => 'connected',
+            ]);
+    }
 }
