@@ -19,6 +19,9 @@ export function initTimeline() {
 
         const instance = new window.Sortable(container, {
             group: 'trip-timeline',
+            draggable: '.timeline-activity-card',
+            filter: '.slot-empty-placeholder',
+            preventOnFilter: false,
             animation: 200,
             handle: '.drag-handle',
             ghostClass: 'opacity-40',
@@ -27,6 +30,11 @@ export function initTimeline() {
             fallbackTolerance: 3,
 
             onEnd: async function (evt) {
+                // Ignore if dragged element is not an activity card
+                if (!evt.item || !evt.item.classList.contains('timeline-activity-card')) {
+                    return;
+                }
+
                 // If position hasn't changed at all, do nothing
                 if (evt.from === evt.to && evt.oldIndex === evt.newIndex) {
                     return;
@@ -103,28 +111,27 @@ export function initTimeline() {
                         }
                     }));
 
-                    window.dispatchEvent(new CustomEvent('timeline-saving', {
-                        detail: { saving: false }
-                    }));
-
                 } catch (error) {
                     console.error('[Timeline] Reorder failed, performing rollback:', error);
 
                     // ==========================================
                     // ROLLBACK MECHANISM
                     // ==========================================
-                    if (fromContainer.children[oldIndex]) {
+                    if (fromContainer && fromContainer.children && fromContainer.children[oldIndex]) {
                         fromContainer.insertBefore(itemEl, fromContainer.children[oldIndex]);
-                    } else {
+                    } else if (fromContainer) {
                         fromContainer.appendChild(itemEl);
                     }
 
                     // Restore previous day & slot
-                    itemEl.dataset.day = fromContainer.dataset.day;
-                    itemEl.dataset.slot = fromContainer.dataset.slot;
-
-                    updateSlotEmptyState(fromContainer);
-                    updateSlotEmptyState(toContainer);
+                    if (fromContainer) {
+                        itemEl.dataset.day = fromContainer.dataset.day;
+                        itemEl.dataset.slot = fromContainer.dataset.slot;
+                        updateSlotEmptyState(fromContainer);
+                    }
+                    if (toContainer) {
+                        updateSlotEmptyState(toContainer);
+                    }
                     recalculateDayTotals();
 
                     // Notify user via Toast
@@ -134,7 +141,7 @@ export function initTimeline() {
                             message: 'Could not save new order. Position was restored.'
                         }
                     }));
-
+                } finally {
                     window.dispatchEvent(new CustomEvent('timeline-saving', {
                         detail: { saving: false }
                     }));

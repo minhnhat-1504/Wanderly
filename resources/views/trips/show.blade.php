@@ -183,9 +183,16 @@
             activeDay: 1,
             totalDays: {{ max(1, $tripDays) }},
             savingOrder: false,
+            savingTimer: null,
             init() {
                 window.addEventListener('timeline-saving', (e) => {
                     this.savingOrder = e.detail?.saving || false;
+                    if (this.savingOrder) {
+                        clearTimeout(this.savingTimer);
+                        this.savingTimer = setTimeout(() => {
+                            this.savingOrder = false;
+                        }, 2500);
+                    }
                 });
             }
         }"

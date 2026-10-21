@@ -17,10 +17,16 @@
         remaining: {{ $initialRemaining }},
         percentage: {{ $initialPercent }},
         minimized: false,
+        drawerOpen: false,
         warningShown80: false,
         warningShown95: false,
 
         init() {
+            // Listen for drawer toggle to gracefully hide widget
+            window.addEventListener('drawer-toggled', (e) => {
+                this.drawerOpen = e.detail?.open || false;
+            });
+
             // Listen for timeline or room updates
             window.addEventListener('budget-recalculate', () => this.recalculateFromDOM());
             window.addEventListener('timeline-updated', () => this.recalculateFromDOM());
@@ -70,7 +76,14 @@
             return new Intl.NumberFormat('vi-VN').format(Math.max(0, num)) + ' VND';
         }
     }"
-    class="fixed bottom-6 right-6 z-40 max-w-sm w-full transition-all duration-300"
+    x-show="!drawerOpen"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0 translate-y-4"
+    x-transition:enter-end="opacity-100 translate-y-0"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100 translate-y-0"
+    x-transition:leave-end="opacity-0 translate-y-4"
+    class="fixed bottom-6 right-6 z-30 max-w-sm w-full transition-all duration-300"
 >
     {{-- Widget Card --}}
     <div class="bg-white/95 backdrop-blur-md rounded-2xl border shadow-xl p-4 transition-all duration-300"

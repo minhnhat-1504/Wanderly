@@ -25,6 +25,7 @@
         },
         init() {
             window.addEventListener('open-activity-modal', (e) => {
+                window.dispatchEvent(new CustomEvent('close-room-drawer'));
                 this.errors = {};
                 this.mode = e.detail?.mode || 'create';
                 if (this.mode === 'edit' && e.detail?.activity) {
@@ -45,6 +46,10 @@
                     };
                 }
                 this.open = true;
+            });
+
+            window.addEventListener('close-activity-modal', () => {
+                this.closeModal();
             });
         },
         closeModal() {
@@ -124,7 +129,7 @@
     x-show="open"
     x-cloak
     @keydown.escape.window="closeModal()"
-    class="fixed inset-0 z-50 overflow-y-auto"
+    class="fixed inset-0 z-[60] overflow-y-auto"
     aria-labelledby="activity-modal-title"
     role="dialog"
     aria-modal="true"

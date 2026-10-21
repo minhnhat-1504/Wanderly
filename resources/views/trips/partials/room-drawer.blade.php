@@ -21,9 +21,19 @@
         },
         init() {
             window.addEventListener('open-room-drawer', () => {
+                window.dispatchEvent(new CustomEvent('close-activity-modal'));
                 this.open = true;
+                window.dispatchEvent(new CustomEvent('drawer-toggled', { detail: { open: true } }));
                 this.fetchRooms();
             });
+
+            window.addEventListener('close-room-drawer', () => {
+                this.closeDrawer();
+            });
+        },
+        closeDrawer() {
+            this.open = false;
+            window.dispatchEvent(new CustomEvent('drawer-toggled', { detail: { open: false } }));
         },
         async fetchRooms() {
             // Can be populated from server or initial data
@@ -131,6 +141,7 @@
     }"
     x-show="open"
     x-cloak
+    @keydown.escape.window="closeDrawer()"
     class="fixed inset-0 z-50 overflow-hidden"
     aria-labelledby="room-drawer-title"
     role="dialog"
@@ -145,7 +156,7 @@
         x-transition:leave="transition-opacity ease-linear duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        @click="open = false"
+        @click="closeDrawer()"
         class="fixed inset-0 bg-black/40 backdrop-blur-sm"
     ></div>
 
@@ -179,7 +190,7 @@
 
                 <button
                     type="button"
-                    @click="open = false"
+                    @click="closeDrawer()"
                     class="p-2 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-white transition-colors"
                 >
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -328,7 +339,7 @@
 
             {{-- Footer --}}
             <div class="p-4 border-t border-gray-100 bg-gray-50 text-right">
-                <x-button variant="secondary" type="button" @click="open = false">
+                <x-button variant="secondary" type="button" @click="closeDrawer()">
                     {{ __('Close') }}
                 </x-button>
             </div>
