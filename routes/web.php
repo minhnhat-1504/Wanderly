@@ -8,8 +8,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('trips.index');
+    }
+
     return view('welcome');
 });
+
+Route::get('/dashboard', function () {
+    return redirect()->route('trips.index');
+})->middleware('auth')->name('dashboard');
 
 Route::get('/healthz', function () {
     try {
