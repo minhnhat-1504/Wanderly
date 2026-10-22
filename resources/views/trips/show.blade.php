@@ -37,6 +37,31 @@
                 @endif
             </button>
 
+            {{-- Checklist Drawer Trigger Button (D4-02) --}}
+            <button
+                type="button"
+                @click="$dispatch('open-checklist-drawer')"
+                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-sm"
+                title="{{ __('Trip Checklist') }}"
+            >
+                <span>🧳</span>
+                <span>{{ __('Checklist') }}</span>
+            </button>
+
+            {{-- Public Share Modal Trigger Button (D4-03) --}}
+            <button
+                type="button"
+                @click="$dispatch('open-share-modal')"
+                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 transition-colors shadow-sm"
+                title="{{ __('Share Trip') }}"
+            >
+                <span>🔗</span>
+                <span>{{ __('Share') }}</span>
+                @if($trip->is_shared)
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+                @endif
+            </button>
+
             @can('update', $trip)
                 <a href="{{ route('trips.edit', $trip) }}">
                     <x-button variant="secondary" type="button" class="text-xs sm:text-sm">
@@ -471,6 +496,12 @@
 
     {{-- Budget Override Warning Modal --}}
     @include('trips.partials.budget-override-modal')
+
+    {{-- Checklist Drawer (D4-02) --}}
+    @include('trips.partials.checklist-drawer', ['trip' => $trip])
+
+    {{-- Public Share Modal (D4-03) --}}
+    @include('trips.partials.share-modal', ['trip' => $trip])
 
 </div>
 @endsection

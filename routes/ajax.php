@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Trip\ActivityController;
+use App\Http\Controllers\Trip\ChecklistController;
 use App\Http\Controllers\Trip\RoomBookingController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +32,16 @@ Route::middleware('auth')->group(function () {
     // Room Booking AJAX routes
     Route::patch('/rooms/{room}/toggle-budget', [RoomBookingController::class, 'toggleBudget'])
         ->name('rooms.toggle-budget');
+
+    // Checklist AJAX routes (D4-01, D4-02)
+    Route::get('/trips/{trip}/checklist', [ChecklistController::class, 'index'])
+        ->name('trips.checklist.index');
+    Route::post('/trips/{trip}/checklist', [ChecklistController::class, 'store'])
+        ->name('trips.checklist.store');
+    Route::patch('/trips/{trip}/checklist/{item}/toggle', [ChecklistController::class, 'toggle'])
+        ->name('trips.checklist.toggle');
+    Route::delete('/trips/{trip}/checklist/{item}', [ChecklistController::class, 'destroy'])
+        ->name('trips.checklist.destroy');
+    Route::post('/trips/{trip}/checklist/apply-template', [ChecklistController::class, 'applyTemplate'])
+        ->name('trips.checklist.apply-template');
 });

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Trip\ActivityController;
 use App\Http\Controllers\Trip\BudgetController;
+use App\Http\Controllers\Trip\PublicShareController;
 use App\Http\Controllers\Trip\RoomBookingController;
 use App\Http\Controllers\Trip\TripController;
 use Illuminate\Support\Facades\DB;
@@ -61,4 +62,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/rooms/{room}', [RoomBookingController::class, 'destroy'])->name('rooms.destroy');
     Route::match(['put', 'patch'], '/trips/{trip}/rooms/{room}', [RoomBookingController::class, 'update']);
     Route::delete('/trips/{trip}/rooms/{room}', [RoomBookingController::class, 'destroy']);
+
+    // Public Share Management (D4-03)
+    Route::post('/trips/{trip}/share/toggle', [PublicShareController::class, 'toggleShare'])->name('trips.share.toggle');
+    Route::post('/trips/{trip}/share/revoke', [PublicShareController::class, 'revoke'])->name('trips.share.revoke');
+    Route::post('/trips/{trip}/share/budget', [PublicShareController::class, 'toggleBudget'])->name('trips.share.budget');
 });
+
+// Read-only Public Share (M7)
+Route::get('/s/{slug}', [PublicShareController::class, 'show'])->name('trips.share.show');
