@@ -1,13 +1,23 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Trip\BudgetController;
+use App\Http\Controllers\Trip\RoomBookingController;
 use App\Http\Controllers\Trip\TripController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('trips.index');
+    }
+
     return view('welcome');
 });
+
+Route::get('/dashboard', function () {
+    return redirect()->route('trips.index');
+})->middleware('auth')->name('dashboard');
 
 Route::get('/healthz', function () {
     try {
@@ -38,4 +48,14 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::resource('trips', TripController::class);
+
+    // Budget Endpoints (D2-05)
+    Route::get('/trips/{trip}/budget', [BudgetController::class, 'show'])->name('trips.budget');
+
+    // Room Bookings Endpoints (D2-03)
+    Route::post('/trips/{trip}/rooms', [RoomBookingController::class, 'store'])->name('trips.rooms.store');
+    Route::match(['put', 'patch'], '/rooms/{room}', [RoomBookingController::class, 'update'])->name('rooms.update');
+    Route::delete('/rooms/{room}', [RoomBookingController::class, 'destroy'])->name('rooms.destroy');
+    Route::match(['put', 'patch'], '/trips/{trip}/rooms/{room}', [RoomBookingController::class, 'update']);
+    Route::delete('/trips/{trip}/rooms/{room}', [RoomBookingController::class, 'destroy']);
 });

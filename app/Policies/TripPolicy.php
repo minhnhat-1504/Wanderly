@@ -75,4 +75,29 @@ class TripPolicy
             ->where('role', 'leader')
             ->exists();
     }
+
+    /**
+     * Determine whether the user can view the budget details of the trip.
+     * Allowed only for owner, leader, or editor roles. Viewers are forbidden.
+     */
+    public function viewBudget(User $user, Trip $trip): bool
+    {
+        if ($trip->owner_id === $user->id) {
+            return true;
+        }
+
+        return $trip->members()
+            ->where('user_id', $user->id)
+            ->whereIn('role', ['leader', 'editor'])
+            ->exists();
+    }
+
+    /**
+     * Determine whether the user can manage rooms (create, update, delete, toggle) for the trip.
+     * Allowed only for owner, leader, or editor roles.
+     */
+    public function manageRooms(User $user, Trip $trip): bool
+    {
+        return $this->update($user, $trip);
+    }
 }
