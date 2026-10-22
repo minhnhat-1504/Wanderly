@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 class TripService
@@ -125,5 +126,73 @@ class TripService
         }
 
         return (bool) $trip->delete();
+    }
+
+    /**
+     * Duplicate an existing trip including its activities and checklist items.
+     *
+     * @throws Exception
+     */
+    public function duplicateTrip(Trip $originalTrip, User $newOwner): Trip
+    {
+        DB::beginTransaction();
+
+        try {
+            $newTrip = Trip::create([
+                'owner_id' => $newOwner->id,
+                'name' => __('Copy of :name', ['name' => $originalTrip->name]),
+                'destination' => $originalTrip->destination,
+                'start_date' => $originalTrip->start_date,
+                'end_date' => $originalTrip->end_date,
+                'budget' => $originalTrip->budget,
+                'cover' => $originalTrip->cover,
+                'privacy' => 'private',
+                'status' => 'planning',
+            ]);
+
+            TripMember::create([
+                'trip_id' => $newTrip->id,
+                'user_id' => $newOwner->id,
+                'role' => 'leader',
+            ]);
+
+            // Duplicate activities
+            $originalActivities = $originalTrip->activities()->get();
+            foreach ($originalActivities as $act) {
+                $newTrip->activities()->create([
+                    'day' => $act->day,
+                    'time_slot' => $act->time_slot,
+                    'start_time' => $act->start_time,
+                    'end_time' => $act->end_time,
+                    'title' => $act->title,
+                    'cost' => $act->cost,
+                    'category' => $act->category,
+                    'location' => $act->location,
+                    'address' => $act->address,
+                    'notes' => $act->notes,
+                    'type' => $act->type,
+                    'position' => $act->position,
+                ]);
+            }
+
+            // Duplicate checklist items if available
+            if (method_exists($originalTrip, 'checklistItems') && Schema::hasTable('checklist_items')) {
+                foreach ($originalTrip->checklistItems as $item) {
+                    $newTrip->checklistItems()->create([
+                        'title' => $item->title,
+                        'category' => $item->category,
+                        'is_completed' => false,
+                        'position' => $item->position,
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return $newTrip;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 }

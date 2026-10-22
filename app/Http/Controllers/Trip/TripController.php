@@ -122,4 +122,17 @@ class TripController extends Controller
         return redirect()->route('trips.index')
             ->with('success', __('Trip deleted successfully.'));
     }
+
+    /**
+     * Duplicate the specified trip for the authenticated user.
+     */
+    public function duplicate(Request $request, Trip $trip): RedirectResponse
+    {
+        $this->authorize('view', $trip);
+
+        $newTrip = $this->tripService->duplicateTrip($trip, $request->user());
+
+        return redirect()->route('trips.show', $newTrip)
+            ->with('success', __('Trip duplicated successfully.'));
+    }
 }
