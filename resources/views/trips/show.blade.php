@@ -43,6 +43,20 @@
                 </a>
             @endcan
 
+            @auth
+                <form method="POST" action="{{ route('trips.duplicate', $trip) }}" class="inline">
+                    @csrf
+                    <x-button variant="outline" type="submit" class="text-xs sm:text-sm">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        <span>{{ __('Duplicate Trip') }}</span>
+                    </x-button>
+                </form>
+            @endauth
+
+
             @can('delete', $trip)
                 <form method="POST" action="{{ route('trips.destroy', $trip) }}" onsubmit="return confirm('{{ __('Are you sure you want to delete this trip? This action cannot be undone.') }}');" class="inline">
                     @csrf
