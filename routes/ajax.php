@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Trip\ActivityController;
+use App\Http\Controllers\Trip\RoomBookingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth')->group(function () {
+    // Activities AJAX routes
     Route::put('/trips/{trip}/activities/reorder', [ActivityController::class, 'reorder'])
         ->name('trips.activities.reorder');
 
@@ -25,4 +27,8 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/trips/{trip}/activities/{activity}', [ActivityController::class, 'destroy'])
         ->name('trips.activities.destroy');
+
+    // Room Booking AJAX routes
+    Route::patch('/rooms/{room}/toggle-budget', [RoomBookingController::class, 'toggleBudget'])
+        ->name('rooms.toggle-budget');
 });
