@@ -22,6 +22,9 @@ class Trip extends Model
         'cover',
         'privacy',
         'status',
+        'share_slug',
+        'is_shared',
+        'is_share_budget_visible',
     ];
 
     protected function casts(): array
@@ -30,6 +33,8 @@ class Trip extends Model
             'start_date' => 'date',
             'end_date' => 'date',
             'budget' => 'decimal:2',
+            'is_shared' => 'boolean',
+            'is_share_budget_visible' => 'boolean',
         ];
     }
 
@@ -58,5 +63,10 @@ class Trip extends Model
     public function activities(): HasMany
     {
         return $this->hasMany(Activity::class);
+    }
+
+    public function checklistItems(): HasMany
+    {
+        return $this->hasMany(ChecklistItem::class)->orderBy('position');
     }
 }
