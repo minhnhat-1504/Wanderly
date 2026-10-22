@@ -9,3 +9,7 @@ Alpine.start();
 
 window.Sortable = Sortable;
 window.Chart = Chart;
+
+import { initTimeline } from './modules/timeline';
+window.initTimeline = initTimeline;
+
