@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Trip\ActivityController;
 use App\Http\Controllers\Trip\BudgetController;
 use App\Http\Controllers\Trip\RoomBookingController;
 use App\Http\Controllers\Trip\TripController;
@@ -47,7 +48,9 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/trips/{trip}/duplicate', [TripController::class, 'duplicate'])->name('trips.duplicate');
     Route::resource('trips', TripController::class);
+    Route::resource('trips.activities', ActivityController::class)->only(['store', 'update', 'destroy']);
 
     // Budget Endpoints (D2-05)
     Route::get('/trips/{trip}/budget', [BudgetController::class, 'show'])->name('trips.budget');
