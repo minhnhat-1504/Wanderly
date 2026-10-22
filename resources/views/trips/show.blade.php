@@ -20,12 +20,12 @@
             <span class="text-gray-900 font-semibold truncate max-w-xs sm:max-w-md">{{ $trip->name }}</span>
         </nav>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2" x-data>
             {{-- Room Drawer Trigger Button --}}
             <button
                 type="button"
-                @click="$dispatch('open-room-drawer')"
-                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition-colors shadow-sm"
+                @click="window.dispatchEvent(new CustomEvent('open-room-drawer'))"
+                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition-colors shadow-sm cursor-pointer"
                 title="{{ __('Accommodations Drawer') }}"
             >
                 <span>🏨</span>
@@ -40,8 +40,8 @@
             {{-- Checklist Drawer Trigger Button (D4-02) --}}
             <button
                 type="button"
-                @click="$dispatch('open-checklist-drawer')"
-                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-sm"
+                @click="window.dispatchEvent(new CustomEvent('open-checklist-drawer'))"
+                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-sm cursor-pointer"
                 title="{{ __('Trip Checklist') }}"
             >
                 <span>🧳</span>
@@ -51,8 +51,8 @@
             {{-- Public Share Modal Trigger Button (D4-03) --}}
             <button
                 type="button"
-                @click="$dispatch('open-share-modal')"
-                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 transition-colors shadow-sm"
+                @click="window.dispatchEvent(new CustomEvent('open-share-modal'))"
+                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 transition-colors shadow-sm cursor-pointer"
                 title="{{ __('Share Trip') }}"
             >
                 <span>🔗</span>
@@ -240,6 +240,7 @@
         {{-- Saving Indicator Badge --}}
         <div
             x-show="savingOrder"
+            x-cloak
             x-transition
             class="fixed top-20 right-6 z-50 flex items-center gap-2 bg-gray-900/90 text-white text-xs px-3.5 py-2 rounded-xl shadow-lg backdrop-blur-md"
         >

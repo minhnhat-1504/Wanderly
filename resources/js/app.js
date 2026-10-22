@@ -3,13 +3,12 @@ import './bootstrap';
 import Alpine from 'alpinejs';
 import Sortable from 'sortablejs';
 import Chart from 'chart.js/auto';
+import { initTimeline } from './modules/timeline';
 
 window.Alpine = Alpine;
-Alpine.start();
-
-window.Sortable = Sortable;
-window.Chart = Chart;
-
-import { initTimeline } from './modules/timeline';
+window.Sortable = Sortable?.default || Sortable;
+window.Chart = Chart?.default || Chart;
 window.initTimeline = initTimeline;
+
+Alpine.start();
 

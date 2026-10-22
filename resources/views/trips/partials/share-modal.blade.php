@@ -22,7 +22,7 @@
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name=\'csrf-token\']').getAttribute('content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.getAttribute('content')
                     }
                 });
                 const data = await res.json();
@@ -44,7 +44,7 @@
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name=\'csrf-token\']').getAttribute('content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.getAttribute('content')
                     }
                 });
                 const data = await res.json();
@@ -57,7 +57,7 @@
         },
 
         async revokeLink() {
-            if (!confirm('{{ __('Revoking will immediately invalidate the current public link. Anyone with the old link will lose access. Continue?') }}')) {
+            if (!confirm('Revoking will immediately invalidate the current public link. Anyone with the old link will lose access. Continue?')) {
                 return;
             }
             this.loading = true;
@@ -66,7 +66,7 @@
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name=\'csrf-token\']').getAttribute('content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.getAttribute('content')
                     }
                 });
                 const data = await res.json();
@@ -91,6 +91,7 @@
     }"
     x-cloak
     x-show="open"
+    style="display: none;"
     class="fixed inset-0 z-50 overflow-y-auto"
     aria-labelledby="modal-title"
     role="dialog"

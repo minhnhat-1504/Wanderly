@@ -25,6 +25,7 @@
     }"
     x-show="open"
     x-cloak
+    style="display: none;"
     class="fixed inset-0 z-50 overflow-y-auto"
     aria-labelledby="override-modal-title"
     role="dialog"

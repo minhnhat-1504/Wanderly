@@ -66,7 +66,7 @@
                 : `/trips/${this.tripId}/activities`;
             const method = isEdit ? 'PUT' : 'POST';
 
-            const csrfToken = document.querySelector('meta[name=\"csrf-token\"]')?.getAttribute('content');
+            const csrfToken = document.querySelector('meta[name=csrf-token]')?.getAttribute('content');
 
             try {
                 const response = await fetch(url, {
@@ -128,6 +128,7 @@
     }"
     x-show="open"
     x-cloak
+    style="display: none;"
     @keydown.escape.window="closeModal()"
     class="fixed inset-0 z-[60] overflow-y-auto"
     aria-labelledby="activity-modal-title"

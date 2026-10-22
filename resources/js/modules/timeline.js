@@ -1,12 +1,15 @@
-/**
- * Wanderly — SortableJS Interactive Timeline Module (M3)
- * Handles multi-container drag-and-drop across days and 4 time slots
- * Features: Optimistic UI, Atomic Reorder, Auto Rollback on error, CustomEvents
- */
+import Sortable from 'sortablejs';
+
+const SortableClass = Sortable?.default || Sortable || window?.Sortable;
 
 export function initTimeline() {
     const timelineBoard = document.getElementById('timeline-board');
     if (!timelineBoard) return;
+
+    if (!SortableClass) {
+        console.warn('[Wanderly Timeline] Sortable library could not be loaded.');
+        return;
+    }
 
     const tripId = timelineBoard.dataset.tripId;
     const containers = document.querySelectorAll('.timeline-slot-container');
@@ -17,7 +20,8 @@ export function initTimeline() {
             container._sortableInstance.destroy();
         }
 
-        const instance = new window.Sortable(container, {
+        try {
+            const instance = new SortableClass(container, {
             group: 'trip-timeline',
             draggable: '.timeline-activity-card',
             filter: '.slot-empty-placeholder',
@@ -150,7 +154,10 @@ export function initTimeline() {
         });
 
         container._sortableInstance = instance;
-    });
+    } catch (sortErr) {
+        console.error('[Wanderly Timeline] Error initializing sortable on container:', sortErr);
+    }
+});
 
     // Helper: Hide/Show empty placeholder in slot
     function updateSlotEmptyState(container) {

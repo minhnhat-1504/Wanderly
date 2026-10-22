@@ -161,7 +161,7 @@
             </div>
 
             {{-- Mobile Menu Panel --}}
-            <div x-show="mobileMenuOpen" x-collapse x-cloak class="sm:hidden border-t border-gray-100">
+            <div x-show="mobileMenuOpen" x-transition x-cloak class="sm:hidden border-t border-gray-100">
                 <div class="px-4 py-3 space-y-1">
                     <a href="{{ url('/trips') }}"
                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 transition-all duration-200">

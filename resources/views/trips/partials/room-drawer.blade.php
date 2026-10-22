@@ -53,7 +53,7 @@
             const previousState = room.is_budget_included;
             room.is_budget_included = !previousState;
 
-            const csrfToken = document.querySelector('meta[name=\"csrf-token\"]')?.getAttribute('content');
+            const csrfToken = document.querySelector('meta[name=csrf-token]')?.getAttribute('content');
 
             try {
                 const res = await fetch(`/ajax/rooms/${room.id}/toggle-budget`, {
@@ -94,7 +94,7 @@
         },
         async addRoom() {
             this.loading = true;
-            const csrfToken = document.querySelector('meta[name=\"csrf-token\"]')?.getAttribute('content');
+            const csrfToken = document.querySelector('meta[name=csrf-token]')?.getAttribute('content');
 
             try {
                 const res = await fetch(`/trips/${this.tripId}/rooms`, {
@@ -141,6 +141,7 @@
     }"
     x-show="open"
     x-cloak
+    style="display: none;"
     @keydown.escape.window="closeDrawer()"
     class="fixed inset-0 z-50 overflow-hidden"
     aria-labelledby="room-drawer-title"
@@ -221,7 +222,7 @@
                 {{-- Quick Add Room Form --}}
                 <div
                     x-show="showAddForm"
-                    x-collapse
+                    x-transition
                     class="bg-gray-50 rounded-2xl p-4 border border-gray-200/80 space-y-3"
                 >
                     <h3 class="text-xs font-bold text-gray-900 uppercase">

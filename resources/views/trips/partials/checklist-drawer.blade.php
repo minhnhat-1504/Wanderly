@@ -47,7 +47,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name=\'csrf-token\']').getAttribute('content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.getAttribute('content')
                     },
                     body: JSON.stringify({ title, category })
                 });
@@ -69,7 +69,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name=\'csrf-token\']').getAttribute('content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.getAttribute('content')
                     }
                 });
                 const data = await res.json();
@@ -83,7 +83,7 @@
         },
 
         async deleteItem(item) {
-            if (!confirm('{{ __('Delete this checklist item?') }}')) return;
+            if (!confirm('Delete this checklist item?')) return;
             const originalItems = [...this.items];
             this.items = this.items.filter(i => i.id !== item.id);
 
@@ -93,7 +93,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name=\'csrf-token\']').getAttribute('content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.getAttribute('content')
                     }
                 });
                 const data = await res.json();
@@ -107,7 +107,7 @@
         },
 
         async applyTemplate(type) {
-            if (this.items.length > 0 && !confirm('{{ __('Add preset checklist items to your current trip?') }}')) {
+            if (this.items.length > 0 && !confirm('Add preset checklist items to your current trip?')) {
                 return;
             }
             this.applyingTemplate = true;
@@ -118,7 +118,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name=\'csrf-token\']').getAttribute('content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.getAttribute('content')
                     },
                     body: JSON.stringify({ template: type })
                 });
@@ -141,6 +141,7 @@
     }"
     x-cloak
     x-show="open"
+    style="display: none;"
     class="fixed inset-0 z-50 overflow-hidden"
     aria-labelledby="slide-over-title"
     role="dialog"
