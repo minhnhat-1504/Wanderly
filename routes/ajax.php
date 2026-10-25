@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\Trip\ActivityController;
+use App\Http\Controllers\Trip\BookingController;
 use App\Http\Controllers\Trip\ChecklistController;
+use App\Http\Controllers\Trip\ProposalController;
 use App\Http\Controllers\Trip\RoomBookingController;
+use App\Http\Controllers\Trip\TravelRequestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,4 +47,14 @@ Route::middleware('auth')->group(function () {
         ->name('trips.checklist.destroy');
     Route::post('/trips/{trip}/checklist/apply-template', [ChecklistController::class, 'applyTemplate'])
         ->name('trips.checklist.apply-template');
+
+    // Marketplace AJAX routes (D2-05)
+    Route::post('/trips/{trip}/marketplace/requests', [TravelRequestController::class, 'store'])
+        ->name('trips.marketplace.requests.store');
+    Route::get('/trips/{trip}/marketplace/requests/{travelRequest}/compare', [ProposalController::class, 'compare'])
+        ->name('trips.marketplace.compare');
+    Route::post('/marketplace/proposals/{proposal}/accept-bundle', [BookingController::class, 'acceptBundle'])
+        ->name('marketplace.proposals.accept-bundle');
+    Route::post('/marketplace/items/{item}/accept-item', [BookingController::class, 'acceptItem'])
+        ->name('marketplace.items.accept-item');
 });
