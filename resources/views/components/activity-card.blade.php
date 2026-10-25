@@ -62,13 +62,16 @@
     };
 
     $isRoom = ($type === 'room');
+    $isBooking = ($type === 'booking');
 @endphp
 
 <div
     class="timeline-activity-card group relative rounded-2xl border p-4 transition-all duration-200 shadow-sm hover:shadow-md select-none
         {{ $isRoom
             ? 'bg-gradient-to-br from-indigo-50/80 to-purple-50/60 border-indigo-200 hover:border-indigo-300'
-            : 'bg-white border-gray-200/90 hover:border-teal-300' }}"
+            : ($isBooking
+                ? 'bg-gradient-to-br from-emerald-50/70 to-teal-50/50 border-emerald-200 hover:border-emerald-300'
+                : 'bg-white border-gray-200/90 hover:border-teal-300') }}"
     data-id="{{ $id }}"
     data-day="{{ $day }}"
     data-slot="{{ $slot }}"
@@ -96,11 +99,15 @@
             </button>
 
             <div class="min-w-0 flex-1">
-                {{-- Category Tag & Room Badge --}}
+                {{-- Category Tag & Room / Booking Badge --}}
                 <div class="flex flex-wrap items-center gap-2 mb-1.5">
                     @if($isRoom)
                         <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-xs font-semibold bg-indigo-100 text-indigo-800 border border-indigo-200">
                             🏨 {{ __('Accommodation') }}
+                        </span>
+                    @elseif($isBooking)
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                            🎟️ {{ __('Booking Voucher') }}
                         </span>
                     @else
                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-medium border {{ $categoryConfig['bg'] }}">
