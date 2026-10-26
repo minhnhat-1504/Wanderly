@@ -100,4 +100,13 @@ class TripPolicy
     {
         return $this->update($user, $trip);
     }
+
+    /**
+     * Determine whether the user can manage marketplace requests and proposals for the trip.
+     * Allowed only for owner, leader, or editor roles.
+     */
+    public function manageMarketplace(User $user, Trip $trip): bool
+    {
+        return $this->update($user, $trip);
+    }
 }

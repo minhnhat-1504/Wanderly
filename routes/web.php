@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Trip\ActivityController;
+use App\Http\Controllers\Trip\BookingController;
 use App\Http\Controllers\Trip\BudgetController;
+use App\Http\Controllers\Trip\ProposalController;
 use App\Http\Controllers\Trip\PublicShareController;
 use App\Http\Controllers\Trip\RoomBookingController;
+use App\Http\Controllers\Trip\TravelRequestController;
 use App\Http\Controllers\Trip\TripController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +70,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/trips/{trip}/share/toggle', [PublicShareController::class, 'toggleShare'])->name('trips.share.toggle');
     Route::post('/trips/{trip}/share/revoke', [PublicShareController::class, 'revoke'])->name('trips.share.revoke');
     Route::post('/trips/{trip}/share/budget', [PublicShareController::class, 'toggleBudget'])->name('trips.share.budget');
+
+    // Reverse Marketplace Routes (Sprint 3 - D2-05)
+    Route::get('/trips/{trip}/marketplace', [TravelRequestController::class, 'index'])->name('trips.marketplace.index');
+    Route::get('/trips/{trip}/marketplace/requests/create', [TravelRequestController::class, 'create'])->name('trips.marketplace.requests.create');
+    Route::post('/trips/{trip}/marketplace/requests', [TravelRequestController::class, 'store'])->name('trips.marketplace.requests.store');
+    Route::delete('/trips/{trip}/marketplace/requests/{travelRequest}', [TravelRequestController::class, 'destroy'])->name('trips.marketplace.requests.destroy');
+
+    Route::get('/trips/{trip}/marketplace/requests/{travelRequest}/compare', [ProposalController::class, 'compare'])->name('trips.marketplace.compare');
+    Route::get('/marketplace/requests/{travelRequest}/proposals/create', [ProposalController::class, 'create'])->name('marketplace.proposals.create');
+    Route::post('/marketplace/requests/{travelRequest}/proposals', [ProposalController::class, 'store'])->name('marketplace.proposals.store');
+
+    Route::post('/marketplace/proposals/{proposal}/accept-bundle', [BookingController::class, 'acceptBundle'])->name('marketplace.proposals.accept-bundle');
+    Route::post('/marketplace/items/{item}/accept-item', [BookingController::class, 'acceptItem'])->name('marketplace.items.accept-item');
+    Route::get('/trips/{trip}/marketplace/bookings', [BookingController::class, 'index'])->name('trips.marketplace.bookings');
+    Route::get('/marketplace/bookings/{booking}', [BookingController::class, 'show'])->name('marketplace.bookings.show');
 });
 
 // Read-only Public Share (M7)

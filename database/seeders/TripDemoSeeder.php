@@ -4,12 +4,19 @@ namespace Database\Seeders;
 
 use App\Models\Activity;
 use App\Models\ChecklistItem;
+use App\Models\Destination;
+use App\Models\Proposal;
+use App\Models\ProposalItem;
+use App\Models\Provider;
 use App\Models\RoomBooking;
+use App\Models\Service;
+use App\Models\TravelRequest;
 use App\Models\Trip;
 use App\Models\TripMember;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class TripDemoSeeder extends Seeder
 {
@@ -209,6 +216,101 @@ class TripDemoSeeder extends Seeder
                 'trip_id' => $trip->id,
                 'position' => $index + 1,
             ]));
+        }
+
+        // 7. Create Demo Provider & Catalog Services (Sprint 3 Reverse Marketplace Demo)
+        if (class_exists(Provider::class) && Schema::hasTable('providers')) {
+            $providerUser = User::firstOrCreate(
+                ['email' => 'provider@wanderly.test'],
+                [
+                    'name' => 'Dalat Highland Drivers & Tours',
+                    'password' => bcrypt('password'),
+                    'role' => 'provider',
+                ]
+            );
+
+            $dalat = Destination::where('name', 'LIKE', '%Da Lat%')->first() ?? Destination::first();
+
+            if ($dalat) {
+                $provider = Provider::updateOrCreate(
+                    ['user_id' => $providerUser->id],
+                    [
+                        'business_name' => 'Dalat Pine Explorer Travel',
+                        'service_type' => 'transport',
+                        'destination_id' => $dalat->id,
+                        'bio' => 'Professional 7-seater private transfers and curated countryside excursions in Da Lat.',
+                        'rating' => 4.9,
+                        'phone' => '+84 909 888 777',
+                        'address' => '12 Phan Dinh Phung, Ward 2, Da Lat',
+                        'is_verified' => true,
+                    ]
+                );
+
+                if (Schema::hasTable('services')) {
+                    Service::updateOrCreate(
+                        ['provider_id' => $provider->id, 'name' => 'Private 7-Seater Airport & City Transfer (2 Days)'],
+                        [
+                            'price' => 1800000.00,
+                            'tags' => ['transport', 'car', 'private'],
+                            'specs' => ['seats' => 7, 'ac' => true, 'driver' => 'English-speaking'],
+                        ]
+                    );
+
+                    Service::updateOrCreate(
+                        ['provider_id' => $provider->id, 'name' => 'Countryside Pine Forest & Coffee Farm Excursion'],
+                        [
+                            'price' => 900000.00,
+                            'tags' => ['tour', 'sightseeing', 'coffee'],
+                            'specs' => ['duration' => 'full-day', 'lunch_included' => true],
+                        ]
+                    );
+                }
+
+                // Create a sample open Travel Request with a Proposal ready to compare
+                if (Schema::hasTable('travel_requests')) {
+                    $travelRequest = TravelRequest::updateOrCreate(
+                        ['trip_id' => $trip->id, 'pace' => 'balanced'],
+                        [
+                            'needs' => ['transport', 'tour'],
+                            'max_budget' => 3500000.00,
+                            'status' => 'bidding',
+                            'notes' => 'Looking for comfortable private transportation and an authentic coffee plantation day tour.',
+                        ]
+                    );
+
+                    if (Schema::hasTable('proposals')) {
+                        $proposal = Proposal::updateOrCreate(
+                            ['request_id' => $travelRequest->id, 'provider_id' => $provider->id],
+                            [
+                                'total_price' => 2500000.00,
+                                'message' => 'Hello! We offer a full 2-day private 7-seater car package and a curated farm tour at a 28% discount for your team.',
+                                'valid_until' => Carbon::now()->addDays(7),
+                                'status' => 'pending',
+                            ]
+                        );
+
+                        if (Schema::hasTable('proposal_items')) {
+                            ProposalItem::updateOrCreate(
+                                ['proposal_id' => $proposal->id, 'name' => 'Private 7-Seater 2-Day Shuttle'],
+                                [
+                                    'price' => 1600000.00,
+                                    'specs' => ['seats' => 7, 'driver' => 'Included'],
+                                    'is_accepted' => false,
+                                ]
+                            );
+
+                            ProposalItem::updateOrCreate(
+                                ['proposal_id' => $proposal->id, 'name' => 'Specialty Coffee Tasting & Farm Experience'],
+                                [
+                                    'price' => 900000.00,
+                                    'specs' => ['duration' => 'half-day'],
+                                    'is_accepted' => false,
+                                ]
+                            );
+                        }
+                    }
+                }
+            }
         }
     }
 }

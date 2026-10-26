@@ -69,4 +69,14 @@ class Trip extends Model
     {
         return $this->hasMany(ChecklistItem::class)->orderBy('position');
     }
+
+    public function travelRequests(): HasMany
+    {
+        return $this->hasMany(TravelRequest::class);
+    }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
 }
