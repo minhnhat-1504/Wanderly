@@ -44,7 +44,7 @@
                         {{-- Desktop Navigation Links --}}
                         <div class="hidden sm:ml-8 sm:flex sm:items-center sm:space-x-1">
                             <a href="{{ url('/trips') }}"
-                               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 transition-all duration-200">
+                               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium {{ request()->is('trips*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
                                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="3" y="3" width="7" height="7" rx="1"></rect>
                                     <rect x="14" y="3" width="7" height="7" rx="1"></rect>
@@ -53,23 +53,42 @@
                                 </svg>
                                 {{ __('Dashboard') }}
                             </a>
+
+                            <a href="{{ route('social.feed') }}"
+                               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium {{ request()->is('social*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="18" cy="5" r="3"></circle>
+                                    <circle cx="6" cy="12" r="3"></circle>
+                                    <circle cx="18" cy="19" r="3"></circle>
+                                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                                </svg>
+                                {{ __('Community Feed') }}
+                            </a>
+
+                            @auth
+                                @if(auth()->user()->role === 'admin')
+                                <a href="{{ route('admin.destinations.index') }}"
+                                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium {{ request()->is('admin*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
+                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                        <path d="M2 17l10 5 10-5"></path>
+                                        <path d="M2 12l10 5 10-5"></path>
+                                    </svg>
+                                    {{ __('Admin') }}
+                                </a>
+                                @endif
+                            @endauth
                         </div>
                     </div>
 
                     {{-- Right: Actions --}}
                     <div class="flex items-center gap-2">
 
-                        {{-- Notification Bell --}}
-                        <button type="button"
-                                class="relative p-2.5 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all duration-200"
-                                title="{{ __('Notifications') }}"
-                                id="btn-notifications">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                            </svg>
-                            <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
-                        </button>
+                        {{-- Notification Bell (D4-03 M15) --}}
+                        @auth
+                        <x-notification-bell />
+                        @endauth
 
                         {{-- User Dropdown --}}
                         @auth
@@ -164,7 +183,7 @@
             <div x-show="mobileMenuOpen" x-transition x-cloak class="sm:hidden border-t border-gray-100">
                 <div class="px-4 py-3 space-y-1">
                     <a href="{{ url('/trips') }}"
-                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 transition-all duration-200">
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->is('trips*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="3" width="7" height="7" rx="1"></rect>
                             <rect x="14" y="3" width="7" height="7" rx="1"></rect>
@@ -173,6 +192,32 @@
                         </svg>
                         {{ __('Dashboard') }}
                     </a>
+
+                    <a href="{{ route('social.feed') }}"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->is('social*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                        {{ __('Community Feed') }}
+                    </a>
+
+                    @auth
+                        @if(auth()->user()->role === 'admin')
+                        <a href="{{ route('admin.destinations.index') }}"
+                           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->is('admin*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                            {{ __('Admin') }}
+                        </a>
+                        @endif
+                    @endauth
                 </div>
             </div>
         </nav>

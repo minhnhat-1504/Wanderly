@@ -4,7 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Activity;
 use App\Models\ChecklistItem;
+use App\Models\Comment;
 use App\Models\Destination;
+use App\Models\Notification;
+use App\Models\Post;
 use App\Models\Proposal;
 use App\Models\ProposalItem;
 use App\Models\Provider;
@@ -311,6 +314,92 @@ class TripDemoSeeder extends Seeder
                     }
                 }
             }
+        }
+
+        // ══════════════════════════════════════════════════════════════════════
+        // 8. Demo Social Posts & In-App Notifications (Sprint 3 - Member 4)
+        // ══════════════════════════════════════════════════════════════════════
+        if (Schema::hasTable('posts')) {
+            $post = Post::updateOrCreate(
+                ['title' => 'Our 4-day Da Lat Pine Paradise Itinerary!'],
+                [
+                    'user_id' => $demoUser->id,
+                    'trip_id' => $trip->id,
+                    'content' => 'Sharing our complete 4-day, 3-night itinerary in Da Lat! We visited Tuyen Lam Lake, Truc Lam Zen Monastery, and enjoyed specialty coffee in the misty mornings. Feel free to clone this trip to your own account and customize it for your travel buddies!',
+                    'likes_count' => 5,
+                    'comments_count' => 2,
+                ]
+            );
+
+            // Add demo comments if comments table exists
+            if (Schema::hasTable('comments')) {
+                Comment::firstOrCreate(
+                    ['post_id' => $post->id, 'content' => 'Such a well-structured plan! How was the lake view at Terracotta?'],
+                    ['user_id' => $demoUser->id]
+                );
+
+                if (isset($providerUser)) {
+                    Comment::firstOrCreate(
+                        ['post_id' => $post->id, 'content' => 'Great itinerary! Let us know if you need any extra shuttle services.'],
+                        ['user_id' => $providerUser->id]
+                    );
+                }
+            }
+
+            // Seed second community post
+            $communityUser = User::where('email', 'admin@wanderly.test')->first() ?? $demoUser;
+            Post::updateOrCreate(
+                ['title' => 'Top 5 Hidden Cafes in Da Lat for Remote Work & Chill'],
+                [
+                    'user_id' => $communityUser->id,
+                    'trip_id' => null,
+                    'content' => 'Da Lat is famous for its chill coffee shops nestled in pine forests. Here are my favorite 5 spots with strong wifi, quiet spaces, and stunning valley views: 1. Cheo Veooo, 2. Thong Oi, 3. In the Forest, 4. Bo Ho Cafe, 5. Tieng To Dong.',
+                    'likes_count' => 12,
+                    'comments_count' => 4,
+                ]
+            );
+        }
+
+        // Seed In-App Notifications
+        if (Schema::hasTable('notifications')) {
+            Notification::firstOrCreate(
+                [
+                    'user_id' => $demoUser->id,
+                    'title' => 'New Proposal Received',
+                ],
+                [
+                    'type' => 'proposal',
+                    'message' => 'Da Lat Travel Services submitted a competitive proposal for your travel request.',
+                    'action_url' => url('/trips/'.$trip->id.'/marketplace'),
+                    'read_at' => null,
+                ]
+            );
+
+            Notification::firstOrCreate(
+                [
+                    'user_id' => $demoUser->id,
+                    'title' => 'Budget Alert',
+                ],
+                [
+                    'type' => 'budget',
+                    'message' => 'Your trip "4 Days in Da Lat Pine Paradise" is currently within 65% of allocated budget.',
+                    'action_url' => url('/trips/'.$trip->id),
+                    'read_at' => now()->subHours(2),
+                ]
+            );
+
+            Notification::firstOrCreate(
+                [
+                    'user_id' => $demoUser->id,
+                    'title' => 'Welcome to Wanderly Community!',
+                ],
+                [
+                    'type' => 'system',
+                    'message' => 'Explore public itineraries and share your travel experiences on the Community Feed.',
+                    'action_url' => url('/social'),
+                    'read_at' => null,
+                ]
+            );
         }
     }
 }

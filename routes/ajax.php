@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Social\NotificationController;
+use App\Http\Controllers\Social\SocialFeedController;
 use App\Http\Controllers\Trip\ActivityController;
 use App\Http\Controllers\Trip\BookingController;
 use App\Http\Controllers\Trip\ChecklistController;
@@ -57,4 +59,20 @@ Route::middleware('auth')->group(function () {
         ->name('marketplace.proposals.accept-bundle');
     Route::post('/marketplace/items/{item}/accept-item', [BookingController::class, 'acceptItem'])
         ->name('marketplace.items.accept-item');
+
+    // Notification AJAX routes (D4-03 M15)
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
+    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markRead'])
+        ->name('notifications.mark-read');
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead'])
+        ->name('notifications.mark-all-read');
+
+    // Social Feed AJAX routes (D4-02 M13)
+    Route::post('/social/posts/{post}/like', [SocialFeedController::class, 'toggleLike'])
+        ->name('social.posts.like');
+    Route::post('/social/posts/{post}/comments', [SocialFeedController::class, 'addComment'])
+        ->name('social.posts.comments.store');
+    Route::post('/social/posts/{post}/save', [SocialFeedController::class, 'toggleSave'])
+        ->name('social.posts.save');
 });
