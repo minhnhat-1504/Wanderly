@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Chat\ChatController;
+use App\Http\Controllers\Provider\ProviderDashboardController;
 use App\Http\Controllers\Social\NotificationController;
 use App\Http\Controllers\Social\SocialFeedController;
 use App\Http\Controllers\Trip\ActivityController;
@@ -102,4 +104,24 @@ Route::middleware('auth')->group(function () {
         ->name('trips.match-engine.suggest');
     Route::post('/trips/{trip}/match-engine/apply', [MatchEngineController::class, 'apply'])
         ->name('trips.match-engine.apply');
+
+    // Chat AJAX routes (Sprint 3 - D3-03, D3-05)
+    Route::get('/trips/{trip}/messages', [ChatController::class, 'tripMessages'])
+        ->name('trips.messages');
+    Route::post('/trips/{trip}/messages', [ChatController::class, 'sendTripMessage'])
+        ->name('trips.messages.store');
+    Route::get('/trips/{trip}/channels', [ChatController::class, 'tripChannels'])
+        ->name('trips.channels');
+    Route::get('/bookings/{booking}/messages', [ChatController::class, 'bookingMessages'])
+        ->name('bookings.messages');
+    Route::post('/bookings/{booking}/messages', [ChatController::class, 'sendBookingMessage'])
+        ->name('bookings.messages.store');
+    Route::get('/messages/unread-count', [ChatController::class, 'unreadCount'])
+        ->name('messages.unread-count');
+
+    // Provider Calendar AJAX routes (Sprint 3 - D3-04)
+    Route::post('/provider/calendar/block', [ProviderDashboardController::class, 'blockDate'])
+        ->name('provider.calendar.block');
+    Route::post('/provider/calendar/unblock', [ProviderDashboardController::class, 'unblockDate'])
+        ->name('provider.calendar.unblock');
 });

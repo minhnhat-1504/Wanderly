@@ -67,6 +67,20 @@
                             </a>
 
                             @auth
+                                @if(auth()->user()->role === 'provider')
+                                <a href="{{ route('provider.dashboard') }}"
+                                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium {{ request()->is('provider*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
+                                    <span>🏢</span>
+                                    {{ __('Partner Portal') }}
+                                </a>
+                                @elseif(auth()->user()->role === 'traveler')
+                                <a href="{{ route('provider.register') }}"
+                                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium {{ request()->is('provider*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
+                                    <span>🤝</span>
+                                    {{ __('Become Partner') }}
+                                </a>
+                                @endif
+
                                 @if(auth()->user()->role === 'admin')
                                 <a href="{{ route('admin.destinations.index') }}"
                                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium {{ request()->is('admin*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
@@ -206,6 +220,20 @@
                     </a>
 
                     @auth
+                        @if(auth()->user()->role === 'provider')
+                        <a href="{{ route('provider.dashboard') }}"
+                           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->is('provider*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
+                            <span>🏢</span>
+                            {{ __('Partner Portal') }}
+                        </a>
+                        @elseif(auth()->user()->role === 'traveler')
+                        <a href="{{ route('provider.register') }}"
+                           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->is('provider*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
+                            <span>🤝</span>
+                            {{ __('Become Partner') }}
+                        </a>
+                        @endif
+
                         @if(auth()->user()->role === 'admin')
                         <a href="{{ route('admin.destinations.index') }}"
                            class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->is('admin*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
