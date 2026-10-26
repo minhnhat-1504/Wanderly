@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDestinationController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Social\SocialFeedController;
 use App\Http\Controllers\Trip\ActivityController;
 use App\Http\Controllers\Trip\BookingController;
 use App\Http\Controllers\Trip\BudgetController;
+use App\Http\Controllers\Trip\PdfExportController;
 use App\Http\Controllers\Trip\ProposalController;
 use App\Http\Controllers\Trip\PublicShareController;
 use App\Http\Controllers\Trip\RoomBookingController;
@@ -66,7 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::match(['put', 'patch'], '/trips/{trip}/rooms/{room}', [RoomBookingController::class, 'update']);
     Route::delete('/trips/{trip}/rooms/{room}', [RoomBookingController::class, 'destroy']);
 
-    // Public Share Management (D4-03)
+    // Public Share Management (D4-03 Sprint 2)
     Route::post('/trips/{trip}/share/toggle', [PublicShareController::class, 'toggleShare'])->name('trips.share.toggle');
     Route::post('/trips/{trip}/share/revoke', [PublicShareController::class, 'revoke'])->name('trips.share.revoke');
     Route::post('/trips/{trip}/share/budget', [PublicShareController::class, 'toggleBudget'])->name('trips.share.budget');
@@ -85,6 +88,35 @@ Route::middleware('auth')->group(function () {
     Route::post('/marketplace/items/{item}/accept-item', [BookingController::class, 'acceptItem'])->name('marketplace.items.accept-item');
     Route::get('/trips/{trip}/marketplace/bookings', [BookingController::class, 'index'])->name('trips.marketplace.bookings');
     Route::get('/marketplace/bookings/{booking}', [BookingController::class, 'show'])->name('marketplace.bookings.show');
+
+    // ─── PDF Export (D4-04 M7) ─────────────────────────────────────────────────
+    Route::get('/trips/{trip}/export-pdf', [PdfExportController::class, 'export'])->name('trips.export-pdf');
+
+    // ─── Social Feed (D4-02 M13) ──────────────────────────────────────────────
+    Route::get('/social', [SocialFeedController::class, 'index'])->name('social.feed');
+    Route::post('/social/posts', [SocialFeedController::class, 'store'])->name('social.posts.store');
+    Route::delete('/social/posts/{post}', [SocialFeedController::class, 'destroy'])->name('social.posts.destroy');
+    Route::post('/social/posts/{post}/clone-trip', [SocialFeedController::class, 'cloneTrip'])->name('social.posts.clone-trip');
+
+    // ─── Admin Destination Management (D4-05 M16) ─────────────────────────────
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/destinations', [AdminDestinationController::class, 'index'])->name('destinations.index');
+        Route::get('/destinations/create', [AdminDestinationController::class, 'createDestination'])->name('destinations.create');
+        Route::post('/destinations', [AdminDestinationController::class, 'storeDestination'])->name('destinations.store');
+        Route::get('/destinations/{destination}/edit', [AdminDestinationController::class, 'editDestination'])->name('destinations.edit');
+        Route::put('/destinations/{destination}', [AdminDestinationController::class, 'updateDestination'])->name('destinations.update');
+        Route::delete('/destinations/{destination}', [AdminDestinationController::class, 'destroyDestination'])->name('destinations.destroy');
+
+        Route::get('/destinations/{destination}/zones', [AdminDestinationController::class, 'zones'])->name('destinations.zones');
+        Route::post('/destinations/{destination}/zones', [AdminDestinationController::class, 'storeZone'])->name('destinations.zones.store');
+        Route::put('/zones/{zone}', [AdminDestinationController::class, 'updateZone'])->name('zones.update');
+        Route::delete('/zones/{zone}', [AdminDestinationController::class, 'destroyZone'])->name('zones.destroy');
+
+        Route::get('/zones/{zone}/pois', [AdminDestinationController::class, 'pois'])->name('zones.pois');
+        Route::post('/zones/{zone}/pois', [AdminDestinationController::class, 'storePoi'])->name('zones.pois.store');
+        Route::put('/pois/{poi}', [AdminDestinationController::class, 'updatePoi'])->name('pois.update');
+        Route::delete('/pois/{poi}', [AdminDestinationController::class, 'destroyPoi'])->name('pois.destroy');
+    });
 });
 
 // Read-only Public Share (M7)

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -62,5 +63,25 @@ class User extends Authenticatable
     public function provider(): HasOne
     {
         return $this->hasOne(Provider::class);
+    }
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function inAppNotifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function savedPosts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'post_saves')->withTimestamps();
     }
 }

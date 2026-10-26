@@ -1,0 +1,211 @@
+@extends('layouts.app')
+
+@section('title', __('Community Feed'))
+@section('description', __('Explore travel stories, tips, and itineraries shared by the Wanderly community.'))
+
+@push('styles')
+<style>
+    .feed-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .feed-card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.10); }
+    .like-btn.liked svg { fill: #ef4444; stroke: #ef4444; }
+    .save-btn.saved svg { fill: #f59e0b; stroke: #f59e0b; }
+    .trip-card-badge { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .post-avatar { background: linear-gradient(135deg, #4ade80, #06b6d4); }
+</style>
+@endpush
+
+@section('content')
+<div class="max-w-4xl mx-auto">
+
+    {{-- Header --}}
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">🌍 {{ __('Community Feed') }}</h1>
+            <p class="text-gray-500 mt-1">{{ __('Discover and share travel stories with fellow wanderers.') }}</p>
+        </div>
+        <button type="button" onclick="document.getElementById('create-post-modal').classList.remove('hidden')"
+                class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors shadow-lg shadow-primary/25"
+                id="btn-create-post">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+            {{ __('Share a Story') }}
+        </button>
+    </div>
+
+    {{-- Tabs --}}
+    <div class="flex gap-1 mb-6 bg-gray-100 p-1 rounded-xl w-fit">
+        <a href="{{ route('social.feed', ['tab' => 'feed']) }}"
+           class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ $tab === 'feed' ? 'bg-white text-gray-900 shadow' : 'text-gray-500 hover:text-gray-700' }}"
+           id="tab-feed">
+            🌐 {{ __('All Posts') }}
+        </a>
+        <a href="{{ route('social.feed', ['tab' => 'saved']) }}"
+           class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ $tab === 'saved' ? 'bg-white text-gray-900 shadow' : 'text-gray-500 hover:text-gray-700' }}"
+           id="tab-saved">
+            🔖 {{ __('Saved') }}
+        </a>
+    </div>
+
+    @if(session('success'))
+        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm font-medium">
+            ✅ {{ session('success') }}
+        </div>
+    @endif
+
+    {{-- Feed --}}
+    <div class="space-y-6" id="feed-list">
+        @forelse($posts as $post)
+            @include('social.post-card', ['post' => $post])
+        @empty
+            <div class="text-center py-20 text-gray-400">
+                <div class="text-6xl mb-4">✈️</div>
+                <p class="text-lg font-medium text-gray-500">{{ __('No posts yet. Be the first to share!') }}</p>
+            </div>
+        @endforelse
+    </div>
+
+    {{-- Pagination --}}
+    @if($posts->hasPages())
+        <div class="mt-8">{{ $posts->links() }}</div>
+    @endif
+</div>
+
+{{-- Create Post Modal --}}
+<div id="create-post-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="document.getElementById('create-post-modal').classList.add('hidden')"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h2 class="text-lg font-semibold text-gray-900">✍️ {{ __('Share Your Story') }}</h2>
+            <button type="button" onclick="document.getElementById('create-post-modal').classList.add('hidden')" class="p-2 rounded-xl hover:bg-gray-100 transition-colors">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form method="POST" action="{{ route('social.posts.store') }}" class="p-6 space-y-4">
+            @csrf
+            <div>
+                <label for="post-title" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Post Title') }}</label>
+                <input type="text" name="title" id="post-title" required maxlength="255"
+                       placeholder="{{ __('E.g., Our Amazing Dalat Trip!') }}"
+                       class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm outline-none transition">
+            </div>
+            <div>
+                <label for="post-content" class="block text-sm font-medium text-gray-700 mb-1">{{ __('Your Story') }}</label>
+                <textarea name="content" id="post-content" rows="5" required maxlength="5000"
+                          placeholder="{{ __('Share your experience, tips, and highlights...') }}"
+                          class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm outline-none transition resize-none"></textarea>
+            </div>
+            {{-- Attach Trip --}}
+            @if($myTrips->isNotEmpty())
+            <div>
+                <label for="post-trip" class="block text-sm font-medium text-gray-700 mb-1">📎 {{ __('Attach a Trip Card (optional)') }}</label>
+                <select name="trip_id" id="post-trip"
+                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm outline-none transition bg-white">
+                    <option value="">— {{ __('No trip attached') }} —</option>
+                    @foreach($myTrips as $trip)
+                        <option value="{{ $trip->id }}">{{ $trip->name }} · {{ $trip->destination }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @endif
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="document.getElementById('create-post-modal').classList.add('hidden')"
+                        class="px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+                    {{ __('Cancel') }}
+                </button>
+                <button type="submit"
+                        class="px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors shadow-md shadow-primary/25"
+                        id="btn-submit-post">
+                    🚀 {{ __('Publish Post') }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    // ── Like Toggle ──────────────────────────────────────────────────────
+    document.addEventListener('click', async function (e) {
+        const likeBtn = e.target.closest('.like-btn');
+        if (!likeBtn) return;
+
+        const postId = likeBtn.dataset.postId;
+        const countEl = likeBtn.querySelector('.like-count');
+
+        likeBtn.disabled = true;
+        try {
+            const res = await fetch(`/social/posts/${postId}/like`, {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
+            });
+            const data = await res.json();
+            likeBtn.classList.toggle('liked', data.liked);
+            if (countEl) countEl.textContent = data.likes_count;
+        } catch (err) { console.error(err); }
+        likeBtn.disabled = false;
+    });
+
+    // ── Save Toggle ───────────────────────────────────────────────────────
+    document.addEventListener('click', async function (e) {
+        const saveBtn = e.target.closest('.save-btn');
+        if (!saveBtn) return;
+
+        const postId = saveBtn.dataset.postId;
+        saveBtn.disabled = true;
+        try {
+            const res = await fetch(`/social/posts/${postId}/save`, {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
+            });
+            const data = await res.json();
+            saveBtn.classList.toggle('saved', data.saved);
+            saveBtn.title = data.saved ? '{{ __("Unsave") }}' : '{{ __("Save") }}';
+        } catch (err) { console.error(err); }
+        saveBtn.disabled = false;
+    });
+
+    // ── Comment Submit ────────────────────────────────────────────────────
+    document.addEventListener('submit', async function (e) {
+        const form = e.target.closest('.comment-form');
+        if (!form) return;
+        e.preventDefault();
+
+        const postId = form.dataset.postId;
+        const input = form.querySelector('input[name="content"]');
+        const content = input.value.trim();
+        if (!content) return;
+
+        try {
+            const res = await fetch(`/social/posts/${postId}/comments`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content })
+            });
+            const data = await res.json();
+            if (data.comment) {
+                const commentList = form.closest('.post-card').querySelector('.comment-list');
+                const html = `<div class="flex gap-2 items-start py-2 border-t border-gray-50">
+                    <div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center text-white text-xs font-semibold shrink-0">${data.comment.avatar_initial}</div>
+                    <div class="flex-1 min-w-0">
+                        <span class="text-xs font-semibold text-gray-700">${data.comment.author}</span>
+                        <span class="text-xs text-gray-500 ml-2">${data.comment.created_at}</span>
+                        <p class="text-sm text-gray-600 mt-0.5">${data.comment.content}</p>
+                    </div>
+                </div>`;
+                commentList.insertAdjacentHTML('beforeend', html);
+                const countEl = form.closest('.post-card').querySelector('.comment-count');
+                if (countEl) countEl.textContent = data.comments_count;
+                input.value = '';
+            }
+        } catch (err) { console.error(err); }
+    });
+});
+</script>
+@endpush

@@ -16,6 +16,9 @@ class Poi extends Model
         'address',
         'category',
         'typical_cost',
+        'rating',
+        'avg_cost',
+        'description',
     ];
 
     /**
