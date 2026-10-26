@@ -12,6 +12,7 @@ use App\Http\Controllers\Trip\PublicShareController;
 use App\Http\Controllers\Trip\RoomBookingController;
 use App\Http\Controllers\Trip\TravelRequestController;
 use App\Http\Controllers\Trip\TripController;
+use App\Http\Controllers\Trip\TripMemberController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -56,6 +57,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('/trips/{trip}/duplicate', [TripController::class, 'duplicate'])->name('trips.duplicate');
+    Route::post('/trips/{trip}/members/invite', [TripMemberController::class, 'generateInvite'])->name('trips.members.invite');
+    Route::delete('/trips/{trip}/members/{user}', [TripMemberController::class, 'destroy'])->name('trips.members.destroy');
+    Route::post('/trips/{trip}/preferences', [TripMemberController::class, 'updatePreferences'])->name('trips.preferences.update');
     Route::resource('trips', TripController::class);
     Route::resource('trips.activities', ActivityController::class)->only(['store', 'update', 'destroy']);
 
@@ -121,3 +125,7 @@ Route::middleware('auth')->group(function () {
 
 // Read-only Public Share (M7)
 Route::get('/s/{slug}', [PublicShareController::class, 'show'])->name('trips.share.show');
+
+// Trip Collaboration Invite & Join (M8)
+Route::get('/trips/join/{token}', [TripMemberController::class, 'showJoin'])->name('trips.join');
+Route::post('/trips/join/{token}', [TripMemberController::class, 'processJoin'])->name('trips.join.process')->middleware('auth');
