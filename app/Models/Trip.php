@@ -79,4 +79,14 @@ class Trip extends Model
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function memberPreferences(): HasMany
+    {
+        return $this->hasMany(MemberPreference::class);
+    }
+
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Vote::class);
+    }
 }

@@ -14,7 +14,16 @@ class TripMember extends Model
         'trip_id',
         'user_id',
         'role',
+        'invite_token',
+        'token_expires_at',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'token_expires_at' => 'datetime',
+        ];
+    }
 
     public function trip(): BelongsTo
     {

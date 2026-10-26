@@ -62,6 +62,39 @@
                 @endif
             </button>
 
+            {{-- Members & Group Mood (Sprint 3 - M8) --}}
+            <button
+                type="button"
+                @click="window.dispatchEvent(new CustomEvent('open-member-modal'))"
+                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 transition-colors shadow-sm cursor-pointer"
+                title="{{ __('Trip Members & Group Mood') }}"
+            >
+                <span>👥</span>
+                <span>{{ __('Members & Mood') }}</span>
+            </button>
+
+            {{-- Voting Pool Drawer (Sprint 3 - M8) --}}
+            <button
+                type="button"
+                @click="window.dispatchEvent(new CustomEvent('open-voting-drawer'))"
+                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition-colors shadow-sm cursor-pointer"
+                title="{{ __('Vote on Candidate Spots') }}"
+            >
+                <span>🗳️</span>
+                <span>{{ __('Vote Pool') }}</span>
+            </button>
+
+            {{-- Auto Suggest Match Engine (Sprint 3 - M9) --}}
+            <button
+                type="button"
+                @click="window.dispatchEvent(new CustomEvent('open-match-engine-modal'))"
+                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200 transition-colors shadow-sm cursor-pointer"
+                title="{{ __('Auto Suggest Draft Itinerary') }}"
+            >
+                <span>⚡</span>
+                <span>{{ __('Match Engine') }}</span>
+            </button>
+
             {{-- Reverse Marketplace Button (Sprint 3 - M10) --}}
             <a href="{{ route('trips.marketplace.index', $trip) }}">
                 <x-button variant="outline" type="button" class="text-xs sm:text-sm border-primary/40 text-primary hover:bg-primary/5">
@@ -459,9 +492,19 @@
                 <h2 class="text-lg font-bold text-gray-900">{{ __('Trip Members & Roles') }}</h2>
                 <p class="text-xs text-gray-500">{{ __('Collaborators and their assigned permission levels.') }}</p>
             </div>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
-                {{ $trip->members->count() }} {{ __('Members') }}
-            </span>
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
+                    {{ $trip->members->count() }} {{ __('Members') }}
+                </span>
+                <button
+                    type="button"
+                    @click="window.dispatchEvent(new CustomEvent('open-member-modal'))"
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold bg-primary/10 text-primary hover:bg-primary/20 transition-colors cursor-pointer"
+                >
+                    <span>+</span>
+                    <span>{{ __('Invite / Manage') }}</span>
+                </button>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -513,6 +556,15 @@
 
     {{-- Public Share Modal (D4-03) --}}
     @include('trips.partials.share-modal', ['trip' => $trip])
+
+    {{-- Member & Group Mood Modal (Sprint 3 - M8) --}}
+    @include('trips.partials.member-modal', ['trip' => $trip])
+
+    {{-- Voting Drawer (Sprint 3 - M8) --}}
+    @include('trips.partials.voting-drawer', ['trip' => $trip])
+
+    {{-- Match Engine Modal (Sprint 3 - M9) --}}
+    @include('trips.partials.match-engine-modal', ['trip' => $trip])
 
 </div>
 @endsection

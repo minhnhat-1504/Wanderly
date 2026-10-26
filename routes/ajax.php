@@ -5,9 +5,12 @@ use App\Http\Controllers\Social\SocialFeedController;
 use App\Http\Controllers\Trip\ActivityController;
 use App\Http\Controllers\Trip\BookingController;
 use App\Http\Controllers\Trip\ChecklistController;
+use App\Http\Controllers\Trip\MatchEngineController;
 use App\Http\Controllers\Trip\ProposalController;
 use App\Http\Controllers\Trip\RoomBookingController;
 use App\Http\Controllers\Trip\TravelRequestController;
+use App\Http\Controllers\Trip\TripMemberController;
+use App\Http\Controllers\Trip\VoteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -75,4 +78,28 @@ Route::middleware('auth')->group(function () {
         ->name('social.posts.comments.store');
     Route::post('/social/posts/{post}/save', [SocialFeedController::class, 'toggleSave'])
         ->name('social.posts.save');
+
+    // Collaboration & Group Mood AJAX routes (Sprint 3 - M8)
+    Route::get('/trips/{trip}/mood', [TripMemberController::class, 'groupMood'])
+        ->name('trips.mood');
+    Route::post('/trips/{trip}/members/invite', [TripMemberController::class, 'generateInvite'])
+        ->name('trips.members.invite');
+    Route::delete('/trips/{trip}/members/{user}', [TripMemberController::class, 'destroy'])
+        ->name('trips.members.destroy');
+    Route::post('/trips/{trip}/preferences', [TripMemberController::class, 'updatePreferences'])
+        ->name('trips.preferences.update');
+
+    // Voting Engine AJAX routes (Sprint 3 - M8)
+    Route::get('/trips/{trip}/candidates', [VoteController::class, 'index'])
+        ->name('trips.candidates.index');
+    Route::post('/trips/{trip}/votes', [VoteController::class, 'store'])
+        ->name('trips.votes.store');
+    Route::get('/trips/{trip}/votes/leaderboard', [VoteController::class, 'leaderboard'])
+        ->name('trips.votes.leaderboard');
+
+    // Match Engine AJAX routes (Sprint 3 - M9)
+    Route::get('/trips/{trip}/match-engine/suggest', [MatchEngineController::class, 'suggest'])
+        ->name('trips.match-engine.suggest');
+    Route::post('/trips/{trip}/match-engine/apply', [MatchEngineController::class, 'apply'])
+        ->name('trips.match-engine.apply');
 });

@@ -84,4 +84,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Post::class, 'post_saves')->withTimestamps();
     }
+
+    public function memberPreferences(): HasMany
+    {
+        return $this->hasMany(MemberPreference::class);
+    }
+
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Vote::class);
+    }
 }
