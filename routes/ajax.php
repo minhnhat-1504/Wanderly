@@ -10,6 +10,7 @@ use App\Http\Controllers\Trip\ChecklistController;
 use App\Http\Controllers\Trip\MatchEngineController;
 use App\Http\Controllers\Trip\ProposalController;
 use App\Http\Controllers\Trip\RoomBookingController;
+use App\Http\Controllers\Trip\SplitBillController;
 use App\Http\Controllers\Trip\TravelRequestController;
 use App\Http\Controllers\Trip\TripMemberController;
 use App\Http\Controllers\Trip\VoteController;
@@ -124,4 +125,16 @@ Route::middleware('auth')->group(function () {
         ->name('provider.calendar.block');
     Route::post('/provider/calendar/unblock', [ProviderDashboardController::class, 'unblockDate'])
         ->name('provider.calendar.unblock');
+
+    // Split-Bill & Settlements AJAX routes (Sprint 4 - F2)
+    Route::get('/trips/{trip}/settlements', [SplitBillController::class, 'getSettlementPlan'])
+        ->name('trips.settlements');
+    Route::get('/trips/{trip}/activities/{activity}/split', [SplitBillController::class, 'getActivitySplit'])
+        ->name('trips.activities.split.get');
+    Route::post('/trips/{trip}/activities/{activity}/split', [SplitBillController::class, 'assignParticipants'])
+        ->name('trips.activities.split.assign');
+    Route::post('/trips/{trip}/settlements/vietqr', [SplitBillController::class, 'generateVietQr'])
+        ->name('trips.settlements.vietqr');
+    Route::post('/trips/{trip}/settlements/confirm', [SplitBillController::class, 'confirmPayment'])
+        ->name('trips.settlements.confirm');
 });
