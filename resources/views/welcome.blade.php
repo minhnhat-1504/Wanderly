@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Wanderly') }} — {{ __('Quảng Bá & Khám Phá Du Lịch Việt Nam') }}</title>
-    <meta name="description" content="{{ __('Khám phá vẻ đẹp bất tận của du lịch Việt Nam cùng Wanderly. Lên lịch trình thông minh, chia tiền nhóm tự động và kết nối đối tác bản địa uy tín.') }}">
+    <title>{{ config('app.name', 'Wanderly') }} — {{ __('Discover & Experience Vietnam') }}</title>
+    <meta name="description" content="{{ __('Discover the timeless beauty of Vietnam with Wanderly. Smart itinerary planning, automatic group expense splitting, and trusted local service booking.') }}">
 
     {{-- Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     {{-- Styles & Scripts --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -36,24 +36,24 @@
                     </div>
                     <div>
                         <span class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight block leading-none">Wanderly</span>
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-teal-700 block mt-0.5">Du lịch Việt Nam</span>
+                        <span class="text-[10px] uppercase font-bold tracking-wider text-teal-700 block mt-0.5">{{ __('Explore Vietnam') }}</span>
                     </div>
                 </a>
 
                 {{-- Center: Navigation Links (Desktop) --}}
                 <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
                     <a href="#destinations" class="px-3.5 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-teal-700 hover:bg-teal-50 transition-all">
-                        {{ __('Điểm đến 3 Miền') }}
+                        {{ __('Destinations') }}
                     </a>
                     <a href="#culture" class="px-3.5 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-teal-700 hover:bg-teal-50 transition-all">
-                        {{ __('Ẩm thực & Văn hóa') }}
+                        {{ __('Cuisine & Culture') }}
                     </a>
                     <a href="#features" class="px-3.5 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-teal-700 hover:bg-teal-50 transition-all">
-                        {{ __('Tính năng Nổi bật') }}
+                        {{ __('Features') }}
                     </a>
                     <a href="{{ route('social.feed') }}" class="px-3.5 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:text-teal-700 hover:bg-teal-50 transition-all flex items-center gap-1.5">
                         <span>📸</span>
-                        <span>{{ __('Cộng đồng') }}</span>
+                        <span>{{ __('Community') }}</span>
                     </a>
                 </div>
 
@@ -67,14 +67,14 @@
                                 <rect x="3" y="14" width="7" height="7" rx="1"></rect>
                                 <rect x="14" y="14" width="7" height="7" rx="1"></rect>
                             </svg>
-                            <span>{{ __('Vào Dashboard') }}</span>
+                            <span>{{ __('Dashboard') }}</span>
                         </a>
                     @else
                         <a href="{{ route('login') }}" class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:text-teal-700 hover:bg-gray-100 transition">
-                            {{ __('Đăng nhập') }}
+                            {{ __('Sign In') }}
                         </a>
                         <a href="{{ route('register') }}" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-md shadow-teal-900/20 hover:bg-teal-800 hover:shadow-lg transition-all duration-200">
-                            <span>{{ __('Bắt đầu miễn phí') }}</span>
+                            <span>{{ __('Get Started Free') }}</span>
                             <span class="text-base">&rarr;</span>
                         </a>
                     @endauth
@@ -98,28 +98,28 @@
         {{-- Mobile Menu Dropdown --}}
         <div x-show="mobileMenuOpen" x-transition x-cloak class="md:hidden bg-white border-b border-gray-200 px-4 pt-2 pb-4 space-y-2">
             <a href="#destinations" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:bg-teal-50 hover:text-teal-700">
-                {{ __('Điểm đến 3 Miền') }}
+                {{ __('Destinations') }}
             </a>
             <a href="#culture" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:bg-teal-50 hover:text-teal-700">
-                {{ __('Ẩm thực & Văn hóa') }}
+                {{ __('Cuisine & Culture') }}
             </a>
             <a href="#features" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:bg-teal-50 hover:text-teal-700">
-                {{ __('Tính năng Nổi bật') }}
+                {{ __('Features') }}
             </a>
             <a href="{{ route('social.feed') }}" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:bg-teal-50 hover:text-teal-700">
-                📸 {{ __('Cộng đồng du lịch') }}
+                📸 {{ __('Travel Community') }}
             </a>
             <div class="pt-3 border-t border-gray-100 flex flex-col gap-2">
                 @auth
                     <a href="{{ route('trips.index') }}" class="w-full text-center py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow">
-                        {{ __('Vào Dashboard') }}
+                        {{ __('Dashboard') }}
                     </a>
                 @else
                     <a href="{{ route('login') }}" class="w-full text-center py-2 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm">
-                        {{ __('Đăng nhập') }}
+                        {{ __('Sign In') }}
                     </a>
                     <a href="{{ route('register') }}" class="w-full text-center py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow">
-                        {{ __('Bắt đầu miễn phí') }}
+                        {{ __('Get Started Free') }}
                     </a>
                 @endauth
             </div>
@@ -128,13 +128,13 @@
 
 
     {{-- ================================================================
-         2. HERO SECTION — QUẢNG BÁ DU LỊCH VIỆT NAM
+         2. HERO SECTION — DISCOVER VIETNAM
     ================================================================= --}}
     <section class="relative min-h-[580px] lg:min-h-[680px] flex items-center justify-center overflow-hidden bg-gray-900 text-white">
-        {{-- Background Image with Parallax / Depth --}}
+        {{-- Background Image with Depth --}}
         <img
             src="{{ asset('images/destinations/hero.jpg') }}"
-            alt="Vịnh Hạ Long, Việt Nam"
+            alt="Ha Long Bay, Vietnam"
             class="absolute inset-0 w-full h-full object-cover object-center scale-105 transition-transform duration-1000 ease-out"
         />
 
@@ -147,17 +147,17 @@
             {{-- Flag Badge --}}
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs sm:text-sm font-semibold shadow-xl animate-fade-in">
                 <span>🇻🇳</span>
-                <span class="tracking-wide uppercase font-bold">{{ __('Tự Hào Du Lịch Việt Nam — Vietnam Discovery') }}</span>
+                <span class="tracking-wide uppercase font-bold">{{ __('Discover Vietnam — S-Shaped Wonder') }}</span>
             </div>
 
             {{-- Main Headline --}}
             <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight max-w-4xl mx-auto drop-shadow-md">
-                Khám Phá Vẻ Đẹp Bất Tận Của <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300">Đất Nước Hình Chữ S</span>
+                Discover the Timeless Beauty of <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300">Vietnam</span>
             </h1>
 
             {{-- Subheading --}}
             <p class="text-base sm:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed font-normal drop-shadow">
-                Từ đỉnh đèo Mã Pí Lèng hùng vĩ, phố cổ Hội An rực rỡ đèn lồng đến biển ngọc Phú Quốc hoang sơ. Wanderly đồng hành cùng bạn lên lịch trình thông minh, chia tiền nhóm tự động và kết nối dịch vụ địa phương.
+                From the majestic peaks of Ma Pi Leng and lantern-lit alleyways of Hoi An to the emerald waters of Phu Quoc. Wanderly empowers your journey with smart planning, automated group bill splitting, and authentic local experiences.
             </p>
 
             {{-- CTA Actions --}}
@@ -167,7 +167,7 @@
                         href="{{ route('trips.create') }}"
                         class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-base shadow-xl shadow-teal-900/40 hover:from-emerald-600 hover:to-teal-700 hover:scale-105 active:scale-95 transition-all duration-200"
                     >
-                        <span>🗺️ {{ __('Tạo Chuyến Đi Mới') }}</span>
+                        <span>🗺️ {{ __('Create New Trip') }}</span>
                         <span class="text-lg">&rarr;</span>
                     </a>
                 @else
@@ -175,7 +175,7 @@
                         href="{{ route('register') }}"
                         class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-base shadow-xl shadow-teal-900/40 hover:from-emerald-600 hover:to-teal-700 hover:scale-105 active:scale-95 transition-all duration-200"
                     >
-                        <span>🚀 {{ __('Lên Lịch Trình Miễn Phí') }}</span>
+                        <span>🚀 {{ __('Plan Your Trip Free') }}</span>
                         <span class="text-lg">&rarr;</span>
                     </a>
                 @endauth
@@ -184,7 +184,7 @@
                     href="#destinations"
                     class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white font-semibold text-base transition-all duration-200"
                 >
-                    <span>{{ __('Khám phá 3 miền') }}</span>
+                    <span>{{ __('Explore Regions') }}</span>
                     <span class="text-sm">&darr;</span>
                 </a>
             </div>
@@ -193,19 +193,19 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 pt-10 border-t border-white/15 max-w-4xl mx-auto">
                 <div class="text-center">
                     <div class="text-2xl sm:text-3xl font-extrabold text-white">63</div>
-                    <div class="text-xs sm:text-sm text-gray-300 font-medium mt-0.5">{{ __('Tỉnh Thành Việt Nam') }}</div>
+                    <div class="text-xs sm:text-sm text-gray-300 font-medium mt-0.5">{{ __('Provinces & Cities') }}</div>
                 </div>
                 <div class="text-center">
                     <div class="text-2xl sm:text-3xl font-extrabold text-white">100+</div>
-                    <div class="text-xs sm:text-sm text-gray-300 font-medium mt-0.5">{{ __('Điểm đến Tuyển chọn') }}</div>
+                    <div class="text-xs sm:text-sm text-gray-300 font-medium mt-0.5">{{ __('Curated Destinations') }}</div>
                 </div>
                 <div class="text-center">
                     <div class="text-2xl sm:text-3xl font-extrabold text-white">1-Click</div>
-                    <div class="text-xs sm:text-sm text-gray-300 font-medium mt-0.5">{{ __('Lịch trình Kéo — Thả') }}</div>
+                    <div class="text-xs sm:text-sm text-gray-300 font-medium mt-0.5">{{ __('Drag & Drop Timeline') }}</div>
                 </div>
                 <div class="text-center">
                     <div class="text-2xl sm:text-3xl font-extrabold text-white">VietQR</div>
-                    <div class="text-xs sm:text-sm text-gray-300 font-medium mt-0.5">{{ __('Tất toán Nợ 1 Chạm') }}</div>
+                    <div class="text-xs sm:text-sm text-gray-300 font-medium mt-0.5">{{ __('Instant Debt Settlement') }}</div>
                 </div>
             </div>
         </div>
@@ -213,19 +213,19 @@
 
 
     {{-- ================================================================
-         3. KHÁM PHÁ ĐIỂM ĐẾN 3 MIỀN (INTERACTIVE REGION FILTER)
+         3. EXPLORE ICONIC DESTINATIONS (REGION FILTER)
     ================================================================= --}}
     <section id="destinations" class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12" x-data="{ activeRegion: 'all' }">
         {{-- Section Header --}}
         <div class="text-center max-w-3xl mx-auto space-y-3">
             <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full">
-                {{ __('Hành Trình Di Sản & Kỳ Quan') }}
+                {{ __('Heritage & Natural Wonders') }}
             </span>
             <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-                Điểm Đến Tiêu Biểu Bắc — Trung — Nam
+                {{ __('Iconic Destinations Across 3 Regions') }}
             </h2>
             <p class="text-sm sm:text-base text-gray-500">
-                Mỗi vùng đất một phong vị riêng. Hãy chọn miền đất bạn yêu thích để bắt đầu hành trình khám phá thiên nhiên và văn hóa đặc sắc.
+                {{ __('Each region boasts its own soul and story. Select a region to uncover stunning landscapes, rich traditions, and local secrets.') }}
             </p>
 
             {{-- Region Filter Pills --}}
@@ -236,7 +236,7 @@
                     :class="activeRegion === 'all' ? 'bg-primary text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'"
                     class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all"
                 >
-                    {{ __('Tất cả (6)') }}
+                    {{ __('All Regions (6)') }}
                 </button>
                 <button
                     type="button"
@@ -244,7 +244,7 @@
                     :class="activeRegion === 'north' ? 'bg-primary text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'"
                     class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all"
                 >
-                    {{ __('Miền Bắc') }}
+                    {{ __('Northern Vietnam') }}
                 </button>
                 <button
                     type="button"
@@ -252,7 +252,7 @@
                     :class="activeRegion === 'central' ? 'bg-primary text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'"
                     class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all"
                 >
-                    {{ __('Miền Trung') }}
+                    {{ __('Central Vietnam') }}
                 </button>
                 <button
                     type="button"
@@ -260,7 +260,7 @@
                     :class="activeRegion === 'south' ? 'bg-primary text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'"
                     class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all"
                 >
-                    {{ __('Miền Nam & Tây Nguyên') }}
+                    {{ __('Southern & Highlands') }}
                 </button>
             </div>
         </div>
@@ -268,7 +268,7 @@
         {{-- Destinations Grid --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-            {{-- 1. HÀ GIANG (NORTH) --}}
+            {{-- 1. HA GIANG (NORTH) --}}
             <div
                 x-show="activeRegion === 'all' || activeRegion === 'north'"
                 x-transition
@@ -277,39 +277,39 @@
                 <div class="relative h-60 overflow-hidden">
                     <img
                         src="{{ asset('images/destinations/hagiang.jpg') }}"
-                        alt="Hà Giang"
+                        alt="Ha Giang, Vietnam"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
                     <span class="absolute top-4 left-4 bg-sky-900/80 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-white/20">
-                        {{ __('Miền Bắc') }}
+                        {{ __('Northern Vietnam') }}
                     </span>
                     <div class="absolute bottom-4 left-4 right-4 text-white">
-                        <h3 class="text-xl font-extrabold leading-tight">Hà Giang</h3>
-                        <p class="text-xs text-gray-200 mt-0.5">Cao nguyên đá Đồng Văn & Đèo Mã Pí Lèng</p>
+                        <h3 class="text-xl font-extrabold leading-tight">Ha Giang</h3>
+                        <p class="text-xs text-gray-200 mt-0.5">{{ __('Dong Van Karst Plateau & Ma Pi Leng Pass') }}</p>
                     </div>
                 </div>
 
                 <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                        Nơi địa đầu Tổ quốc với những cung đèo ngoạn mục, hẻm Tu Sản xanh ngọc bích của dòng sông Nho Quế và mùa hoa tam giác mạch rực rỡ khắp sườn đồi.
+                        {{ __("Vietnam's northern frontier renowned for dizzying serpentine passes, the emerald Tu San Canyon along the Nho Que River, and blooming buckwheat flowers across terraced hills.") }}
                     </p>
 
                     <div class="space-y-2 border-t border-gray-100 pt-3 text-xs">
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">🗓️</span>
-                            <span class="font-semibold text-gray-900">{{ __('Mùa đẹp nhất:') }}</span>
-                            <span class="text-gray-500">Tháng 9 – 11 (Lúa chín & Hoa tam giác mạch)</span>
+                            <span class="font-semibold text-gray-900">{{ __('Best Season:') }}</span>
+                            <span class="text-gray-500">{{ __('Sep – Nov (Golden rice terraces & Buckwheat flowers)') }}</span>
                         </div>
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">🍲</span>
-                            <span class="font-semibold text-gray-900">{{ __('Đặc sản:') }}</span>
-                            <span class="text-gray-500">Cháo ấu tẩu, Thắng cố, Bánh tam giác mạch</span>
+                            <span class="font-semibold text-gray-900">{{ __('Specialties:') }}</span>
+                            <span class="text-gray-500">{{ __('Au Tau porridge, Thang Co, Buckwheat cakes') }}</span>
                         </div>
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">⭐</span>
-                            <span class="font-semibold text-gray-900">{{ __('Trải nghiệm:') }}</span>
-                            <span class="text-gray-500">Đi thuyền sông Nho Quế, Chợ phiên Đồng Văn</span>
+                            <span class="font-semibold text-gray-900">{{ __('Highlights:') }}</span>
+                            <span class="text-gray-500">{{ __('Nho Que River boat cruise, Dong Van Sunday market') }}</span>
                         </div>
                     </div>
 
@@ -317,13 +317,13 @@
                         href="{{ auth()->check() ? route('trips.create', ['destination' => 'Hà Giang']) : route('register') }}"
                         class="w-full text-center py-2.5 rounded-xl bg-teal-50 text-teal-800 hover:bg-primary hover:text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
                     >
-                        <span>{{ __('Lên lịch trình Hà Giang') }}</span>
+                        <span>{{ __('Plan Ha Giang Trip') }}</span>
                         <span>&rarr;</span>
                     </a>
                 </div>
             </div>
 
-            {{-- 2. HẠ LONG (NORTH) --}}
+            {{-- 2. HA LONG (NORTH) --}}
             <div
                 x-show="activeRegion === 'all' || activeRegion === 'north'"
                 x-transition
@@ -332,39 +332,39 @@
                 <div class="relative h-60 overflow-hidden">
                     <img
                         src="{{ asset('images/destinations/hero.jpg') }}"
-                        alt="Vịnh Hạ Long"
+                        alt="Ha Long Bay"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
                     <span class="absolute top-4 left-4 bg-sky-900/80 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-white/20">
-                        {{ __('Miền Bắc') }}
+                        {{ __('Northern Vietnam') }}
                     </span>
                     <div class="absolute bottom-4 left-4 right-4 text-white">
-                        <h3 class="text-xl font-extrabold leading-tight">Vịnh Hạ Long</h3>
-                        <p class="text-xs text-gray-200 mt-0.5">Kỳ quan Thiên nhiên Thế giới (Quảng Ninh)</p>
+                        <h3 class="text-xl font-extrabold leading-tight">Ha Long Bay</h3>
+                        <p class="text-xs text-gray-200 mt-0.5">{{ __('UNESCO World Natural Heritage (Quang Ninh)') }}</p>
                     </div>
                 </div>
 
                 <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                        Hàng ngàn đảo đá vôi kỳ vĩ nhấp nhô trên mặt biển xanh ngọc. Trải nghiệm ngủ đêm trên du thuyền sang trọng và chèo kayak qua hang luồn kỳ bí.
+                        {{ __('Thousands of towering limestone karsts rising dramatically from turquoise waters. Sleep under the stars aboard a luxury cruise and kayak through mystical sea caves.') }}
                     </p>
 
                     <div class="space-y-2 border-t border-gray-100 pt-3 text-xs">
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">🗓️</span>
-                            <span class="font-semibold text-gray-900">{{ __('Mùa đẹp nhất:') }}</span>
-                            <span class="text-gray-500">Tháng 4 – 10 (Trời trong, biển êm, nắng vàng)</span>
+                            <span class="font-semibold text-gray-900">{{ __('Best Season:') }}</span>
+                            <span class="text-gray-500">{{ __('Apr – Oct (Clear skies, calm waters & golden sunlight)') }}</span>
                         </div>
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">🍲</span>
-                            <span class="font-semibold text-gray-900">{{ __('Đặc sản:') }}</span>
-                            <span class="text-gray-500">Chả mực giã tay, Sam biển, Bún bề bề</span>
+                            <span class="font-semibold text-gray-900">{{ __('Specialties:') }}</span>
+                            <span class="text-gray-500">{{ __('Hand-pounded squid rolls, Sea mantis shrimp noodles') }}</span>
                         </div>
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">⭐</span>
-                            <span class="font-semibold text-gray-900">{{ __('Trải nghiệm:') }}</span>
-                            <span class="text-gray-500">Du thuyền 5 sao, Hang Sửng Sốt, Đảo Ti Tốp</span>
+                            <span class="font-semibold text-gray-900">{{ __('Highlights:') }}</span>
+                            <span class="text-gray-500">{{ __('5-Star overnight cruise, Sung Sot Cave, Ti Top Island') }}</span>
                         </div>
                     </div>
 
@@ -372,13 +372,13 @@
                         href="{{ auth()->check() ? route('trips.create', ['destination' => 'Hạ Long']) : route('register') }}"
                         class="w-full text-center py-2.5 rounded-xl bg-teal-50 text-teal-800 hover:bg-primary hover:text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
                     >
-                        <span>{{ __('Lên lịch trình Hạ Long') }}</span>
+                        <span>{{ __('Plan Ha Long Trip') }}</span>
                         <span>&rarr;</span>
                     </a>
                 </div>
             </div>
 
-            {{-- 3. HỘI AN (CENTRAL) --}}
+            {{-- 3. HOI AN (CENTRAL) --}}
             <div
                 x-show="activeRegion === 'all' || activeRegion === 'central'"
                 x-transition
@@ -387,39 +387,39 @@
                 <div class="relative h-60 overflow-hidden">
                     <img
                         src="{{ asset('images/destinations/hoian.jpg') }}"
-                        alt="Phố cổ Hội An"
+                        alt="Hoi An Ancient Town"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
                     <span class="absolute top-4 left-4 bg-amber-900/80 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-white/20">
-                        {{ __('Miền Trung') }}
+                        {{ __('Central Vietnam') }}
                     </span>
                     <div class="absolute bottom-4 left-4 right-4 text-white">
-                        <h3 class="text-xl font-extrabold leading-tight">Phố Cổ Hội An</h3>
-                        <p class="text-xs text-gray-200 mt-0.5">Di sản Văn hóa Thế giới UNESCO (Quảng Nam)</p>
+                        <h3 class="text-xl font-extrabold leading-tight">Hoi An Ancient Town</h3>
+                        <p class="text-xs text-gray-200 mt-0.5">{{ __('UNESCO World Cultural Heritage (Quang Nam)') }}</p>
                     </div>
                 </div>
 
                 <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                        Phố cổ rêu phong bên dòng sông Hoài thơ mộng, lung linh muôn sắc đèn lồng mỗi đêm rằm. Thiên đường ẩm thực đường phố níu chân mọi lữ khách phương xa.
+                        {{ __('A magical riverside town steeped in centuries of trade history, glowing warmly under thousands of colorful silk lanterns every evening along the Hoai River.') }}
                     </p>
 
                     <div class="space-y-2 border-t border-gray-100 pt-3 text-xs">
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">🗓️</span>
-                            <span class="font-semibold text-gray-900">{{ __('Mùa đẹp nhất:') }}</span>
-                            <span class="text-gray-500">Tháng 2 – 7 (Thời tiết khô ráo, nắng ấm)</span>
+                            <span class="font-semibold text-gray-900">{{ __('Best Season:') }}</span>
+                            <span class="text-gray-500">{{ __('Feb – Jul (Dry season, warm sunshine & festive nights)') }}</span>
                         </div>
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">🍲</span>
-                            <span class="font-semibold text-gray-900">{{ __('Đặc sản:') }}</span>
-                            <span class="text-gray-500">Cao lầu, Bánh mì Phượng, Cơm gà bà Buội</span>
+                            <span class="font-semibold text-gray-900">{{ __('Specialties:') }}</span>
+                            <span class="text-gray-500">{{ __('Cao Lau noodles, Banh Mi Phuong, Ba Buoi chicken rice') }}</span>
                         </div>
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">⭐</span>
-                            <span class="font-semibold text-gray-900">{{ __('Trải nghiệm:') }}</span>
-                            <span class="text-gray-500">Thả đèn hoa đăng, Đi thuyền thúng Rừng dừa Bảy Mẫu</span>
+                            <span class="font-semibold text-gray-900">{{ __('Highlights:') }}</span>
+                            <span class="text-gray-500">{{ __('Lantern floating ceremony, Bay Mau coconut basket boat') }}</span>
                         </div>
                     </div>
 
@@ -427,13 +427,13 @@
                         href="{{ auth()->check() ? route('trips.create', ['destination' => 'Hội An']) : route('register') }}"
                         class="w-full text-center py-2.5 rounded-xl bg-teal-50 text-teal-800 hover:bg-primary hover:text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
                     >
-                        <span>{{ __('Lên lịch trình Hội An') }}</span>
+                        <span>{{ __('Plan Hoi An Trip') }}</span>
                         <span>&rarr;</span>
                     </a>
                 </div>
             </div>
 
-            {{-- 4. ĐÀ NẴNG (CENTRAL) --}}
+            {{-- 4. DA NANG (CENTRAL) --}}
             <div
                 x-show="activeRegion === 'all' || activeRegion === 'central'"
                 x-transition
@@ -442,39 +442,39 @@
                 <div class="relative h-60 overflow-hidden">
                     <img
                         src="{{ asset('images/destinations/danang.jpg') }}"
-                        alt="Đà Nẵng"
+                        alt="Da Nang City"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
                     <span class="absolute top-4 left-4 bg-amber-900/80 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-white/20">
-                        {{ __('Miền Trung') }}
+                        {{ __('Central Vietnam') }}
                     </span>
                     <div class="absolute bottom-4 left-4 right-4 text-white">
-                        <h3 class="text-xl font-extrabold leading-tight">Đà Nẵng</h3>
-                        <p class="text-xs text-gray-200 mt-0.5">Thành phố của những cây cầu & Bãi biển Mỹ Khê</p>
+                        <h3 class="text-xl font-extrabold leading-tight">Da Nang</h3>
+                        <p class="text-xs text-gray-200 mt-0.5">{{ __('City of Iconic Bridges & My Khe Coastline') }}</p>
                     </div>
                 </div>
 
                 <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                        Thành phố biển hiện đại đáng sống bậc nhất với bãi cát dài mịn màng, Cầu Rồng phun lửa ấn tượng và danh thắng Ngũ Hành Sơn huyền bí.
+                        {{ __("Vietnam's most livable modern coastal metropolis, famous for miles of powdery white sand, the fire-breathing Dragon Bridge, and sacred Marble Mountains.") }}
                     </p>
 
                     <div class="space-y-2 border-t border-gray-100 pt-3 text-xs">
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">🗓️</span>
-                            <span class="font-semibold text-gray-900">{{ __('Mùa đẹp nhất:') }}</span>
-                            <span class="text-gray-500">Tháng 3 – 8 (Mùa tắm biển & Lễ hội pháo hoa)</span>
+                            <span class="font-semibold text-gray-900">{{ __('Best Season:') }}</span>
+                            <span class="text-gray-500">{{ __('Mar – Aug (Sunny beach season & International Fireworks Festival)') }}</span>
                         </div>
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">🍲</span>
-                            <span class="font-semibold text-gray-900">{{ __('Đặc sản:') }}</span>
-                            <span class="text-gray-500">Mì Quảng ếch, Bánh tráng cuốn thịt heo, Hải sản Bé Mặn</span>
+                            <span class="font-semibold text-gray-900">{{ __('Specialties:') }}</span>
+                            <span class="text-gray-500">{{ __('Mi Quang frog noodles, Pork rice paper rolls, Be Man seafood') }}</span>
                         </div>
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">⭐</span>
-                            <span class="font-semibold text-gray-900">{{ __('Trải nghiệm:') }}</span>
-                            <span class="text-gray-500">Bán đảo Sơn Trà ngắm Voọc, Cầu Vàng Bà Nà Hills</span>
+                            <span class="font-semibold text-gray-900">{{ __('Highlights:') }}</span>
+                            <span class="text-gray-500">{{ __('Son Tra Peninsula langurs, Golden Bridge at Ba Na Hills') }}</span>
                         </div>
                     </div>
 
@@ -482,13 +482,13 @@
                         href="{{ auth()->check() ? route('trips.create', ['destination' => 'Đà Nẵng']) : route('register') }}"
                         class="w-full text-center py-2.5 rounded-xl bg-teal-50 text-teal-800 hover:bg-primary hover:text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
                     >
-                        <span>{{ __('Lên lịch trình Đà Nẵng') }}</span>
+                        <span>{{ __('Plan Da Nang Trip') }}</span>
                         <span>&rarr;</span>
                     </a>
                 </div>
             </div>
 
-            {{-- 5. ĐÀ LẠT (SOUTH / HIGHLANDS) --}}
+            {{-- 5. DA LAT (HIGHLANDS) --}}
             <div
                 x-show="activeRegion === 'all' || activeRegion === 'south'"
                 x-transition
@@ -497,39 +497,39 @@
                 <div class="relative h-60 overflow-hidden">
                     <img
                         src="{{ asset('images/destinations/dalat.jpg') }}"
-                        alt="Đà Lạt"
+                        alt="Da Lat City"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
                     <span class="absolute top-4 left-4 bg-emerald-900/80 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-white/20">
-                        {{ __('Tây Nguyên') }}
+                        {{ __('Central Highlands') }}
                     </span>
                     <div class="absolute bottom-4 left-4 right-4 text-white">
-                        <h3 class="text-xl font-extrabold leading-tight">Đà Lạt</h3>
-                        <p class="text-xs text-gray-200 mt-0.5">Xứ sở ngàn hoa sương mờ (Lâm Đồng)</p>
+                        <h3 class="text-xl font-extrabold leading-tight">Da Lat</h3>
+                        <p class="text-xs text-gray-200 mt-0.5">{{ __('City of Eternal Spring & Pine Forests (Lam Dong)') }}</p>
                     </div>
                 </div>
 
                 <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                        Khí hậu cao nguyên se lạnh quanh năm, những đồi thông thơ mộng bên hồ Tuyền Lâm và hàng trăm quán cafe chill ngắm biển mây sớm mai.
+                        {{ __('A refreshing highland sanctuary blessed with cool year-round climate, mist-cloaked pine forests by Tuyen Lam Lake, and charming hillside cloud-hunting cafes.') }}
                     </p>
 
                     <div class="space-y-2 border-t border-gray-100 pt-3 text-xs">
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">🗓️</span>
-                            <span class="font-semibold text-gray-900">{{ __('Mùa đẹp nhất:') }}</span>
-                            <span class="text-gray-500">Tháng 10 – 3 (Mùa hoa mai anh đào, dã quỳ, mây sớm)</span>
+                            <span class="font-semibold text-gray-900">{{ __('Best Season:') }}</span>
+                            <span class="text-gray-500">{{ __('Oct – Mar (Cherry blossoms, wild sunflowers & early mist)') }}</span>
                         </div>
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">🍲</span>
-                            <span class="font-semibold text-gray-900">{{ __('Đặc sản:') }}</span>
-                            <span class="text-gray-500">Lẩu gà lá é, Bánh tráng nướng, Sữa đậu nành nóng</span>
+                            <span class="font-semibold text-gray-900">{{ __('Specialties:') }}</span>
+                            <span class="text-gray-500">{{ __('Chicken leaf hotpot, Grilled rice paper pizza, Warm soy milk') }}</span>
                         </div>
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">⭐</span>
-                            <span class="font-semibold text-gray-900">{{ __('Trải nghiệm:') }}</span>
-                            <span class="text-gray-500">Săn mây Cầu Đất, Chèo SUP hồ Tuyền Lâm, Cắm trại rừng thông</span>
+                            <span class="font-semibold text-gray-900">{{ __('Highlights:') }}</span>
+                            <span class="text-gray-500">{{ __('Cau Dat cloud hunting, SUP paddling on Tuyen Lam Lake') }}</span>
                         </div>
                     </div>
 
@@ -537,13 +537,13 @@
                         href="{{ auth()->check() ? route('trips.create', ['destination' => 'Đà Lạt']) : route('register') }}"
                         class="w-full text-center py-2.5 rounded-xl bg-teal-50 text-teal-800 hover:bg-primary hover:text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
                     >
-                        <span>{{ __('Lên lịch trình Đà Lạt') }}</span>
+                        <span>{{ __('Plan Da Lat Trip') }}</span>
                         <span>&rarr;</span>
                     </a>
                 </div>
             </div>
 
-            {{-- 6. PHÚ QUỐC (SOUTH) --}}
+            {{-- 6. PHU QUOC (SOUTH) --}}
             <div
                 x-show="activeRegion === 'all' || activeRegion === 'south'"
                 x-transition
@@ -552,39 +552,39 @@
                 <div class="relative h-60 overflow-hidden">
                     <img
                         src="{{ asset('images/destinations/phuquoc.jpg') }}"
-                        alt="Đảo Ngọc Phú Quốc"
+                        alt="Phu Quoc Pearl Island"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
                     <span class="absolute top-4 left-4 bg-emerald-900/80 backdrop-blur-md text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-white/20">
-                        {{ __('Miền Nam') }}
+                        {{ __('Southern Vietnam') }}
                     </span>
                     <div class="absolute bottom-4 left-4 right-4 text-white">
-                        <h3 class="text-xl font-extrabold leading-tight">Đảo Ngọc Phú Quốc</h3>
-                        <p class="text-xs text-gray-200 mt-0.5">Thiên đường biển đảo nhiệt đới (Kiên Giang)</p>
+                        <h3 class="text-xl font-extrabold leading-tight">Phu Quoc Pearl Island</h3>
+                        <p class="text-xs text-gray-200 mt-0.5">{{ __('Tropical Island Paradise (Kien Giang)') }}</p>
                     </div>
                 </div>
 
                 <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                        Làn nước trong xanh màu ngọc bích, bãi cát trắng mịn như kem tại Bãi Sao và những buổi chiều hoàng hôn rực lửa trên biển Tây Nam.
+                        {{ __('Crystal-clear turquoise waters, silky soft sand at Bai Sao, and legendary fiery crimson sunsets across the Southwestern sea horizon.') }}
                     </p>
 
                     <div class="space-y-2 border-t border-gray-100 pt-3 text-xs">
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">🗓️</span>
-                            <span class="font-semibold text-gray-900">{{ __('Mùa đẹp nhất:') }}</span>
-                            <span class="text-gray-500">Tháng 11 – 4 (Mùa biển êm, sóng nhẹ, trời xanh ngắt)</span>
+                            <span class="font-semibold text-gray-900">{{ __('Best Season:') }}</span>
+                            <span class="text-gray-500">{{ __('Nov – Apr (Calm waters, gentle breezes & azure skies)') }}</span>
                         </div>
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">🍲</span>
-                            <span class="font-semibold text-gray-900">{{ __('Đặc sản:') }}</span>
-                            <span class="text-gray-500">Gỏi cá trích, Bún quậy Kiến Xây, Ghẹ Hàm Ninh</span>
+                            <span class="font-semibold text-gray-900">{{ __('Specialties:') }}</span>
+                            <span class="text-gray-500">{{ __('Raw herring salad, Kien Xay stirred noodles, Ham Ninh crab') }}</span>
                         </div>
                         <div class="flex items-center gap-2 text-gray-700">
                             <span class="text-sm">⭐</span>
-                            <span class="font-semibold text-gray-900">{{ __('Trải nghiệm:') }}</span>
-                            <span class="text-gray-500">Cáp treo Hòn Thơm vượt biển, Lặn ngắm san hô An Thới</span>
+                            <span class="font-semibold text-gray-900">{{ __('Highlights:') }}</span>
+                            <span class="text-gray-500">{{ __('Hon Thom sea cable car, An Thoi coral snorkeling cruise') }}</span>
                         </div>
                     </div>
 
@@ -592,7 +592,7 @@
                         href="{{ auth()->check() ? route('trips.create', ['destination' => 'Phú Quốc']) : route('register') }}"
                         class="w-full text-center py-2.5 rounded-xl bg-teal-50 text-teal-800 hover:bg-primary hover:text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
                     >
-                        <span>{{ __('Lên lịch trình Phú Quốc') }}</span>
+                        <span>{{ __('Plan Phu Quoc Trip') }}</span>
                         <span>&rarr;</span>
                     </a>
                 </div>
@@ -603,71 +603,71 @@
 
 
     {{-- ================================================================
-         4. TINH HOA ẨM THỰC & VĂN HÓA VIỆT NAM (CULTURE & CUISINE)
+         4. VIETNAMESE CUISINE & CULTURE (3 REGIONS)
     ================================================================= --}}
     <section id="culture" class="py-16 bg-gradient-to-b from-gray-50 via-teal-50/40 to-gray-50 border-y border-teal-100/60">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             <div class="text-center max-w-3xl mx-auto space-y-3">
                 <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-teal-800 bg-white border border-teal-200 px-3 py-1 rounded-full shadow-xs">
-                    {{ __('Bản Sắc Văn Hóa & Ẩm Thực') }}
+                    {{ __('Culture & Gastronomy') }}
                 </span>
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-                    Hương Vị Ba Miền & Trải Nghiệm Bản Địa
+                    {{ __('Flavors of 3 Regions & Authentic Traditions') }}
                 </h2>
                 <p class="text-sm sm:text-base text-gray-500">
-                    Mỗi món ăn là một câu chuyện văn hóa, mỗi lễ hội là một nhịp thở nghìn năm của đất Việt.
+                    {{ __('Every dish tells a cultural heritage tale, every festival echoes the thousand-year spirit of Vietnam.') }}
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-                {{-- Card 1: Miền Bắc --}}
+                {{-- Card 1: Northern --}}
                 <div class="bg-white rounded-3xl p-6 sm:p-8 border border-teal-100/80 shadow-sm space-y-4 hover:shadow-md transition">
                     <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-2xl font-bold">
                         🥢
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900">Ẩm Thực Đất Bắc — Tinh Tế & Thanh Nhã</h3>
+                    <h3 class="text-xl font-bold text-gray-900">{{ __('Northern Flavors — Subtle & Delicate') }}</h3>
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                        Đặc trưng bởi hương vị thanh tao, hài hòa, tôn trọng độ ngọt tự nhiên của nguyên liệu. Thưởng thức bát Phở bò Hà Nội nghi ngút khói sáng mùa đông, Bún chả nướng than hoa thơm lừng và chè sen nhãn lồng thanh mát.
+                        {{ __('Characterized by harmonious, gentle flavors that celebrate the natural purity of fresh ingredients. Savor a steaming bowl of Hanoi Pho on a crisp morning, charcoal-grilled Bun Cha, and fragrant West Lake lotus tea.') }}
                     </p>
                     <div class="flex flex-wrap gap-1.5 pt-2">
-                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Phở Hà Nội</span>
-                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Cốm Làng Vòng</span>
-                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Bún thang</span>
-                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Trà sen Tây Hồ</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Hanoi Pho</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Vong Village Green Rice</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Bun Thang</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">West Lake Lotus Tea</span>
                     </div>
                 </div>
 
-                {{-- Card 2: Miền Trung --}}
+                {{-- Card 2: Central --}}
                 <div class="bg-white rounded-3xl p-6 sm:p-8 border border-teal-100/80 shadow-sm space-y-4 hover:shadow-md transition">
                     <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-800 flex items-center justify-center text-2xl font-bold">
                         🌶️
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900">Hương Vị Xứ Quảng & Cố Đô — Đậm Đà Cay Nồng</h3>
+                    <h3 class="text-xl font-bold text-gray-900">{{ __('Central Flavors — Bold & Vibrant Spices') }}</h3>
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                        Nổi bật với vị cay nồng của ớt, màu sắc rực rỡ và nghệ thuật ẩm thực cung đình cầu kỳ. Một tô Bún bò Huế thơm lừng mùi mắm ruốc, đĩa Mì Quảng ếch vàng ươm hay chén chè bột lọc heo quay độc đáo.
+                        {{ __('Defined by fiery chili heat, deep umami seasoning, and the intricate elegance of royal imperial heritage. Indulge in aromatic Bun Bo Hue, golden turmeric Mi Quang noodles, and delicate savory rice cakes.') }}
                     </p>
                     <div class="flex flex-wrap gap-1.5 pt-2">
-                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Bún bò Huế</span>
-                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Mì Quảng</span>
-                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Bánh bèo chén</span>
-                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Hải sản tươi sống</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Bun Bo Hue</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Mi Quang</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Banh Beo</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Fresh Coastline Seafood</span>
                     </div>
                 </div>
 
-                {{-- Card 3: Miền Nam --}}
+                {{-- Card 3: Southern --}}
                 <div class="bg-white rounded-3xl p-6 sm:p-8 border border-teal-100/80 shadow-sm space-y-4 hover:shadow-md transition">
                     <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-2xl font-bold">
                         🥥
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900">Miền Nam & Sông Nước — Phóng Khoáng & Đậm Tình</h3>
+                    <h3 class="text-xl font-bold text-gray-900">{{ __('Southern Flavors — Generous & Sun-Kissed') }}</h3>
                     <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                        Hương vị ngọt bùi của nước cốt dừa, phong vị tươi ngon hào sảng của miệt vườn cây trái và hải sản biển đảo. Nồi lẩu mắm miền Tây thơm nức mũi, bánh xèo vàng rụm cuốn rau rừng và gỏi cá trích Phú Quốc.
+                        {{ __('Infused with rich coconut cream, sun-ripened tropical orchard fruits, and bountiful seafood from the Mekong Delta. Relish bubbling fermented fish hotpot, giant crispy sizzling pancakes (Banh Xeo), and fresh island herring salad.') }}
                     </p>
                     <div class="flex flex-wrap gap-1.5 pt-2">
-                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Lẩu mắm</span>
-                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Bánh xèo miền Tây</span>
-                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Hủ tiếu Nam Vang</span>
-                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Gỏi cá trích</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Mekong Hotpot</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Crispy Banh Xeo</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Hu Tieu Nam Vang</span>
+                        <span class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium">Island Herring Salad</span>
                     </div>
                 </div>
             </div>
@@ -676,18 +676,18 @@
 
 
     {{-- ================================================================
-         5. TÍNH NĂNG ĐỘT PHÁ CỦA WANDERLY CHO DU LỊCH VIỆT NAM
+         5. SMART WANDERLY CAPABILITIES FOR VIETNAM TRAVEL
     ================================================================= --}}
     <section id="features" class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div class="text-center max-w-3xl mx-auto space-y-3">
             <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-teal-700 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full">
-                {{ __('Hệ Sinh Thái Thông Minh') }}
+                {{ __('Smart Travel Ecosystem') }}
             </span>
             <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-                Tại Sao Chọn Wanderly Để Khám Phá Việt Nam?
+                {{ __('Why Explore Vietnam With Wanderly?') }}
             </h2>
             <p class="text-sm sm:text-base text-gray-500">
-                Giải quyết trọn vẹn những bất tiện khi đi du lịch tự túc hoặc theo nhóm đông người.
+                {{ __('Eliminate travel friction whether you are an intrepid solo explorer or traveling with a group of friends.') }}
             </p>
         </div>
 
@@ -697,9 +697,9 @@
                 <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-800 flex items-center justify-center text-xl">
                     ⏱️
                 </div>
-                <h4 class="font-bold text-gray-900 text-base">Lịch Trình 4 Khung Giờ</h4>
+                <h4 class="font-bold text-gray-900 text-base">{{ __('4-Timeslot Timeline') }}</h4>
                 <p class="text-xs text-gray-600 leading-relaxed">
-                    Kéo-thả hoạt động mượt mà vào Sáng - Trưa - Chiều - Tối. Hệ thống tự động cảnh báo trùng giờ và tính ngân sách tức thì.
+                    {{ __('Drag and drop activities seamlessly across Morning, Afternoon, Evening, and Night. Built-in conflict warnings and instant budget calculation.') }}
                 </p>
             </div>
 
@@ -708,9 +708,9 @@
                 <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl">
                     💸
                 </div>
-                <h4 class="font-bold text-gray-900 text-base">Chia Tiền Nhóm & VietQR</h4>
+                <h4 class="font-bold text-gray-900 text-base">{{ __('Group Split Bill & VietQR') }}</h4>
                 <p class="text-xs text-gray-600 leading-relaxed">
-                    Thuật toán Min-Cash-Flow rút gọn nợ chéo tối đa. Quét mã QR ngân hàng tự động điền số tiền và nội dung, sạch nợ 100%.
+                    {{ __('Min-Cash-Flow algorithm minimizes cross-debts among friends. Scan banking QR codes with auto-filled amounts and memo for 1-tap settlement.') }}
                 </p>
             </div>
 
@@ -719,9 +719,9 @@
                 <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-800 flex items-center justify-center text-xl">
                     🏪
                 </div>
-                <h4 class="font-bold text-gray-900 text-base">Sàn Dịch Vụ Đảo</h4>
+                <h4 class="font-bold text-gray-900 text-base">{{ __('Island & Local Marketplace') }}</h4>
                 <p class="text-xs text-gray-600 leading-relaxed">
-                    Đăng yêu cầu du lịch và nhận báo giá cạnh tranh từ các nhà xe, hướng dẫn viên, khách sạn bản địa uy tín.
+                    {{ __('Post custom travel requests and receive competitive bids from verified local drivers, experienced guides, and authentic homestays.') }}
                 </p>
             </div>
 
@@ -730,9 +730,9 @@
                 <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-xl">
                     📶
                 </div>
-                <h4 class="font-bold text-gray-900 text-base">Hộ Chiếu Ngoại Tuyến</h4>
+                <h4 class="font-bold text-gray-900 text-base">{{ __('Offline Travel Passport') }}</h4>
                 <p class="text-xs text-gray-600 leading-relaxed">
-                    Xem trọn vẹn tóm tắt lịch trình, voucher và số điện thoại khẩn cấp ngay cả khi mất sóng 4G ở vùng đèo núi, hải đảo.
+                    {{ __('Access your full itinerary summary, static voucher QRs, and emergency hotlines even when you lose cell coverage in remote mountain passes or islands.') }}
                 </p>
             </div>
         </div>
@@ -748,29 +748,29 @@
 
             <div class="relative z-10 max-w-3xl space-y-4">
                 <span class="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-white/10 px-3 py-1 rounded-full border border-white/15">
-                    {{ __('Bắt đầu trải nghiệm ngay') }}
+                    {{ __('Get Started Today') }}
                 </span>
                 <h2 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
-                    Bạn Đã Sẵn Sàng Cho Chuyến Hành Trình Tiếp Theo Khắp Việt Nam?
+                    {{ __('Ready for Your Next Great Journey Across Vietnam?') }}
                 </h2>
                 <p class="text-sm sm:text-base text-gray-300 leading-relaxed max-w-2xl">
-                    Tạo chuyến đi đầu tiên chỉ trong 30 giây. Thêm bạn bè cùng bàn bạc, chọn dịch vụ bản địa và lưu giữ những khoảnh khắc đẹp nhất.
+                    {{ __('Create your first itinerary in under 30 seconds. Invite travel buddies, discover authentic local spots, and capture unforgettable memories.') }}
                 </p>
 
                 <div class="pt-4 flex flex-wrap gap-4 items-center">
                     @auth
                         <a href="{{ route('trips.create') }}" class="px-8 py-3.5 rounded-2xl bg-white text-teal-900 font-extrabold text-sm shadow-xl hover:bg-gray-100 hover:scale-105 active:scale-95 transition-all">
-                            🗺️ {{ __('Tạo Chuyến Đi Mới Ngay') }}
+                            🗺️ {{ __('Create New Trip Now') }}
                         </a>
                         <a href="{{ route('trips.index') }}" class="px-6 py-3.5 rounded-2xl bg-white/15 hover:bg-white/25 border border-white/20 text-white font-bold text-sm transition-all">
-                            {{ __('Xem Danh Sách Chuyến Đi') }} &rarr;
+                            {{ __('View All Trips') }} &rarr;
                         </a>
                     @else
                         <a href="{{ route('register') }}" class="px-8 py-3.5 rounded-2xl bg-white text-teal-900 font-extrabold text-sm shadow-xl hover:bg-gray-100 hover:scale-105 active:scale-95 transition-all">
-                            🚀 {{ __('Đăng Ký Miễn Phí') }}
+                            🚀 {{ __('Sign Up Free') }}
                         </a>
                         <a href="{{ route('login') }}" class="px-6 py-3.5 rounded-2xl bg-white/15 hover:bg-white/25 border border-white/20 text-white font-bold text-sm transition-all">
-                            {{ __('Đã có tài khoản? Đăng nhập') }} &rarr;
+                            {{ __('Already have an account? Sign In') }} &rarr;
                         </a>
                     @endauth
                 </div>
@@ -791,22 +791,22 @@
                         <span>Wanderly</span>
                     </div>
                     <p class="text-xs text-gray-400 max-w-md">
-                        Nền tảng lập kế hoạch du lịch thông minh, tôn vinh và lan tỏa vẻ đẹp thiên nhiên, con người cùng tinh hoa văn hóa Việt Nam.
+                        {{ __('Intelligent travel planning platform celebrating the timeless landscapes, hospitable people, and vibrant heritage of Vietnam.') }}
                     </p>
                 </div>
 
                 <div class="flex flex-wrap gap-4 text-xs font-semibold">
-                    <a href="#destinations" class="hover:text-white transition">{{ __('Điểm đến') }}</a>
-                    <a href="#culture" class="hover:text-white transition">{{ __('Văn hóa ẩm thực') }}</a>
-                    <a href="#features" class="hover:text-white transition">{{ __('Tính năng') }}</a>
-                    <a href="{{ route('social.feed') }}" class="hover:text-white transition">{{ __('Cộng đồng') }}</a>
+                    <a href="#destinations" class="hover:text-white transition">{{ __('Destinations') }}</a>
+                    <a href="#culture" class="hover:text-white transition">{{ __('Cuisine & Culture') }}</a>
+                    <a href="#features" class="hover:text-white transition">{{ __('Features') }}</a>
+                    <a href="{{ route('social.feed') }}" class="hover:text-white transition">{{ __('Community') }}</a>
                 </div>
             </div>
 
             <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-gray-500 text-[11px]">
-                <p>&copy; {{ date('Y') }} Wanderly. All rights reserved. Tự hào du lịch Việt Nam 🇻🇳</p>
+                <p>&copy; {{ date('Y') }} Wanderly. {{ __('All rights reserved. Proudly showcasing Vietnam') }} 🇻🇳</p>
                 <p class="flex items-center gap-1">
-                    <span>Phát triển vì tình yêu thiên nhiên & văn hóa đất Việt</span>
+                    <span>{{ __('Crafted with love for nature, culture, and travelers worldwide.') }}</span>
                 </p>
             </div>
         </div>
