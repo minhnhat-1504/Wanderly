@@ -1,7 +1,13 @@
+@props([
+    'trip',
+    'canEdit' => true,
+])
+
 <div
     x-data="{
         open: false,
         loading: false,
+        canEdit: {{ $canEdit ? 'true' : 'false' }},
         items: [],
         progress: { total: 0, completed: 0, percentage: 0 },
         newItemTitle: '',
@@ -36,6 +42,12 @@
         },
 
         async addItem() {
+            if (!this.canEdit) {
+                window.dispatchEvent(new CustomEvent('show-toast', {
+                    detail: { type: 'error', message: '{{ __('Permission denied: You have view-only access and cannot add checklist items.') }}' }
+                }));
+                return;
+            }
             if (!this.newItemTitle.trim()) return;
             const title = this.newItemTitle.trim();
             const category = this.newItemCategory;
@@ -51,6 +63,14 @@
                     },
                     body: JSON.stringify({ title, category })
                 });
+
+                if (res.status === 403) {
+                    window.dispatchEvent(new CustomEvent('show-toast', {
+                        detail: { type: 'error', message: '{{ __('Permission denied: You have view-only access and cannot add checklist items.') }}' }
+                    }));
+                    return;
+                }
+
                 const data = await res.json();
                 if (data.success) {
                     this.items.push(data.item);
@@ -62,6 +82,12 @@
         },
 
         async toggleItem(item) {
+            if (!this.canEdit) {
+                window.dispatchEvent(new CustomEvent('show-toast', {
+                    detail: { type: 'error', message: '{{ __('Permission denied: You have view-only access and cannot toggle checklist items.') }}' }
+                }));
+                return;
+            }
             item.is_completed = !item.is_completed;
             try {
                 const res = await fetch(`/ajax/trips/${this.tripId}/checklist/${item.id}/toggle`, {
@@ -72,6 +98,15 @@
                         'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.getAttribute('content')
                     }
                 });
+
+                if (res.status === 403) {
+                    item.is_completed = !item.is_completed; // Rollback
+                    window.dispatchEvent(new CustomEvent('show-toast', {
+                        detail: { type: 'error', message: '{{ __('Permission denied: You have view-only access and cannot toggle checklist items.') }}' }
+                    }));
+                    return;
+                }
+
                 const data = await res.json();
                 if (data.success) {
                     this.progress = data.progress;
@@ -83,6 +118,12 @@
         },
 
         async deleteItem(item) {
+            if (!this.canEdit) {
+                window.dispatchEvent(new CustomEvent('show-toast', {
+                    detail: { type: 'error', message: '{{ __('Permission denied: You have view-only access and cannot delete checklist items.') }}' }
+                }));
+                return;
+            }
             if (!confirm('Delete this checklist item?')) return;
             const originalItems = [...this.items];
             this.items = this.items.filter(i => i.id !== item.id);
@@ -96,6 +137,15 @@
                         'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]')?.getAttribute('content')
                     }
                 });
+
+                if (res.status === 403) {
+                    this.items = originalItems;
+                    window.dispatchEvent(new CustomEvent('show-toast', {
+                        detail: { type: 'error', message: '{{ __('Permission denied: You have view-only access and cannot delete checklist items.') }}' }
+                    }));
+                    return;
+                }
+
                 const data = await res.json();
                 if (data.success) {
                     this.progress = data.progress;
@@ -107,6 +157,12 @@
         },
 
         async applyTemplate(type) {
+            if (!this.canEdit) {
+                window.dispatchEvent(new CustomEvent('show-toast', {
+                    detail: { type: 'error', message: '{{ __('Permission denied: You have view-only access and cannot apply templates.') }}' }
+                }));
+                return;
+            }
             if (this.items.length > 0 && !confirm('Add preset checklist items to your current trip?')) {
                 return;
             }
@@ -122,6 +178,14 @@
                     },
                     body: JSON.stringify({ template: type })
                 });
+
+                if (res.status === 403) {
+                    window.dispatchEvent(new CustomEvent('show-toast', {
+                        detail: { type: 'error', message: '{{ __('Permission denied: You have view-only access and cannot apply templates.') }}' }
+                    }));
+                    return;
+                }
+
                 const data = await res.json();
                 if (data.success) {
                     this.items = data.items;
@@ -173,24 +237,17 @@
         >
             {{-- Header --}}
             <div class="p-6 bg-gradient-to-r from-teal-700 to-emerald-800 text-white flex items-center justify-between shrink-0 shadow-md">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center text-xl">
-                        🧳
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-bold text-white">{{ __('Trip Checklist') }}</h2>
-                        <p class="text-xs text-teal-100">{{ __('Pack smart & prepare all essentials') }}</p>
-                    </div>
+                <div>
+                    <h2 class="text-base sm:text-lg font-bold text-white">{{ __('Trip Checklist') }}</h2>
+                    <p class="text-xs text-teal-100">{{ __('Pack smart & prepare all essentials') }}</p>
                 </div>
                 <button
                     type="button"
                     @click="open = false"
-                    class="p-2 rounded-xl text-teal-200 hover:text-white hover:bg-white/10 transition-colors"
+                    class="h-8 w-8 rounded-lg text-teal-200 hover:text-white hover:bg-white/10 transition flex items-center justify-center text-lg font-bold select-none"
+                    aria-label="{{ __('Close') }}"
                 >
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
+                    &times;
                 </button>
             </div>
 
@@ -198,14 +255,14 @@
             <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 shrink-0">
                 <div class="flex items-center justify-between text-xs font-semibold text-gray-700 mb-1.5">
                     <span class="flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full" :class="progress.percentage === 100 ? 'bg-emerald-500' : 'bg-primary'"></span>
+                        <span class="w-2 h-2 rounded-full" :class="progress.percentage === 100 ? 'bg-emerald-500' : 'bg-teal-700'"></span>
                         {{ __('Preparation Progress') }}
                     </span>
-                    <span class="text-primary font-bold" x-text="`${progress.completed}/${progress.total} (${progress.percentage}%)`"></span>
+                    <span class="text-teal-700 font-bold" x-text="`${progress.completed}/${progress.total} (${progress.percentage}%)`"></span>
                 </div>
                 <div class="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden shadow-inner">
                     <div
-                        class="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full transition-all duration-500 ease-out"
+                        class="h-full bg-teal-600 rounded-full transition-all duration-500 ease-out"
                         :style="`width: ${progress.percentage}%`"
                     ></div>
                 </div>
@@ -219,27 +276,24 @@
                         type="button"
                         @click="applyTemplate('beach')"
                         :disabled="applyingTemplate"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 transition-colors"
+                        class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 transition-colors"
                     >
-                        <span>🏖️</span>
                         <span>{{ __('Beach') }}</span>
                     </button>
                     <button
                         type="button"
                         @click="applyTemplate('mountain')"
                         :disabled="applyingTemplate"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                        class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
                     >
-                        <span>🏔️</span>
                         <span>{{ __('Highland') }}</span>
                     </button>
                     <button
                         type="button"
                         @click="applyTemplate('city')"
                         :disabled="applyingTemplate"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition-colors"
+                        class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition-colors"
                     >
-                        <span>🏙️</span>
                         <span>{{ __('City') }}</span>
                     </button>
                 </div>
@@ -251,7 +305,7 @@
                     type="button"
                     @click="activeCategory = 'all'"
                     class="px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-colors"
-                    :class="activeCategory === 'all' ? 'bg-primary text-white shadow-sm' : 'bg-gray-200/70 text-gray-700 hover:bg-gray-300'"
+                    :class="activeCategory === 'all' ? 'bg-teal-700 text-white shadow-sm' : 'bg-gray-200/70 text-gray-700 hover:bg-gray-300'"
                 >
                     {{ __('All') }}
                 </button>
@@ -259,41 +313,41 @@
                     type="button"
                     @click="activeCategory = 'clothing'"
                     class="px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-colors"
-                    :class="activeCategory === 'clothing' ? 'bg-primary text-white shadow-sm' : 'bg-gray-200/70 text-gray-700 hover:bg-gray-300'"
+                    :class="activeCategory === 'clothing' ? 'bg-teal-700 text-white shadow-sm' : 'bg-gray-200/70 text-gray-700 hover:bg-gray-300'"
                 >
-                    👕 {{ __('Clothing') }}
+                    {{ __('Clothing') }}
                 </button>
                 <button
                     type="button"
                     @click="activeCategory = 'gear'"
                     class="px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-colors"
-                    :class="activeCategory === 'gear' ? 'bg-primary text-white shadow-sm' : 'bg-gray-200/70 text-gray-700 hover:bg-gray-300'"
+                    :class="activeCategory === 'gear' ? 'bg-teal-700 text-white shadow-sm' : 'bg-gray-200/70 text-gray-700 hover:bg-gray-300'"
                 >
-                    🔦 {{ __('Gear') }}
+                    {{ __('Gear') }}
                 </button>
                 <button
                     type="button"
                     @click="activeCategory = 'electronics'"
                     class="px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-colors"
-                    :class="activeCategory === 'electronics' ? 'bg-primary text-white shadow-sm' : 'bg-gray-200/70 text-gray-700 hover:bg-gray-300'"
+                    :class="activeCategory === 'electronics' ? 'bg-teal-700 text-white shadow-sm' : 'bg-gray-200/70 text-gray-700 hover:bg-gray-300'"
                 >
-                    🔌 {{ __('Electronics') }}
+                    {{ __('Electronics') }}
                 </button>
                 <button
                     type="button"
                     @click="activeCategory = 'health'"
                     class="px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-colors"
-                    :class="activeCategory === 'health' ? 'bg-primary text-white shadow-sm' : 'bg-gray-200/70 text-gray-700 hover:bg-gray-300'"
+                    :class="activeCategory === 'health' ? 'bg-teal-700 text-white shadow-sm' : 'bg-gray-200/70 text-gray-700 hover:bg-gray-300'"
                 >
-                    💊 {{ __('Health') }}
+                    {{ __('Health') }}
                 </button>
                 <button
                     type="button"
                     @click="activeCategory = 'documents'"
                     class="px-2.5 py-1 rounded-full text-xs font-medium shrink-0 transition-colors"
-                    :class="activeCategory === 'documents' ? 'bg-primary text-white shadow-sm' : 'bg-gray-200/70 text-gray-700 hover:bg-gray-300'"
+                    :class="activeCategory === 'documents' ? 'bg-teal-700 text-white shadow-sm' : 'bg-gray-200/70 text-gray-700 hover:bg-gray-300'"
                 >
-                    📄 {{ __('Documents') }}
+                    {{ __('Documents') }}
                 </button>
             </div>
 
@@ -301,19 +355,12 @@
             <div class="flex-1 overflow-y-auto p-6 space-y-2">
                 <template x-if="loading">
                     <div class="py-12 text-center text-gray-400">
-                        <svg class="animate-spin w-6 h-6 mx-auto mb-2 text-primary" viewBox="0 0 24 24" fill="none">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                        </svg>
                         <p class="text-xs">{{ __('Loading checklist items...') }}</p>
                     </div>
                 </template>
 
                 <template x-if="!loading && items.length === 0">
                     <div class="py-12 text-center text-gray-400">
-                        <div class="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-3 text-2xl">
-                            📝
-                        </div>
                         <p class="text-sm font-semibold text-gray-700">{{ __('No items in your checklist') }}</p>
                         <p class="text-xs text-gray-400 mt-1">{{ __('Add custom items below or select a template above.') }}</p>
                     </div>

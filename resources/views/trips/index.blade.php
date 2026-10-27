@@ -12,7 +12,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-gray-200/80">
         <div>
             <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-                {{ __('Welcome back, :name', ['name' => auth()->user()->name ?? __('Traveler')]) }} 👋
+                {{ __('Welcome back, :name', ['name' => auth()->user()->name ?? __('Traveler')]) }}
             </h1>
             <p class="text-sm sm:text-base text-gray-500 mt-1">
                 {{ __('Plan, organize, and explore your upcoming journeys with ease.') }}

@@ -37,14 +37,19 @@
         />
 
         {{-- Password --}}
-        <x-input
-            :label="__('Password')"
-            name="password"
-            type="password"
-            :placeholder="__('At least 8 characters')"
-            autocomplete="new-password"
-            :required="true"
-        />
+        <div>
+            <x-input
+                :label="__('Password')"
+                name="password"
+                type="password"
+                :placeholder="__('Min 8 chars, Aa1@...')"
+                autocomplete="new-password"
+                :required="true"
+            />
+            <p class="text-[11px] text-gray-500 mt-1">
+                {{ __('Must be at least 8 characters and include uppercase, lowercase, numbers, and symbols.') }}
+            </p>
+        </div>
 
         {{-- Confirm Password --}}
         <x-input

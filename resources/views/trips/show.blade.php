@@ -3,266 +3,271 @@
 @section('title', $trip->name)
 @section('description', __('Interactive itinerary and timeline board for :name', ['name' => $trip->name]))
 
+@php
+    $currentUser = auth()->user();
+    $membership = $currentUser ? $trip->members->firstWhere('user_id', $currentUser->id) : null;
+    $isOwner = $currentUser && ($trip->owner_id === $currentUser->id);
+    $userRole = $isOwner ? 'owner' : ($membership ? $membership->role : null);
+    $isViewer = ($userRole === 'viewer') || (!$isOwner && !$membership && $trip->privacy === 'public');
+    $canEdit = $isOwner || in_array($userRole, ['leader', 'editor']);
+@endphp
+
 @section('content')
-<div class="max-w-7xl mx-auto space-y-8" id="timeline-board" data-trip-id="{{ $trip->id }}">
+<div class="w-full max-w-[1280px] mx-auto space-y-6" id="timeline-board" data-trip-id="{{ $trip->id }}" data-can-edit="{{ $canEdit ? 'true' : 'false' }}">
 
     {{-- ================================================================
-         1. BREADCRUMBS & TOP ACTIONS
+         1. BREADCRUMB (Single clean row)
     ================================================================= --}}
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <nav class="flex items-center text-sm font-medium text-gray-500 space-x-2">
-            <a href="{{ route('trips.index') }}" class="hover:text-primary transition-colors duration-200">
-                {{ __('Dashboard') }}
-            </a>
-            <svg class="w-4 h-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-            </svg>
-            <span class="text-gray-900 font-semibold truncate max-w-xs sm:max-w-md">{{ $trip->name }}</span>
-        </nav>
+    <nav class="flex items-center text-xs sm:text-sm font-medium text-gray-500 py-1" aria-label="Breadcrumb">
+        <a href="{{ route('trips.index') }}" class="hover:text-teal-700 transition">
+            {{ __('Dashboard') }}
+        </a>
+        <span class="mx-2 text-gray-300">/</span>
+        <span class="text-gray-900 font-semibold truncate">{{ $trip->name }}</span>
+    </nav>
 
-        <div class="flex items-center gap-2" x-data>
-            {{-- Room Drawer Trigger Button --}}
-            <button
-                type="button"
-                @click="window.dispatchEvent(new CustomEvent('open-room-drawer'))"
-                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition-colors shadow-sm cursor-pointer"
-                title="{{ __('Accommodations Drawer') }}"
-            >
-                <span>🏨</span>
-                <span>{{ __('Stay & Rooms') }}</span>
-                @if(isset($trip->roomBookings) && $trip->roomBookings->count() > 0)
-                    <span class="bg-indigo-600 text-white text-[11px] font-bold px-1.5 py-0.5 rounded-full">
-                        {{ $trip->roomBookings->count() }}
-                    </span>
-                @endif
-            </button>
-
-            {{-- Checklist Drawer Trigger Button (D4-02) --}}
-            <button
-                type="button"
-                @click="window.dispatchEvent(new CustomEvent('open-checklist-drawer'))"
-                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-sm cursor-pointer"
-                title="{{ __('Trip Checklist') }}"
-            >
-                <span>🧳</span>
-                <span>{{ __('Checklist') }}</span>
-            </button>
-
-            {{-- Public Share Modal Trigger Button (D4-03) --}}
-            <button
-                type="button"
-                @click="window.dispatchEvent(new CustomEvent('open-share-modal'))"
-                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 transition-colors shadow-sm cursor-pointer"
-                title="{{ __('Share Trip') }}"
-            >
-                <span>🔗</span>
-                <span>{{ __('Share') }}</span>
-                @if($trip->is_shared)
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></span>
-                @endif
-            </button>
-
-            {{-- Members & Group Mood (Sprint 3 - M8) --}}
-            <button
-                type="button"
-                @click="window.dispatchEvent(new CustomEvent('open-member-modal'))"
-                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 transition-colors shadow-sm cursor-pointer"
-                title="{{ __('Trip Members & Group Mood') }}"
-            >
-                <span>👥</span>
-                <span>{{ __('Members & Mood') }}</span>
-            </button>
-
-            {{-- Voting Pool Drawer (Sprint 3 - M8) --}}
-            <button
-                type="button"
-                @click="window.dispatchEvent(new CustomEvent('open-voting-drawer'))"
-                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition-colors shadow-sm cursor-pointer"
-                title="{{ __('Vote on Candidate Spots') }}"
-            >
-                <span>🗳️</span>
-                <span>{{ __('Vote Pool') }}</span>
-            </button>
-
-            {{-- Auto Suggest Match Engine (Sprint 3 - M9) --}}
-            <button
-                type="button"
-                @click="window.dispatchEvent(new CustomEvent('open-match-engine-modal'))"
-                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200 transition-colors shadow-sm cursor-pointer"
-                title="{{ __('Auto Suggest Draft Itinerary') }}"
-            >
-                <span>⚡</span>
-                <span>{{ __('Match Engine') }}</span>
-            </button>
-
-            {{-- In-App & 1-1 Chat Drawer (Sprint 3 - M12) --}}
-            <button
-                type="button"
-                @click="window.dispatchEvent(new CustomEvent('open-chat-drawer'))"
-                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition-colors shadow-sm cursor-pointer"
-                title="{{ __('Trip & Provider Chat') }}"
-            >
-                <span>💬</span>
-                <span>{{ __('Chat') }}</span>
-            </button>
-
-            {{-- Reverse Marketplace Button (Sprint 3 - M10) --}}
-            <a href="{{ route('trips.marketplace.index', $trip) }}">
-                <x-button variant="outline" type="button" class="text-xs sm:text-sm border-primary/40 text-primary hover:bg-primary/5">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                    <span>{{ __('Marketplace') }}</span>
-                </x-button>
-            </a>
-
-            @can('update', $trip)
-                <a href="{{ route('trips.edit', $trip) }}">
-                    <x-button variant="secondary" type="button" class="text-xs sm:text-sm">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                        <span>{{ __('Edit') }}</span>
-                    </x-button>
-                </a>
-            @endcan
-
-            @auth
-                <form method="POST" action="{{ route('trips.duplicate', $trip) }}" class="inline">
-                    @csrf
-                    <x-button variant="outline" type="submit" class="text-xs sm:text-sm">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                        </svg>
-                        <span>{{ __('Duplicate Trip') }}</span>
-                    </x-button>
-                </form>
-            @endauth
-
-
-            @can('delete', $trip)
-                <form method="POST" action="{{ route('trips.destroy', $trip) }}" onsubmit="return confirm('{{ __('Are you sure you want to delete this trip? This action cannot be undone.') }}');" class="inline">
-                    @csrf
-                    @method('DELETE')
-                    <x-button variant="danger" type="submit" class="text-xs sm:text-sm">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
-                        <span class="hidden sm:inline">{{ __('Delete') }}</span>
-                    </x-button>
-                </form>
-            @endcan
+    {{-- View-Only Banner for Viewers & Non-editors --}}
+    @if(!$canEdit)
+        <div class="bg-amber-50 border border-amber-200 text-amber-900 px-4 py-3 rounded-2xl flex items-center justify-between text-xs sm:text-sm shadow-xs">
+            <div class="flex items-center gap-2.5">
+                <span class="font-bold uppercase tracking-wider text-[11px] bg-amber-200 text-amber-900 px-2 py-0.5 rounded-md">{{ __('View Only') }}</span>
+                <span>{{ __('You are viewing this trip in read-only mode. Only Leaders and Editors can add, edit, or delete activities.') }}</span>
+            </div>
+            <span class="text-[11px] font-semibold text-amber-700 bg-amber-100 px-2.5 py-0.5 rounded-full">{{ ucfirst(__($userRole ?? 'Viewer')) }}</span>
         </div>
-    </div>
+    @endif
 
     {{-- ================================================================
-         2. HERO COVER & HEADER SUMMARY CARD
+         2. TRIP HEADER
     ================================================================= --}}
-    <div class="relative bg-white rounded-3xl shadow-sm border border-gray-200/80 overflow-hidden">
-        {{-- Cover Banner --}}
-        <div class="h-44 sm:h-56 w-full relative bg-gradient-to-r from-teal-800 via-teal-700 to-emerald-700">
-            @if($trip->cover)
-                <img src="{{ asset('storage/' . $trip->cover) }}" alt="{{ $trip->name }}" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent"></div>
-            @else
-                <div class="absolute inset-0 bg-gradient-to-br from-teal-900/90 via-teal-700/80 to-emerald-800/80"></div>
-                <div class="absolute inset-0 flex items-center justify-center opacity-10">
-                    <svg class="w-48 h-48 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M2 12h20"></path>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                    </svg>
-                </div>
-            @endif
+    <div class="bg-white rounded-2xl border border-gray-200/90 shadow-sm p-4 sm:p-6 space-y-4">
+        {{-- Row 1: Title + Badges & Actions --}}
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            {{-- Left: H1 Title & Badges --}}
+            <div class="flex flex-wrap items-center gap-2.5 min-w-0">
+                <h1 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-900 tracking-tight truncate">
+                    {{ $trip->name }}
+                </h1>
 
-            {{-- Floating Badges on Banner --}}
-            <div class="absolute top-4 right-4 flex items-center gap-2">
                 {{-- Privacy Badge --}}
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md
-                    @if($trip->privacy === 'public') bg-emerald-500/80 text-white
-                    @elseif($trip->privacy === 'group') bg-blue-500/80 text-white
-                    @else bg-gray-900/70 text-gray-200 @endif">
-                    @if($trip->privacy === 'public')
-                        🌐 {{ __('Public') }}
-                    @elseif($trip->privacy === 'group')
-                        👥 {{ __('Group') }}
-                    @else
-                        🔒 {{ __('Private') }}
-                    @endif
+                <span class="text-xs font-semibold px-2.5 py-0.5 rounded-md
+                    @if($trip->privacy === 'public') bg-emerald-50 text-emerald-800 border border-emerald-200
+                    @elseif($trip->privacy === 'group') bg-blue-50 text-blue-800 border border-blue-200
+                    @else bg-gray-100 text-gray-700 border border-gray-200 @endif">
+                    {{ ucfirst(__($trip->privacy)) }}
                 </span>
 
                 {{-- Status Badge --}}
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md
-                    @if($trip->status === 'completed') bg-gray-800/80 text-gray-200
-                    @elseif($trip->status === 'ongoing') bg-emerald-500/80 text-white animate-pulse
-                    @else bg-amber-500/80 text-white @endif">
+                <span class="text-xs font-semibold px-2.5 py-0.5 rounded-md
+                    @if($trip->status === 'completed') bg-gray-100 text-gray-700 border border-gray-200
+                    @elseif($trip->status === 'ongoing') bg-teal-50 text-teal-800 border border-teal-200
+                    @else bg-amber-50 text-amber-800 border border-amber-200 @endif">
                     {{ ucfirst(__($trip->status)) }}
                 </span>
             </div>
 
-            {{-- Trip Title & Destination inside hero --}}
-            <div class="absolute bottom-4 left-6 right-6 text-white">
-                <div class="flex items-center gap-2 text-teal-200 text-sm font-medium mb-1 drop-shadow">
-                    <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                    <span>{{ $trip->destination }}</span>
+            {{-- Right: Actions (Share, Edit, Dropdown Menu) --}}
+            <div class="flex items-center gap-2 shrink-0" x-data="{ menuOpen: false }">
+                {{-- Primary Action: Share --}}
+                <button
+                    type="button"
+                    @click="window.dispatchEvent(new CustomEvent('open-share-modal'))"
+                    class="px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-teal-700 text-white hover:bg-teal-800 transition shadow-sm"
+                >
+                    {{ __('Share') }}
+                </button>
+
+                {{-- Secondary Action: Edit --}}
+                @can('update', $trip)
+                    <a
+                        href="{{ route('trips.edit', $trip) }}"
+                        class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 transition"
+                    >
+                        {{ __('Edit') }}
+                    </a>
+                @endcan
+
+                {{-- Dropdown Menu "⋯" --}}
+                <div class="relative" @click.outside="menuOpen = false">
+                    <button
+                        type="button"
+                        @click="menuOpen = !menuOpen"
+                        class="h-9 w-9 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 text-sm font-bold transition flex items-center justify-center tracking-widest select-none"
+                        aria-label="{{ __('More options') }}"
+                        :aria-expanded="menuOpen"
+                    >
+                        ⋯
+                    </button>
+
+                    <div
+                        x-show="menuOpen"
+                        x-cloak
+                        x-transition:enter="transition ease-out duration-150"
+                        x-transition:enter-start="opacity-0 scale-95"
+                        x-transition:enter-end="opacity-100 scale-100"
+                        x-transition:leave="transition ease-in duration-100"
+                        x-transition:leave-start="opacity-100 scale-100"
+                        x-transition:leave-end="opacity-0 scale-95"
+                        class="absolute right-0 mt-2 w-48 rounded-xl bg-white border border-gray-200 shadow-lg py-1.5 z-50 text-xs sm:text-sm"
+                    >
+                        @auth
+                            <form method="POST" action="{{ route('trips.duplicate', $trip) }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-teal-700 transition font-medium">
+                                    {{ __('Duplicate Trip') }}
+                                </button>
+                            </form>
+                        @endauth
+
+                        <a href="{{ route('trips.marketplace.index', $trip) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-teal-700 transition font-medium">
+                            {{ __('Marketplace') }}
+                        </a>
+
+                        @can('delete', $trip)
+                            <div class="border-t border-gray-100 my-1"></div>
+                            <form method="POST" action="{{ route('trips.destroy', $trip) }}" onsubmit="return confirm('{{ __('Are you sure you want to delete this trip? This action cannot be undone.') }}');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition font-medium">
+                                    {{ __('Delete Trip') }}
+                                </button>
+                            </form>
+                        @endcan
+                    </div>
                 </div>
-                <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight drop-shadow-md">
-                    {{ $trip->name }}
-                </h1>
             </div>
         </div>
 
-        {{-- Meta Summary Bar --}}
-        <div class="p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 bg-white">
-            <div class="px-2 pt-2 sm:pt-0">
-                <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">{{ __('Duration') }}</span>
-                <span class="mt-1 text-base sm:text-lg font-bold text-gray-900">
-                    {{ $tripDays }} {{ $tripDays > 1 ? __('Days') : __('Day') }}
+        {{-- Row 2: Location & Compact Cover Banner (max-height 160px, NO globe icon) --}}
+        <div class="space-y-2">
+            <div class="text-xs sm:text-sm font-semibold text-gray-500">
+                <span>{{ __('Location:') }}</span>
+                <span class="text-gray-900 font-bold ml-1">{{ $trip->destination }}</span>
+            </div>
+
+            <div class="h-28 sm:h-36 max-h-[160px] w-full rounded-xl overflow-hidden relative shadow-inner">
+                @if($trip->cover)
+                    <img src="{{ asset('storage/' . $trip->cover) }}" alt="{{ $trip->name }}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
+                @else
+                    <div class="w-full h-full bg-gradient-to-r from-teal-800 via-teal-700 to-emerald-800"></div>
+                @endif
+            </div>
+        </div>
+
+        {{-- Row 3: Stat Strip (4 boxes: 4 cols desktop, 2x2 tablet, 1 col mobile) --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+            {{-- Stat 1: Duration --}}
+            <div class="bg-gray-50/80 rounded-xl p-3 border border-gray-100">
+                <span class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider">{{ __('Duration') }}</span>
+                <span class="mt-1 text-sm sm:text-base font-bold text-gray-900 block">
+                    {{ $tripDays }} {{ $tripDays === 1 ? __('day') : __('days') }}
                 </span>
-                <span class="block text-xs text-gray-500 mt-0.5">
+                <span class="block text-xs text-gray-500 mt-0.5 truncate">
                     {{ $trip->start_date ? $trip->start_date->format('M d') : '' }} – {{ $trip->end_date ? $trip->end_date->format('M d, Y') : '' }}
                 </span>
             </div>
 
-            <div class="px-2 pt-2 sm:pt-0 sm:pl-4">
-                <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">{{ __('Total Budget') }}</span>
-                <span class="mt-1 text-base sm:text-lg font-bold text-teal-700">
-                    {{ number_format($trip->budget, 0, ',', '.') }} VND
+            {{-- Stat 2: Total Budget --}}
+            <div class="bg-gray-50/80 rounded-xl p-3 border border-gray-100">
+                <span class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider">{{ __('Total Budget') }}</span>
+                <span class="mt-1 text-sm sm:text-base font-bold text-teal-700 block">
+                    {{ number_format($trip->budget, 0, ',', '.') }} ₫
                 </span>
                 <span class="block text-xs text-gray-500 mt-0.5">{{ __('Allocated budget') }}</span>
             </div>
 
-            <div class="px-2 pt-2 sm:pt-0 sm:pl-4">
-                <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">{{ __('Trip Status') }}</span>
-                <span class="mt-1 text-base sm:text-lg font-bold text-gray-900 capitalize">
-                    {{ __($trip->status) }}
+            {{-- Stat 3: Status --}}
+            <div class="bg-gray-50/80 rounded-xl p-3 border border-gray-100">
+                <span class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider">{{ __('Trip Status') }}</span>
+                <span class="mt-1 text-sm sm:text-base font-bold text-gray-900 capitalize block">
+                    {{ ucfirst(__($trip->status)) }}
                 </span>
                 <span class="block text-xs text-gray-500 mt-0.5">{{ __('Current Phase') }}</span>
             </div>
 
-            <div class="px-2 pt-2 sm:pt-0 sm:pl-4">
-                <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">{{ __('Owner / Leader') }}</span>
-                <span class="mt-1 text-base sm:text-lg font-bold text-gray-900 truncate block">
+            {{-- Stat 4: Owner / Leader --}}
+            <div class="bg-gray-50/80 rounded-xl p-3 border border-gray-100">
+                <span class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider">{{ __('Owner / Leader') }}</span>
+                <span class="mt-1 text-sm sm:text-base font-bold text-gray-900 truncate block">
                     {{ $trip->owner->name ?? __('Unknown') }}
                 </span>
-                <span class="block text-xs text-gray-500 mt-0.5 truncate">{{ $trip->owner->email ?? '' }}</span>
+                <span class="block text-xs text-gray-500 mt-0.5 truncate block">{{ $trip->owner->email ?? '' }}</span>
             </div>
         </div>
     </div>
 
     {{-- ================================================================
-         3. TIMELINE BOARD & INTERACTIVE 4 SLOTS (M3)
+         3. TAB NAVIGATION (Underline style, brand teal accent, no icons)
+    ================================================================= --}}
+    <nav class="border-b border-gray-200 overflow-x-auto scrollbar-none flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium" aria-label="Trip tabs">
+        <button
+            type="button"
+            class="py-3 px-3.5 sm:px-4 text-teal-700 font-bold border-b-2 border-teal-700 -mb-px shrink-0 transition"
+        >
+            {{ __('Itinerary') }}
+        </button>
+
+        <button
+            type="button"
+            @click="window.dispatchEvent(new CustomEvent('open-room-drawer'))"
+            class="py-3 px-3.5 sm:px-4 text-gray-500 hover:text-teal-700 transition font-medium border-b-2 border-transparent -mb-px shrink-0 flex items-center gap-1.5"
+        >
+            <span>{{ __('Stay & Rooms') }}</span>
+            @if(isset($trip->roomBookings) && $trip->roomBookings->count() > 0)
+                <span class="bg-gray-100 text-gray-700 text-[11px] font-semibold px-2 py-0.5 rounded-full">
+                    {{ $trip->roomBookings->count() }}
+                </span>
+            @endif
+        </button>
+
+        <button
+            type="button"
+            @click="window.dispatchEvent(new CustomEvent('open-checklist-drawer'))"
+            class="py-3 px-3.5 sm:px-4 text-gray-500 hover:text-teal-700 transition font-medium border-b-2 border-transparent -mb-px shrink-0"
+        >
+            {{ __('Checklist') }}
+        </button>
+
+        <button
+            type="button"
+            @click="window.dispatchEvent(new CustomEvent('open-member-modal'))"
+            class="py-3 px-3.5 sm:px-4 text-gray-500 hover:text-teal-700 transition font-medium border-b-2 border-transparent -mb-px shrink-0"
+        >
+            {{ __('Members & Mood') }}
+        </button>
+
+        <button
+            type="button"
+            @click="window.dispatchEvent(new CustomEvent('open-voting-drawer'))"
+            class="py-3 px-3.5 sm:px-4 text-gray-500 hover:text-teal-700 transition font-medium border-b-2 border-transparent -mb-px shrink-0"
+        >
+            {{ __('Vote Pool') }}
+        </button>
+
+        <button
+            type="button"
+            @click="window.dispatchEvent(new CustomEvent('open-match-engine-modal'))"
+            class="py-3 px-3.5 sm:px-4 text-gray-500 hover:text-teal-700 transition font-medium border-b-2 border-transparent -mb-px shrink-0"
+        >
+            {{ __('Match Engine') }}
+        </button>
+
+        <button
+            type="button"
+            @click="window.dispatchEvent(new CustomEvent('open-chat-drawer'))"
+            class="py-3 px-3.5 sm:px-4 text-gray-500 hover:text-teal-700 transition font-medium border-b-2 border-transparent -mb-px shrink-0"
+        >
+            {{ __('Chat') }}
+        </button>
+    </nav>
+
+    {{-- ================================================================
+         4. 2-COLUMN LAYOUT (Main: 8 cols, Sidebar: 4 cols)
     ================================================================= --}}
     @php
         $startDate = $trip->start_date ? \Carbon\Carbon::parse($trip->start_date) : now();
 
-        // Group activities if present
         $activitiesGrouped = [];
         if (isset($trip->activities)) {
             foreach ($trip->activities as $act) {
@@ -289,296 +294,379 @@
                 });
             }
         }"
-        class="space-y-6"
+        class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"
     >
-        {{-- Saving Indicator Badge --}}
+        {{-- Saving indicator --}}
         <div
             x-show="savingOrder"
             x-cloak
             x-transition
-            class="fixed top-20 right-6 z-50 flex items-center gap-2 bg-gray-900/90 text-white text-xs px-3.5 py-2 rounded-xl shadow-lg backdrop-blur-md"
+            class="fixed top-20 right-6 z-50 bg-gray-900/90 text-white text-xs px-3.5 py-2 rounded-xl shadow-lg backdrop-blur-md"
         >
-            <svg class="animate-spin h-3.5 w-3.5 text-teal-400" viewBox="0 0 24 24" fill="none">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-            </svg>
             <span>{{ __('Saving order...') }}</span>
         </div>
 
-        {{-- Day Selector Tabs --}}
-        <div class="flex items-center justify-between gap-4 pb-2 border-b border-gray-200 overflow-x-auto">
-            <div class="flex items-center gap-2">
-                @for($d = 1; $d <= max(1, $tripDays); $d++)
-                    @php
-                        $currentDayDate = (clone $startDate)->addDays($d - 1);
-                    @endphp
+        {{-- ============================================================
+             MAIN COLUMN (8 cols on desktop)
+        ============================================================ --}}
+        <div class="col-span-1 lg:col-span-8 space-y-6 min-w-0">
+
+            {{-- Compact Live Budget Card for Mobile only (<1024px) --}}
+            <div class="block lg:hidden">
+                @include('trips.partials.budget-widget', ['trip' => $trip, 'isMobile' => true])
+            </div>
+
+            {{-- Day Selector Chips --}}
+            <div class="flex items-center justify-between gap-3 overflow-x-auto scrollbar-none pb-1">
+                <div class="flex items-center gap-2 shrink-0">
+                    @for($d = 1; $d <= max(1, $tripDays); $d++)
+                        @php
+                            $currentDayDate = (clone $startDate)->addDays($d - 1);
+                        @endphp
+                        <button
+                            type="button"
+                            @click="activeDay = {{ $d }}; $nextTick(() => window.initTimeline && window.initTimeline())"
+                            class="px-3.5 py-2 rounded-lg text-xs font-semibold transition shrink-0 border"
+                            :class="activeDay === {{ $d }}
+                                ? 'bg-teal-700 text-white border-teal-700 shadow-sm'
+                                : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:border-gray-300'"
+                        >
+                            Day {{ $d }} · {{ $currentDayDate->format('D d/m') }}
+                        </button>
+                    @endfor
+                </div>
+
+                {{-- Add Activity Button (Only for users with edit permission) --}}
+                @if($canEdit)
                     <button
                         type="button"
-                        @click="activeDay = {{ $d }}; $nextTick(() => window.initTimeline && window.initTimeline())"
-                        class="px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-200 shrink-0 flex flex-col items-start border"
-                        :class="activeDay === {{ $d }}
-                            ? 'bg-primary text-white border-primary shadow-lg shadow-primary/25'
-                            : 'bg-white text-gray-700 border-gray-200 hover:border-teal-300 hover:bg-gray-50'"
+                        @click="$dispatch('open-activity-modal', { mode: 'create', day: activeDay, time_slot: 'morning' })"
+                        class="shrink-0 px-3.5 py-2 rounded-lg text-xs font-semibold bg-teal-700 text-white hover:bg-teal-800 transition shadow-sm"
                     >
-                        <span>{{ __('Day :day', ['day' => $d]) }}</span>
-                        <span class="text-[11px] font-normal opacity-80" :class="activeDay === {{ $d }} ? 'text-teal-100' : 'text-gray-400'">
-                            {{ $currentDayDate->format('D, M d') }}
-                        </span>
+                        + {{ __('Add Activity') }}
                     </button>
-                @endfor
-            </div>
-
-            {{-- Quick Add Activity Button --}}
-            <button
-                type="button"
-                @click="$dispatch('open-activity-modal', { mode: 'create', day: activeDay, time_slot: 'morning' })"
-                class="shrink-0 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold bg-primary text-white hover:bg-teal-800 transition-colors shadow-md shadow-primary/20"
-            >
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                <span>{{ __('Add Activity') }}</span>
-            </button>
-        </div>
-
-        {{-- 4 Time Slots Timeline Grid for Active Day --}}
-        @for($d = 1; $d <= max(1, $tripDays); $d++)
-            <div
-                x-show="activeDay === {{ $d }}"
-                x-transition:enter="transition ease-out duration-200"
-                x-transition:enter-start="opacity-0 translate-y-2"
-                x-transition:enter-end="opacity-100 translate-y-0"
-                class="space-y-6"
-            >
-                {{-- Day Banner Info --}}
-                <div class="flex items-center justify-between bg-teal-50/70 border border-teal-100 px-5 py-3 rounded-2xl">
-                    <div class="flex items-center gap-2 text-teal-900 text-sm font-bold">
-                        <span>🗓️</span>
-                        <span>{{ __('Day :day Itinerary', ['day' => $d]) }}</span>
-                        <span class="text-xs font-normal text-teal-700">({{ (clone $startDate)->addDays($d - 1)->format('l, F d, Y') }})</span>
-                    </div>
-
-                    <div class="text-xs text-teal-800 font-semibold flex items-center gap-1.5">
-                        <span class="text-teal-600">{{ __('Day Total:') }}</span>
-                        <span data-day-total-display="{{ $d }}" class="font-bold text-teal-950">0 VND</span>
-                    </div>
-                </div>
-
-                {{-- 4 Time Slots --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-
-                    {{-- Slot 1: MORNING (06:00 – 11:00) --}}
-                    <div class="flex flex-col bg-gray-50/90 rounded-3xl border border-gray-200/80 p-4 space-y-3">
-                        <div class="flex items-center justify-between pb-2 border-b border-gray-200/60">
-                            <div class="flex items-center gap-2">
-                                <span class="text-base">🌅</span>
-                                <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">
-                                    {{ __('Morning') }}
-                                </h3>
-                            </div>
-                            <span class="text-[11px] font-semibold text-gray-400">06:00 – 11:00</span>
-                        </div>
-
-                        {{-- Slot Container for SortableJS --}}
-                        <div
-                            class="timeline-slot-container flex-1 min-h-[140px] space-y-2.5 p-1"
-                            data-day="{{ $d }}"
-                            data-slot="morning"
-                        >
-                            @php $morningActs = $activitiesGrouped[$d]['morning'] ?? []; @endphp
-                            @foreach($morningActs as $act)
-                                <x-activity-card :activity="$act" />
-                            @endforeach
-
-                            <div class="slot-empty-placeholder {{ count($morningActs) > 0 ? 'hidden' : 'flex' }} flex-col items-center justify-center p-6 border-2 border-dashed border-gray-200 rounded-2xl text-center text-gray-400 hover:border-teal-300 hover:text-primary transition-colors cursor-pointer group"
-                                 @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'morning' })">
-                                <span class="text-lg group-hover:scale-110 transition-transform">+</span>
-                                <span class="text-xs font-medium mt-1">{{ __('Drop or click to add') }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Slot 2: MIDDAY (11:00 – 14:00) --}}
-                    <div class="flex flex-col bg-gray-50/90 rounded-3xl border border-gray-200/80 p-4 space-y-3">
-                        <div class="flex items-center justify-between pb-2 border-b border-gray-200/60">
-                            <div class="flex items-center gap-2">
-                                <span class="text-base">☀️</span>
-                                <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">
-                                    {{ __('Midday') }}
-                                </h3>
-                            </div>
-                            <span class="text-[11px] font-semibold text-gray-400">11:00 – 14:00</span>
-                        </div>
-
-                        <div
-                            class="timeline-slot-container flex-1 min-h-[140px] space-y-2.5 p-1"
-                            data-day="{{ $d }}"
-                            data-slot="midday"
-                        >
-                            @php $middayActs = $activitiesGrouped[$d]['midday'] ?? []; @endphp
-                            @foreach($middayActs as $act)
-                                <x-activity-card :activity="$act" />
-                            @endforeach
-
-                            <div class="slot-empty-placeholder {{ count($middayActs) > 0 ? 'hidden' : 'flex' }} flex-col items-center justify-center p-6 border-2 border-dashed border-gray-200 rounded-2xl text-center text-gray-400 hover:border-teal-300 hover:text-primary transition-colors cursor-pointer group"
-                                 @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'midday' })">
-                                <span class="text-lg group-hover:scale-110 transition-transform">+</span>
-                                <span class="text-xs font-medium mt-1">{{ __('Drop or click to add') }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Slot 3: AFTERNOON (14:00 – 18:00) --}}
-                    <div class="flex flex-col bg-gray-50/90 rounded-3xl border border-gray-200/80 p-4 space-y-3">
-                        <div class="flex items-center justify-between pb-2 border-b border-gray-200/60">
-                            <div class="flex items-center gap-2">
-                                <span class="text-base">🌇</span>
-                                <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">
-                                    {{ __('Afternoon') }}
-                                </h3>
-                            </div>
-                            <span class="text-[11px] font-semibold text-gray-400">14:00 – 18:00</span>
-                        </div>
-
-                        <div
-                            class="timeline-slot-container flex-1 min-h-[140px] space-y-2.5 p-1"
-                            data-day="{{ $d }}"
-                            data-slot="afternoon"
-                        >
-                            @php $afternoonActs = $activitiesGrouped[$d]['afternoon'] ?? []; @endphp
-                            @foreach($afternoonActs as $act)
-                                <x-activity-card :activity="$act" />
-                            @endforeach
-
-                            <div class="slot-empty-placeholder {{ count($afternoonActs) > 0 ? 'hidden' : 'flex' }} flex-col items-center justify-center p-6 border-2 border-dashed border-gray-200 rounded-2xl text-center text-gray-400 hover:border-teal-300 hover:text-primary transition-colors cursor-pointer group"
-                                 @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'afternoon' })">
-                                <span class="text-lg group-hover:scale-110 transition-transform">+</span>
-                                <span class="text-xs font-medium mt-1">{{ __('Drop or click to add') }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Slot 4: EVENING (18:00 – 23:00) --}}
-                    <div class="flex flex-col bg-gray-50/90 rounded-3xl border border-gray-200/80 p-4 space-y-3">
-                        <div class="flex items-center justify-between pb-2 border-b border-gray-200/60">
-                            <div class="flex items-center gap-2">
-                                <span class="text-base">🌙</span>
-                                <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">
-                                    {{ __('Evening') }}
-                                </h3>
-                            </div>
-                            <span class="text-[11px] font-semibold text-gray-400">18:00 – 23:00</span>
-                        </div>
-
-                        <div
-                            class="timeline-slot-container flex-1 min-h-[140px] space-y-2.5 p-1"
-                            data-day="{{ $d }}"
-                            data-slot="evening"
-                        >
-                            @php $eveningActs = $activitiesGrouped[$d]['evening'] ?? []; @endphp
-                            @foreach($eveningActs as $act)
-                                <x-activity-card :activity="$act" />
-                            @endforeach
-
-                            <div class="slot-empty-placeholder {{ count($eveningActs) > 0 ? 'hidden' : 'flex' }} flex-col items-center justify-center p-6 border-2 border-dashed border-gray-200 rounded-2xl text-center text-gray-400 hover:border-teal-300 hover:text-primary transition-colors cursor-pointer group"
-                                 @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'evening' })">
-                                <span class="text-lg group-hover:scale-110 transition-transform">+</span>
-                                <span class="text-xs font-medium mt-1">{{ __('Drop or click to add') }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        @endfor
-    </div>
-
-    {{-- ================================================================
-         4. MEMBERS LIST & COLLABORATORS
-    ================================================================= --}}
-    <div class="bg-white rounded-3xl shadow-sm border border-gray-200/80 p-6 space-y-4">
-        <div class="flex items-center justify-between pb-4 border-b border-gray-100">
-            <div>
-                <h2 class="text-lg font-bold text-gray-900">{{ __('Trip Members & Roles') }}</h2>
-                <p class="text-xs text-gray-500">{{ __('Collaborators and their assigned permission levels.') }}</p>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
-                    {{ $trip->members->count() }} {{ __('Members') }}
-                </span>
-                <button
-                    type="button"
-                    @click="window.dispatchEvent(new CustomEvent('open-member-modal'))"
-                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold bg-primary/10 text-primary hover:bg-primary/20 transition-colors cursor-pointer"
-                >
-                    <span>+</span>
-                    <span>{{ __('Invite / Manage') }}</span>
-                </button>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            @foreach($trip->members as $member)
-                <div class="flex items-center justify-between p-3.5 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-gray-50 transition-colors">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <div class="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center shrink-0">
-                            {{ strtoupper(substr($member->user->name ?? 'U', 0, 1)) }}
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-sm font-semibold text-gray-900 truncate">
-                                {{ $member->user->name ?? __('Member') }}
-                                @if($member->user_id === auth()->id())
-                                    <span class="text-xs text-primary font-normal">({{ __('You') }})</span>
-                                @endif
-                            </p>
-                            <p class="text-xs text-gray-500 truncate">{{ $member->user->email ?? '' }}</p>
-                        </div>
-                    </div>
-
-                    <span class="shrink-0 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold
-                        @if($member->role === 'leader') bg-amber-100 text-amber-800 border border-amber-200
-                        @elseif($member->role === 'editor') bg-blue-100 text-blue-800 border border-blue-200
-                        @else bg-gray-200 text-gray-700 @endif">
-                        {{ ucfirst(__($member->role)) }}
+                @else
+                    <span class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-500 border border-gray-200 select-none">
+                        {{ __('View Only') }}
                     </span>
+                @endif
+            </div>
+
+            {{-- Active Day Timeline --}}
+            @for($d = 1; $d <= max(1, $tripDays); $d++)
+                <div
+                    x-show="activeDay === {{ $d }}"
+                    x-transition:enter="transition ease-out duration-150"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    class="space-y-6"
+                >
+                    {{-- Subheader: Day Date + Day Total Cost (No repeated 'Day 1 Itinerary') --}}
+                    <div class="flex items-center justify-between text-xs text-gray-500 py-1.5 border-b border-gray-100">
+                        <span class="font-medium text-gray-700">{{ (clone $startDate)->addDays($d - 1)->format('l, F d, Y') }}</span>
+                        <span>{{ __('Day Total:') }} <strong data-day-total-display="{{ $d }}" class="text-teal-900 font-bold ml-1">0 ₫</strong></span>
+                    </div>
+
+                    {{-- Vertical Timeline: 4 Slots --}}
+                    <div class="space-y-6">
+
+                        {{-- Slot 1: MORNING (06:00 – 11:00) --}}
+                        <div class="flex flex-col md:flex-row md:items-start gap-4">
+                            <div class="w-full md:w-36 shrink-0 flex md:flex-col items-center md:items-start justify-between md:justify-start gap-1 pt-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-teal-600 ring-4 ring-teal-50 shrink-0"></span>
+                                    <span class="text-xs font-bold text-gray-900 uppercase tracking-wider">{{ __('Morning') }}</span>
+                                </div>
+                                <span class="text-xs font-medium text-gray-400 pl-4 md:pl-4">06:00 – 11:00</span>
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <div
+                                    class="timeline-slot-container space-y-3 min-h-[56px]"
+                                    data-day="{{ $d }}"
+                                    data-slot="morning"
+                                >
+                                    @php $morningActs = $activitiesGrouped[$d]['morning'] ?? []; @endphp
+                                    @foreach($morningActs as $act)
+                                        <x-activity-card :activity="$act" :can-edit="$canEdit" />
+                                    @endforeach
+
+                                    @if($canEdit)
+                                        <div
+                                            class="slot-empty-placeholder {{ count($morningActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-12 border border-dashed border-gray-300 rounded-xl text-xs font-medium text-gray-500 hover:border-teal-600 hover:text-teal-700 hover:bg-teal-50/20 transition cursor-pointer"
+                                            @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'morning' })"
+                                        >
+                                            <span>+ {{ __('Add Activity') }}</span>
+                                        </div>
+                                    @else
+                                        <div
+                                            class="slot-empty-placeholder {{ count($morningActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-10 border border-dashed border-gray-200 rounded-xl text-xs text-gray-400 select-none"
+                                        >
+                                            <span>{{ __('No activities scheduled') }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Slot 2: MIDDAY (11:00 – 14:00) --}}
+                        <div class="flex flex-col md:flex-row md:items-start gap-4">
+                            <div class="w-full md:w-36 shrink-0 flex md:flex-col items-center md:items-start justify-between md:justify-start gap-1 pt-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-teal-600 ring-4 ring-teal-50 shrink-0"></span>
+                                    <span class="text-xs font-bold text-gray-900 uppercase tracking-wider">{{ __('Midday') }}</span>
+                                </div>
+                                <span class="text-xs font-medium text-gray-400 pl-4 md:pl-4">11:00 – 14:00</span>
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <div
+                                    class="timeline-slot-container space-y-3 min-h-[56px]"
+                                    data-day="{{ $d }}"
+                                    data-slot="midday"
+                                >
+                                    @php $middayActs = $activitiesGrouped[$d]['midday'] ?? []; @endphp
+                                    @foreach($middayActs as $act)
+                                        <x-activity-card :activity="$act" :can-edit="$canEdit" />
+                                    @endforeach
+
+                                    @if($canEdit)
+                                        <div
+                                            class="slot-empty-placeholder {{ count($middayActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-12 border border-dashed border-gray-300 rounded-xl text-xs font-medium text-gray-500 hover:border-teal-600 hover:text-teal-700 hover:bg-teal-50/20 transition cursor-pointer"
+                                            @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'midday' })"
+                                        >
+                                            <span>+ {{ __('Add Activity') }}</span>
+                                        </div>
+                                    @else
+                                        <div
+                                            class="slot-empty-placeholder {{ count($middayActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-10 border border-dashed border-gray-200 rounded-xl text-xs text-gray-400 select-none"
+                                        >
+                                            <span>{{ __('No activities scheduled') }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Slot 3: AFTERNOON (14:00 – 18:00) --}}
+                        <div class="flex flex-col md:flex-row md:items-start gap-4">
+                            <div class="w-full md:w-36 shrink-0 flex md:flex-col items-center md:items-start justify-between md:justify-start gap-1 pt-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-teal-600 ring-4 ring-teal-50 shrink-0"></span>
+                                    <span class="text-xs font-bold text-gray-900 uppercase tracking-wider">{{ __('Afternoon') }}</span>
+                                </div>
+                                <span class="text-xs font-medium text-gray-400 pl-4 md:pl-4">14:00 – 18:00</span>
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <div
+                                    class="timeline-slot-container space-y-3 min-h-[56px]"
+                                    data-day="{{ $d }}"
+                                    data-slot="afternoon"
+                                >
+                                    @php $afternoonActs = $activitiesGrouped[$d]['afternoon'] ?? []; @endphp
+                                    @foreach($afternoonActs as $act)
+                                        <x-activity-card :activity="$act" :can-edit="$canEdit" />
+                                    @endforeach
+
+                                    @if($canEdit)
+                                        <div
+                                            class="slot-empty-placeholder {{ count($afternoonActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-12 border border-dashed border-gray-300 rounded-xl text-xs font-medium text-gray-500 hover:border-teal-600 hover:text-teal-700 hover:bg-teal-50/20 transition cursor-pointer"
+                                            @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'afternoon' })"
+                                        >
+                                            <span>+ {{ __('Add Activity') }}</span>
+                                        </div>
+                                    @else
+                                        <div
+                                            class="slot-empty-placeholder {{ count($afternoonActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-10 border border-dashed border-gray-200 rounded-xl text-xs text-gray-400 select-none"
+                                        >
+                                            <span>{{ __('No activities scheduled') }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Slot 4: EVENING (18:00 – 23:00) --}}
+                        <div class="flex flex-col md:flex-row md:items-start gap-4">
+                            <div class="w-full md:w-36 shrink-0 flex md:flex-col items-center md:items-start justify-between md:justify-start gap-1 pt-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-teal-600 ring-4 ring-teal-50 shrink-0"></span>
+                                    <span class="text-xs font-bold text-gray-900 uppercase tracking-wider">{{ __('Evening') }}</span>
+                                </div>
+                                <span class="text-xs font-medium text-gray-400 pl-4 md:pl-4">18:00 – 23:00</span>
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <div
+                                    class="timeline-slot-container space-y-3 min-h-[56px]"
+                                    data-day="{{ $d }}"
+                                    data-slot="evening"
+                                >
+                                    @php $eveningActs = $activitiesGrouped[$d]['evening'] ?? []; @endphp
+                                    @foreach($eveningActs as $act)
+                                        <x-activity-card :activity="$act" :can-edit="$canEdit" />
+                                    @endforeach
+
+                                    @if($canEdit)
+                                        <div
+                                            class="slot-empty-placeholder {{ count($eveningActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-12 border border-dashed border-gray-300 rounded-xl text-xs font-medium text-gray-500 hover:border-teal-600 hover:text-teal-700 hover:bg-teal-50/20 transition cursor-pointer"
+                                            @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'evening' })"
+                                        >
+                                            <span>+ {{ __('Add Activity') }}</span>
+                                        </div>
+                                    @else
+                                        <div
+                                            class="slot-empty-placeholder {{ count($eveningActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-10 border border-dashed border-gray-200 rounded-xl text-xs text-gray-400 select-none"
+                                        >
+                                            <span>{{ __('No activities scheduled') }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-            @endforeach
+            @endfor
+        </div>
+
+        {{-- ============================================================
+             SIDEBAR COLUMN (4 cols on desktop, sticky)
+        ============================================================ --}}
+        <div class="col-span-1 lg:col-span-4 space-y-6 min-w-0 lg:sticky lg:top-20">
+
+            {{-- Live Budget Card (Desktop flow) --}}
+            <div class="hidden lg:block">
+                @include('trips.partials.budget-widget', ['trip' => $trip, 'isMobile' => false])
+            </div>
+
+            {{-- Trip Members Card (Replaces huge section at bottom) --}}
+            @include('trips.partials.members-card', ['trip' => $trip])
+
+            {{-- Quick Actions Card --}}
+            <div class="bg-white rounded-2xl border border-gray-200/90 shadow-sm p-4 space-y-3">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">{{ __('Quick Actions') }}</h3>
+
+                <div class="space-y-2">
+                    <a
+                        href="{{ route('trips.marketplace.index', $trip) }}"
+                        class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-teal-700 transition"
+                    >
+                        <span>{{ __('Marketplace') }}</span>
+                        <span class="text-gray-400 font-normal">&rarr;</span>
+                    </a>
+
+                    <button
+                        type="button"
+                        @click="window.dispatchEvent(new CustomEvent('open-chat-drawer'))"
+                        class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-teal-700 transition"
+                    >
+                        <span>{{ __('Trip Chat') }}</span>
+                        <span class="text-gray-400 font-normal">&rarr;</span>
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 
     {{-- ================================================================
-         5. PARTIALS & MODALS INCLUSION (D3-03, D3-04, D3-05)
+         5. MODALS & DRAWERS (Preserved 100% logic and functionality)
     ================================================================= --}}
-    {{-- Activity CRUD Modal --}}
-    @include('trips.partials.activity-modal', ['trip' => $trip, 'tripDays' => $tripDays])
-
-    {{-- Room Drawer --}}
-    @include('trips.partials.room-drawer', ['trip' => $trip])
-
-    {{-- Live Realtime Budget Widget --}}
-    @include('trips.partials.budget-widget', ['trip' => $trip])
-
-    {{-- Budget Override Warning Modal --}}
+    @include('trips.partials.activity-modal', ['trip' => $trip, 'tripDays' => $tripDays, 'canEdit' => $canEdit])
+    @include('trips.partials.room-drawer', ['trip' => $trip, 'canEdit' => $canEdit])
     @include('trips.partials.budget-override-modal')
-
-    {{-- Checklist Drawer (D4-02) --}}
-    @include('trips.partials.checklist-drawer', ['trip' => $trip])
-
-    {{-- Public Share Modal (D4-03) --}}
+    @include('trips.partials.checklist-drawer', ['trip' => $trip, 'canEdit' => $canEdit])
     @include('trips.partials.share-modal', ['trip' => $trip])
-
-    {{-- Member & Group Mood Modal (Sprint 3 - M8) --}}
-    @include('trips.partials.member-modal', ['trip' => $trip])
-
-    {{-- Voting Drawer (Sprint 3 - M8) --}}
+    @include('trips.partials.member-modal', ['trip' => $trip, 'canEdit' => $canEdit])
     @include('trips.partials.voting-drawer', ['trip' => $trip])
-
-    {{-- Match Engine Modal (Sprint 3 - M9) --}}
     @include('trips.partials.match-engine-modal', ['trip' => $trip])
-
-    {{-- Chat Drawer (Sprint 3 - D3-05) --}}
     <x-chat-drawer :trip="$trip" />
+
+    {{-- Global Activity Delete Listener with Permission Check & Notifications --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.addEventListener('delete-activity', async (e) => {
+                const { id, title } = e.detail || {};
+                if (!id) return;
+
+                const timelineBoard = document.getElementById('timeline-board');
+                const canEdit = timelineBoard?.dataset?.canEdit !== 'false';
+
+                if (!canEdit) {
+                    window.dispatchEvent(new CustomEvent('show-toast', {
+                        detail: {
+                            type: 'error',
+                            message: '{{ __('Permission denied: You have view-only access and cannot delete activities.') }}'
+                        }
+                    }));
+                    return;
+                }
+
+                if (!confirm('{{ __('Are you sure you want to delete this activity?') }}' + (title ? ` "${title}"?` : ''))) {
+                    return;
+                }
+
+                const tripId = timelineBoard?.dataset?.tripId;
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+                try {
+                    const res = await fetch(`/ajax/trips/${tripId}/activities/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken || '',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    if (res.status === 403) {
+                        window.dispatchEvent(new CustomEvent('show-toast', {
+                            detail: {
+                                type: 'error',
+                                message: '{{ __('Permission denied: You have view-only access and cannot delete activities.') }}'
+                            }
+                        }));
+                        return;
+                    }
+
+                    if (!res.ok) {
+                        throw new Error('Delete failed');
+                    }
+
+                    window.dispatchEvent(new CustomEvent('show-toast', {
+                        detail: {
+                            type: 'success',
+                            message: '{{ __('Activity removed successfully.') }}'
+                        }
+                    }));
+
+                    const cardEl = document.querySelector(`.timeline-activity-card[data-id="${id}"]`);
+                    if (cardEl) {
+                        const container = cardEl.closest('.timeline-slot-container');
+                        cardEl.remove();
+                        if (container) {
+                            const remaining = container.querySelectorAll('.timeline-activity-card').length;
+                            const emptyEl = container.querySelector('.slot-empty-placeholder');
+                            if (emptyEl) {
+                                emptyEl.style.display = remaining > 0 ? 'none' : 'flex';
+                            }
+                        }
+                    }
+
+                    window.dispatchEvent(new CustomEvent('budget-recalculate'));
+                } catch (err) {
+                    window.dispatchEvent(new CustomEvent('show-toast', {
+                        detail: {
+                            type: 'error',
+                            message: '{{ __('Could not delete activity.') }}'
+                        }
+                    }));
+                }
+            });
+        });
+    </script>
 
 </div>
 @endsection

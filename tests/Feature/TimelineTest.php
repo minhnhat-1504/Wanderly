@@ -52,6 +52,12 @@ class TimelineTest extends TestCase
         ]);
 
         $response->assertStatus(403);
+
+        // Viewer loading trip show page gets view-only mode
+        $pageResponse = $this->actingAs($viewer)->get(route('trips.show', $trip));
+        $pageResponse->assertStatus(200);
+        $pageResponse->assertSee('data-can-edit="false"', false);
+        $pageResponse->assertSee('View Only');
     }
 
     public function test_leader_can_create_activity(): void

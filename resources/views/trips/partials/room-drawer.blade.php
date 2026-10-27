@@ -1,10 +1,12 @@
 @props([
     'trip',
+    'canEdit' => true,
 ])
 
 <div
     x-data="{
         open: false,
+        canEdit: {{ $canEdit ? 'true' : 'false' }},
         showAddForm: false,
         loading: false,
         tripId: {{ $trip->id }},
@@ -50,6 +52,12 @@
             }
         },
         async toggleBudget(room) {
+            if (!this.canEdit) {
+                window.dispatchEvent(new CustomEvent('show-toast', {
+                    detail: { type: 'error', message: '{{ __('Permission denied: You have view-only access and cannot toggle room budget.') }}' }
+                }));
+                return;
+            }
             const previousState = room.is_budget_included;
             room.is_budget_included = !previousState;
 
@@ -66,6 +74,14 @@
                     },
                     body: JSON.stringify({ is_budget_included: room.is_budget_included })
                 });
+
+                if (res.status === 403) {
+                    room.is_budget_included = previousState; // Rollback
+                    window.dispatchEvent(new CustomEvent('show-toast', {
+                        detail: { type: 'error', message: '{{ __('Permission denied: You have view-only access and cannot toggle room budget.') }}' }
+                    }));
+                    return;
+                }
 
                 if (!res.ok) {
                     throw new Error('Toggle failed');
@@ -93,6 +109,12 @@
             }
         },
         async addRoom() {
+            if (!this.canEdit) {
+                window.dispatchEvent(new CustomEvent('show-toast', {
+                    detail: { type: 'error', message: '{{ __('Permission denied: You have view-only access and cannot add room bookings.') }}' }
+                }));
+                return;
+            }
             this.loading = true;
             const csrfToken = document.querySelector('meta[name=csrf-token]')?.getAttribute('content');
 
@@ -107,6 +129,13 @@
                     },
                     body: JSON.stringify(this.form)
                 });
+
+                if (res.status === 403) {
+                    window.dispatchEvent(new CustomEvent('show-toast', {
+                        detail: { type: 'error', message: '{{ __('Permission denied: You have view-only access and cannot add room bookings.') }}' }
+                    }));
+                    return;
+                }
 
                 if (res.ok) {
                     const data = await res.json();
@@ -174,49 +203,44 @@
             class="w-screen max-w-md bg-white shadow-2xl flex flex-col"
         >
             {{-- Header --}}
-            <div class="p-6 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-indigo-50/60 to-purple-50/60">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shadow-md shadow-indigo-600/20">
-                        🏨
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-bold text-gray-900" id="room-drawer-title">
-                            {{ __('Accommodations') }}
-                        </h2>
-                        <p class="text-xs text-gray-500">
-                            {{ __('Manage booked hotels, resorts and stays.') }}
-                        </p>
-                    </div>
+            <div class="p-6 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-teal-50/60 to-emerald-50/60">
+                <div>
+                    <h2 class="text-base sm:text-lg font-bold text-gray-900" id="room-drawer-title">
+                        {{ __('Accommodations') }}
+                    </h2>
+                    <p class="text-xs text-gray-500 mt-0.5">
+                        {{ __('Manage booked hotels, resorts and stays.') }}
+                    </p>
                 </div>
 
                 <button
                     type="button"
                     @click="closeDrawer()"
-                    class="p-2 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-white transition-colors"
+                    class="h-8 w-8 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-white transition flex items-center justify-center text-lg font-bold select-none"
+                    aria-label="{{ __('Close') }}"
                 >
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
+                    &times;
                 </button>
             </div>
 
             {{-- Body Content --}}
             <div class="flex-1 overflow-y-auto p-6 space-y-6">
 
-                {{-- Action: Toggle Add Form --}}
+                {{-- Action: Toggle Add Form (Only for leaders/editors) --}}
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">
                         {{ __('Booked Rooms') }}
                     </span>
 
-                    <button
-                        type="button"
-                        @click="showAddForm = !showAddForm"
-                        class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-xl transition-colors"
-                    >
-                        <span x-text="showAddForm ? '✕ {{ __('Cancel') }}' : '+ {{ __('Add Room') }}'"></span>
-                    </button>
+                    @can('update', $trip)
+                        <button
+                            type="button"
+                            @click="showAddForm = !showAddForm"
+                            class="inline-flex items-center text-xs font-semibold text-teal-700 hover:text-teal-900 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-lg transition"
+                        >
+                            <span x-text="showAddForm ? '{{ __('Cancel') }}' : '+ {{ __('Add Room') }}'"></span>
+                        </button>
+                    @endcan
                 </div>
 
                 {{-- Quick Add Room Form --}}
@@ -297,18 +321,18 @@
                                         <p class="text-xs text-gray-500 mt-0.5">{{ $room->room_type }}</p>
                                     @endif
                                     <p class="text-xs text-gray-400 mt-1">
-                                        📅 {{ $room->check_in ? \Carbon\Carbon::parse($room->check_in)->format('M d') : '' }} – {{ $room->check_out ? \Carbon\Carbon::parse($room->check_out)->format('M d, Y') : '' }}
+                                        {{ $room->check_in ? \Carbon\Carbon::parse($room->check_in)->format('M d') : '' }} – {{ $room->check_out ? \Carbon\Carbon::parse($room->check_out)->format('M d, Y') : '' }}
                                     </p>
                                     @if($room->address)
-                                        <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
-                                            <span>📍</span> {{ $room->address }}
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            <span class="text-gray-400 font-medium">{{ __('Location:') }}</span> {{ $room->address }}
                                         </p>
                                     @endif
                                 </div>
 
                                 <div class="text-right shrink-0">
-                                    <span class="inline-block text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-xl border border-indigo-200">
-                                        {{ number_format($room->price, 0, ',', '.') }} VND
+                                    <span class="inline-block text-xs font-bold text-teal-800 bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-200">
+                                        {{ number_format($room->price, 0, ',', '.') }} ₫
                                     </span>
                                 </div>
                             </div>
@@ -323,13 +347,12 @@
                                         @change="toggleBudget({{ $room->id }})"
                                         class="sr-only peer"
                                     >
-                                    <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                                    <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-teal-700"></div>
                                 </label>
                             </div>
                         </div>
                     @empty
                         <div class="py-12 px-4 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                            <span class="text-3xl">🏨</span>
                             <p class="text-sm font-semibold text-gray-700 mt-2">{{ __('No accommodations added') }}</p>
                             <p class="text-xs text-gray-400 mt-1">{{ __('Add your booked hotel or resort to keep all travel plans in one place.') }}</p>
                         </div>

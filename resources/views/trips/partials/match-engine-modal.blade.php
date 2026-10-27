@@ -89,28 +89,22 @@
             @click.stop
         >
             {{-- Header --}}
-            <div class="px-6 pt-6 pb-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-emerald-50/50 via-teal-50/30 to-sky-50/30">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shrink-0 shadow-xs">
-                        ⚡
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-900" id="match-engine-title">
-                            {{ __('Auto Suggest Draft Itinerary') }}
-                        </h3>
-                        <p class="text-xs text-gray-500">
-                            {{ __('Algorithmic match balancing votes, mood harmony, ratings and zone clustering.') }}
-                        </p>
-                    </div>
+            <div class="px-6 pt-6 pb-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-teal-50/50 via-emerald-50/30 to-sky-50/30">
+                <div>
+                    <h3 class="text-base sm:text-lg font-bold text-gray-900" id="match-engine-title">
+                        {{ __('Auto Suggest Draft Itinerary') }}
+                    </h3>
+                    <p class="text-xs text-gray-500 mt-0.5">
+                        {{ __('Algorithmic match balancing votes, mood harmony, ratings and zone clustering.') }}
+                    </p>
                 </div>
                 <button
                     type="button"
                     @click="open = false"
-                    class="p-2 text-gray-400 hover:text-gray-600 rounded-xl hover:bg-gray-100 transition-colors"
+                    class="h-8 w-8 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition flex items-center justify-center text-lg font-bold select-none"
+                    aria-label="{{ __('Close') }}"
                 >
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    &times;
                 </button>
             </div>
 
@@ -118,13 +112,13 @@
             <div x-show="draft" class="px-6 py-3.5 bg-gray-50/80 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3 text-xs">
                 <div class="flex items-center gap-3">
                     <span class="inline-flex items-center gap-1 font-semibold text-gray-700">
-                        <span>⚖️ {{ __('Pace:') }}</span>
-                        <span class="uppercase font-bold text-primary" x-text="draft?.pace"></span>
+                        <span>{{ __('Pace:') }}</span>
+                        <span class="uppercase font-bold text-teal-700" x-text="draft?.pace"></span>
                     </span>
                     <span class="text-gray-300">•</span>
                     <span class="inline-flex items-center gap-1 font-semibold text-gray-700">
-                        <span>✨ {{ __('Group Mood:') }}</span>
-                        <span class="font-bold text-emerald-600" x-text="(draft?.group_mood_score ?? 100) + '%'"></span>
+                        <span>{{ __('Group Mood:') }}</span>
+                        <span class="font-bold text-teal-700" x-text="(draft?.group_mood_score ?? 100) + '%'"></span>
                     </span>
                 </div>
 
@@ -156,8 +150,7 @@
                                 <div class="flex items-center gap-2">
                                     <span class="font-bold text-xs text-gray-900" x-text="'{{ __('Day') }} ' + day.day_number"></span>
                                     <span class="text-gray-300">•</span>
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                        <span>📍</span>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-[11px] font-semibold bg-teal-50 text-teal-700 border border-teal-100">
                                         <span x-text="day.zone_name"></span>
                                     </span>
                                 </div>
@@ -171,7 +164,7 @@
                                         <div class="flex items-start justify-between gap-3">
                                             <div class="space-y-1 min-w-0">
                                                 <div class="flex items-center gap-2">
-                                                    <span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded-md bg-indigo-50 text-indigo-700" x-text="act.time_slot"></span>
+                                                    <span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded-md bg-teal-50 text-teal-800" x-text="act.time_slot"></span>
                                                     <span class="text-xs text-gray-400 capitalize" x-text="act.category"></span>
                                                 </div>
                                                 <h4 class="text-sm font-bold text-gray-900" x-text="act.title"></h4>
@@ -179,10 +172,10 @@
                                             </div>
 
                                             <div class="text-right shrink-0">
-                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/60">
-                                                    <span>★</span>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200/60">
+                                                    <span class="text-[10px] mr-0.5">Score:</span>
                                                     <span x-text="act.score_breakdown.final_score"></span>
-                                                    <span class="text-[10px] font-normal text-amber-600">/10</span>
+                                                    <span class="text-[10px] font-normal text-amber-700">/10</span>
                                                 </span>
                                                 <p class="text-xs font-mono text-gray-600 mt-1" x-text="new Intl.NumberFormat().format(act.cost) + ' ₫'"></p>
                                             </div>
@@ -190,8 +183,7 @@
 
                                         {{-- Score Breakdown Details --}}
                                         <div class="p-2.5 rounded-xl bg-gray-50 text-[11px] space-y-1.5 border border-gray-100/80">
-                                            <p class="text-gray-600 italic flex items-center gap-1.5">
-                                                <span>💡</span>
+                                            <p class="text-gray-600 italic">
                                                 <span x-text="act.score_breakdown.explanation"></span>
                                             </p>
                                             <div class="flex flex-wrap items-center gap-3 text-gray-500 pt-1 border-t border-gray-200/50">
@@ -215,9 +207,9 @@
                     type="button"
                     @click="fetchDraft()"
                     :disabled="loading"
-                    class="px-4 py-2 text-xs font-bold text-gray-600 hover:text-gray-900 rounded-xl hover:bg-gray-200/60 transition-colors"
+                    class="px-4 py-2 text-xs font-bold text-gray-600 hover:text-gray-900 rounded-xl hover:bg-gray-200/60 transition"
                 >
-                    🔄 {{ __('Regenerate Draft') }}
+                    {{ __('Regenerate Draft') }}
                 </button>
 
                 <div class="flex items-center gap-2">
@@ -234,9 +226,9 @@
                             type="button"
                             @click="applyDraft()"
                             :disabled="applying || !draft"
-                            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-primary hover:bg-primary/90 transition-all shadow-md cursor-pointer disabled:opacity-50"
+                            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-teal-700 hover:bg-teal-800 transition shadow-sm disabled:opacity-50"
                         >
-                            <span x-show="!applying">⚡ {{ __('Apply to Timeline') }}</span>
+                            <span x-show="!applying">{{ __('Apply to Timeline') }}</span>
                             <span x-show="applying">{{ __('Applying to Timeline...') }}</span>
                         </button>
                     @endcan

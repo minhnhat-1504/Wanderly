@@ -34,8 +34,8 @@ class AuthTest extends TestCase
         $response = $this->post('/register', [
             'name' => 'John Traveler',
             'email' => 'john@wanderly.test',
-            'password' => 'secret123',
-            'password_confirmation' => 'secret123',
+            'password' => 'Wanderly#2026',
+            'password_confirmation' => 'Wanderly#2026',
         ]);
 
         $this->assertAuthenticated();
@@ -58,6 +58,20 @@ class AuthTest extends TestCase
 
         $this->assertGuest();
         $response->assertSessionHasErrors(['name', 'email', 'password']);
+    }
+
+    public function test_registration_fails_with_weak_password(): void
+    {
+        // Missing symbols and uppercase
+        $response = $this->post('/register', [
+            'name' => 'Weak User',
+            'email' => 'weak@wanderly.test',
+            'password' => 'secret123',
+            'password_confirmation' => 'secret123',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors(['password']);
     }
 
     public function test_users_can_authenticate_using_the_login_screen(): void

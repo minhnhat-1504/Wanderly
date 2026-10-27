@@ -26,7 +26,7 @@
     {{-- Header --}}
     <div class="pb-4 border-b border-gray-200">
         <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-            {{ __('Edit Trip Details') }} ✏️
+            {{ __('Edit Trip Details') }}
         </h1>
         <p class="text-sm text-gray-500 mt-1">
             {{ __('Modify schedule, allocated budget, status, and permissions for :name.', ['name' => $trip->name]) }}

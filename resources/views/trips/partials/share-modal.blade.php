@@ -123,24 +123,17 @@
         >
             {{-- Header --}}
             <div class="px-6 py-5 bg-gradient-to-r from-teal-700 to-emerald-800 text-white flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center text-xl">
-                        🔗
-                    </div>
-                    <div>
-                        <h3 class="text-base font-bold text-white">{{ __('Share Trip Publicly') }}</h3>
-                        <p class="text-xs text-teal-100">{{ __('Allow friends or viewers to view your itinerary without logging in') }}</p>
-                    </div>
+                <div>
+                    <h3 class="text-base font-bold text-white">{{ __('Share Trip Publicly') }}</h3>
+                    <p class="text-xs text-teal-100">{{ __('Allow friends or viewers to view your itinerary without logging in') }}</p>
                 </div>
                 <button
                     type="button"
                     @click="open = false"
-                    class="p-1.5 rounded-lg text-teal-200 hover:text-white hover:bg-white/10"
+                    class="h-8 w-8 rounded-lg text-teal-200 hover:text-white hover:bg-white/10 transition flex items-center justify-center text-lg font-bold select-none"
+                    aria-label="{{ __('Close') }}"
                 >
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
+                    &times;
                 </button>
             </div>
 
@@ -151,8 +144,8 @@
                     <div>
                         <p class="text-sm font-semibold text-gray-900">{{ __('Public Share Link') }}</p>
                         <p class="text-xs text-gray-500 mt-0.5">
-                            <span x-show="isShared" class="text-emerald-600 font-medium">● {{ __('Active (Anyone with link can view)') }}</span>
-                            <span x-show="!isShared" class="text-gray-400">○ {{ __('Disabled (Access is blocked)') }}</span>
+                            <span x-show="isShared" class="text-teal-700 font-medium">{{ __('Active (Anyone with link can view)') }}</span>
+                            <span x-show="!isShared" class="text-gray-400">{{ __('Disabled (Access is blocked)') }}</span>
                         </p>
                     </div>
 
@@ -161,7 +154,7 @@
                         @click="toggleShare()"
                         :disabled="loading"
                         class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none"
-                        :class="isShared ? 'bg-primary' : 'bg-gray-300'"
+                        :class="isShared ? 'bg-teal-700' : 'bg-gray-300'"
                     >
                         <span
                             aria-hidden="true"
@@ -187,10 +180,10 @@
                             type="button"
                             @click="copyToClipboard()"
                             class="shrink-0 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200"
-                            :class="copied ? 'bg-emerald-600 text-white' : 'bg-primary text-white hover:bg-teal-800'"
+                            :class="copied ? 'bg-emerald-600 text-white' : 'bg-teal-700 text-white hover:bg-teal-800'"
                         >
                             <span x-show="!copied">{{ __('Copy') }}</span>
-                            <span x-show="copied">✓ {{ __('Copied!') }}</span>
+                            <span x-show="copied">{{ __('Copied!') }}</span>
                         </button>
                     </div>
                 </div>

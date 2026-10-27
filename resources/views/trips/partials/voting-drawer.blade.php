@@ -95,23 +95,17 @@
         >
             {{-- Drawer Header --}}
             <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-amber-50/50 to-orange-50/30">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-amber-100/80 text-amber-700 flex items-center justify-center text-xl shrink-0 shadow-xs">
-                        🗳️
-                    </div>
-                    <div>
-                        <h3 class="text-base font-bold text-gray-900">{{ __('Candidate Voting Pool') }}</h3>
-                        <p class="text-xs text-gray-500">{{ __('Vote +1 or -1 on destination highlights.') }}</p>
-                    </div>
+                <div>
+                    <h3 class="text-base font-bold text-gray-900">{{ __('Candidate Voting Pool') }}</h3>
+                    <p class="text-xs text-gray-500 mt-0.5">{{ __('Vote on destination highlights.') }}</p>
                 </div>
                 <button
                     type="button"
                     @click="open = false"
-                    class="p-2 text-gray-400 hover:text-gray-600 rounded-xl hover:bg-gray-100 transition-colors"
+                    class="h-8 w-8 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition flex items-center justify-center text-lg font-bold select-none"
+                    aria-label="{{ __('Close') }}"
                 >
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    &times;
                 </button>
             </div>
 
@@ -120,19 +114,18 @@
                 <button
                     type="button"
                     @click="filter = 'all'; loadCandidates()"
-                    :class="filter === 'all' ? 'bg-white shadow-xs text-primary font-bold' : 'text-gray-600 hover:text-gray-900'"
-                    class="px-3.5 py-1.5 rounded-xl text-xs transition-all border border-gray-200/60"
+                    :class="filter === 'all' ? 'bg-white shadow-xs text-teal-700 font-bold' : 'text-gray-600 hover:text-gray-900'"
+                    class="px-3.5 py-1.5 rounded-lg text-xs transition border border-gray-200/60"
                 >
                     {{ __('All Candidates') }}
                 </button>
                 <button
                     type="button"
                     @click="filter = 'leaderboard'; loadCandidates()"
-                    :class="filter === 'leaderboard' ? 'bg-white shadow-xs text-primary font-bold' : 'text-gray-600 hover:text-gray-900'"
-                    class="px-3.5 py-1.5 rounded-xl text-xs transition-all border border-gray-200/60 flex items-center gap-1.5"
+                    :class="filter === 'leaderboard' ? 'bg-white shadow-xs text-teal-700 font-bold' : 'text-gray-600 hover:text-gray-900'"
+                    class="px-3.5 py-1.5 rounded-lg text-xs transition border border-gray-200/60"
                 >
-                    <span>🏆</span>
-                    <span>{{ __('Top Leaderboard') }}</span>
+                    {{ __('Top Leaderboard') }}
                 </button>
             </div>
 
@@ -143,7 +136,7 @@
                 </div>
 
                 <template x-for="item in candidates" :key="item.key">
-                    <div class="p-4 rounded-2xl border border-gray-100 bg-white hover:border-gray-200 hover:shadow-xs transition-all space-y-3">
+                    <div class="p-4 rounded-xl border border-gray-100 bg-white hover:border-gray-200 hover:shadow-xs transition space-y-3">
                         <div class="flex items-start justify-between gap-3">
                             <div class="space-y-1 min-w-0">
                                 <div class="flex items-center gap-2">
@@ -160,8 +153,8 @@
 
                             {{-- Rating & Cost --}}
                             <div class="text-right shrink-0 space-y-1">
-                                <span class="inline-flex items-center gap-1 text-xs font-semibold text-amber-600">
-                                    <span>★</span>
+                                <span class="inline-flex items-center text-xs font-semibold text-amber-700">
+                                    <span class="text-[11px] mr-0.5">Rating:</span>
                                     <span x-text="item.rating"></span>
                                 </span>
                                 <p class="text-xs font-mono font-medium text-gray-600" x-text="new Intl.NumberFormat().format(item.cost) + ' ₫'"></p>
@@ -184,26 +177,26 @@
                                 <button
                                     type="button"
                                     @click="vote(item, 1)"
-                                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border"
+                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer border"
                                     :class="item.user_vote === 1
                                         ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
                                         : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-emerald-50 hover:text-emerald-700'"
                                 >
-                                    <span>👍</span>
-                                    <span x-text="item.upvotes"></span>
+                                    <span>+1</span>
+                                    <span x-text="`(${item.upvotes})`"></span>
                                 </button>
 
                                 {{-- Downvote (-1) --}}
                                 <button
                                     type="button"
                                     @click="vote(item, -1)"
-                                    class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border"
+                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer border"
                                     :class="item.user_vote === -1
                                         ? 'bg-rose-600 text-white border-rose-600 shadow-xs'
                                         : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-rose-50 hover:text-rose-700'"
                                 >
-                                    <span>👎</span>
-                                    <span x-text="item.downvotes"></span>
+                                    <span>-1</span>
+                                    <span x-text="`(${item.downvotes})`"></span>
                                 </button>
                             </div>
                         </div>

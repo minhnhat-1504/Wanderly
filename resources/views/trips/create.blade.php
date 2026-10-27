@@ -20,7 +20,7 @@
     {{-- Header --}}
     <div class="pb-4 border-b border-gray-200">
         <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-            {{ __('Plan a New Journey') }} ✈️
+            {{ __('Plan a New Journey') }}
         </h1>
         <p class="text-sm text-gray-500 mt-1">
             {{ __('Set up your trip details, define your itinerary dates, and set your budget.') }}

@@ -56,9 +56,9 @@
             @click.stop
             class="bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-md p-6 text-center border-2 border-red-200"
         >
-            {{-- Warning Icon --}}
-            <div class="w-16 h-16 mx-auto rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-3xl mb-4 shadow-inner">
-                ⚠️
+            {{-- Warning Badge (Clean typography, no icon) --}}
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-2xl font-black mb-4 border border-red-200">
+                !
             </div>
 
             <h3 class="text-xl font-bold text-gray-900 mb-2" id="override-modal-title">

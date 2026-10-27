@@ -6,13 +6,23 @@ export function initTimeline() {
     const timelineBoard = document.getElementById('timeline-board');
     if (!timelineBoard) return;
 
+    const canEdit = timelineBoard.dataset.canEdit !== 'false';
+    const tripId = timelineBoard.dataset.tripId;
+    const containers = document.querySelectorAll('.timeline-slot-container');
+
+    // Initial check for empty placeholders and recalculate totals
+    containers.forEach(updateSlotEmptyState);
+    recalculateDayTotals();
+
+    if (!canEdit) {
+        // Read-only / viewer mode: disable drag-and-drop reordering
+        return;
+    }
+
     if (!SortableClass) {
         console.warn('[Wanderly Timeline] Sortable library could not be loaded.');
         return;
     }
-
-    const tripId = timelineBoard.dataset.tripId;
-    const containers = document.querySelectorAll('.timeline-slot-container');
 
     containers.forEach((container) => {
         // Prevent duplicate initialization

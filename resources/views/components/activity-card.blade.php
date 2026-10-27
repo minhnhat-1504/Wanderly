@@ -1,5 +1,6 @@
 @props([
     'activity',
+    'canEdit' => true,
 ])
 
 @php
@@ -17,7 +18,7 @@
     $type = is_object($activity) ? ($activity->type ?? 'activity') : ($activity['type'] ?? 'activity');
     $isConflict = is_object($activity) ? ($activity->is_conflict ?? false) : ($activity['is_conflict'] ?? false);
 
-    // Format times if Carbon or string
+    // Format times
     $formattedTime = '';
     if ($startTime && $endTime) {
         $startStr = is_string($startTime) ? substr($startTime, 0, 5) : $startTime->format('H:i');
@@ -27,31 +28,31 @@
         $formattedTime = is_string($startTime) ? substr($startTime, 0, 5) : $startTime->format('H:i');
     }
 
-    // Category styling & icons
+    // Category styling & labels
     $categoryConfig = match ($category) {
         'sightseeing' => [
             'label' => __('Sightseeing'),
-            'bg'    => 'bg-sky-50 text-sky-700 border-sky-200',
+            'bg'    => 'bg-sky-50 text-sky-800 border-sky-200',
             'dot'   => 'bg-sky-500',
         ],
         'dining' => [
             'label' => __('Dining'),
-            'bg'    => 'bg-amber-50 text-amber-700 border-amber-200',
+            'bg'    => 'bg-amber-50 text-amber-800 border-amber-200',
             'dot'   => 'bg-amber-500',
         ],
         'cafe' => [
             'label' => __('Cafe'),
-            'bg'    => 'bg-orange-50 text-orange-700 border-orange-200',
+            'bg'    => 'bg-orange-50 text-orange-800 border-orange-200',
             'dot'   => 'bg-orange-500',
         ],
         'shopping' => [
             'label' => __('Shopping'),
-            'bg'    => 'bg-rose-50 text-rose-700 border-rose-200',
+            'bg'    => 'bg-rose-50 text-rose-800 border-rose-200',
             'dot'   => 'bg-rose-500',
         ],
         'entertainment' => [
             'label' => __('Entertainment'),
-            'bg'    => 'bg-purple-50 text-purple-700 border-purple-200',
+            'bg'    => 'bg-purple-50 text-purple-800 border-purple-200',
             'dot'   => 'bg-purple-500',
         ],
         default => [
@@ -66,148 +67,132 @@
 @endphp
 
 <div
-    class="timeline-activity-card group relative rounded-2xl border p-4 transition-all duration-200 shadow-sm hover:shadow-md select-none
-        {{ $isRoom
-            ? 'bg-gradient-to-br from-indigo-50/80 to-purple-50/60 border-indigo-200 hover:border-indigo-300'
-            : ($isBooking
-                ? 'bg-gradient-to-br from-emerald-50/70 to-teal-50/50 border-emerald-200 hover:border-emerald-300'
-                : 'bg-white border-gray-200/90 hover:border-teal-300') }}"
+    class="timeline-activity-card group relative w-full bg-white rounded-xl border border-gray-200/90 p-3.5 sm:p-4 transition-all duration-200 shadow-sm hover:shadow-md hover:border-teal-300 select-none {{ $isRoom ? 'bg-indigo-50/30 border-indigo-200' : ($isBooking ? 'bg-emerald-50/30 border-emerald-200' : '') }}"
     data-id="{{ $id }}"
     data-day="{{ $day }}"
     data-slot="{{ $slot }}"
     data-cost="{{ $cost }}"
     data-type="{{ $type }}"
 >
-    <div class="flex items-start justify-between gap-3">
-        {{-- Left: Drag Handle & Main Content --}}
-        <div class="flex items-start gap-2.5 min-w-0 flex-1">
-            {{-- Drag Handle --}}
-            <button
-                type="button"
-                class="drag-handle p-1 text-gray-400 hover:text-gray-700 cursor-grab active:cursor-grabbing rounded-lg hover:bg-gray-100 transition-colors mt-0.5 shrink-0"
-                title="{{ __('Drag to reorder') }}"
-                aria-label="{{ __('Drag handle') }}"
-            >
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                    <circle cx="9" cy="5" r="1"></circle>
-                    <circle cx="9" cy="12" r="1"></circle>
-                    <circle cx="9" cy="19" r="1"></circle>
-                    <circle cx="15" cy="5" r="1"></circle>
-                    <circle cx="15" cy="12" r="1"></circle>
-                    <circle cx="15" cy="19" r="1"></circle>
-                </svg>
-            </button>
+    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 min-w-0">
+        {{-- Left: Drag Handle + Time Block + Title + Address + Notes --}}
+        <div class="flex items-start gap-3 min-w-0 flex-1">
+            {{-- Drag Handle (pure CSS/typography, no icon!) --}}
+            @if($canEdit)
+                <button
+                    type="button"
+                    class="drag-handle px-1.5 py-1 text-gray-400 hover:text-gray-700 cursor-grab active:cursor-grabbing rounded hover:bg-gray-100 transition shrink-0 mt-0.5 font-mono text-xs tracking-tighter"
+                    title="{{ __('Drag to reorder') }}"
+                    aria-label="{{ __('Drag handle') }}"
+                >
+                    :::
+                </button>
+            @endif
 
-            <div class="min-w-0 flex-1">
-                {{-- Category Tag & Room / Booking Badge --}}
-                <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                    @if($isRoom)
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-xs font-semibold bg-indigo-100 text-indigo-800 border border-indigo-200">
-                            🏨 {{ __('Accommodation') }}
-                        </span>
-                    @elseif($isBooking)
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                            🎟️ {{ __('Booking Voucher') }}
-                        </span>
-                    @else
-                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-medium border {{ $categoryConfig['bg'] }}">
-                            <span class="w-1.5 h-1.5 rounded-full {{ $categoryConfig['dot'] }}"></span>
-                            {{ $categoryConfig['label'] }}
-                        </span>
-                    @endif
-
+            {{-- Main Text Details (min-width: 0 prevents flex overflow) --}}
+            <div class="min-w-0 flex-1 space-y-1">
+                {{-- Badges / Time Row --}}
+                <div class="flex flex-wrap items-center gap-2">
                     @if($formattedTime)
-                        <span class="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 bg-gray-50 px-2 py-0.5 rounded-lg border border-gray-200/70">
-                            <svg class="w-3 h-3 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polyline points="12 6 12 12 16 14"></polyline>
-                            </svg>
+                        <span class="inline-flex items-center text-xs font-semibold text-gray-700 bg-gray-100 px-2 py-0.5 rounded-md">
                             {{ $formattedTime }}
                         </span>
                     @endif
 
+                    @if($isRoom)
+                        <span class="inline-flex items-center text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-md">
+                            {{ __('Accommodation') }}
+                        </span>
+                    @elseif($isBooking)
+                        <span class="inline-flex items-center text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+                            {{ __('Voucher') }}
+                        </span>
+                    @endif
+
                     @if($isConflict)
-                        <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
-                            ⚠️ {{ __('Time Conflict') }}
+                        <span class="inline-flex items-center text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-md">
+                            {{ __('Time Conflict') }}
                         </span>
                     @endif
                 </div>
 
-                {{-- Activity Title --}}
-                <h4 class="text-sm font-bold text-gray-900 group-hover:text-primary transition-colors duration-150 truncate">
+                {{-- Activity Title: Max 2 lines (line-clamp-2), NOT truncated to 1 short line --}}
+                <h4 class="text-sm font-bold text-gray-900 group-hover:text-teal-700 transition leading-snug line-clamp-2">
                     {{ $title }}
                 </h4>
 
-                {{-- Location & Address (Strictly No Map API) --}}
+                {{-- Location / Address: 1 line with tooltip --}}
                 @if($location || $address)
-                    <div class="flex items-center gap-1.5 text-xs text-gray-500 mt-1 truncate">
-                        <svg class="w-3.5 h-3.5 text-teal-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                        <span class="truncate font-medium">{{ $location ?: $address }}</span>
-                    </div>
+                    <p class="text-xs text-gray-500 truncate" title="{{ $location ?: $address }}">
+                        <span class="text-gray-400 font-medium">{{ __('Location:') }}</span> {{ $location ?: $address }}
+                    </p>
                 @endif
 
-                {{-- Notes if present --}}
+                {{-- Notes / Description: 2 lines with line-clamp --}}
                 @if($notes)
-                    <p class="text-xs text-gray-400 mt-1.5 line-clamp-2 italic">
+                    <p class="text-xs text-gray-500 line-clamp-2 italic leading-relaxed pt-0.5">
                         {{ $notes }}
                     </p>
                 @endif
             </div>
         </div>
 
-        {{-- Right: Cost Badge & Action Buttons --}}
-        <div class="flex flex-col items-end justify-between self-stretch shrink-0 gap-2">
-            {{-- Cost Badge --}}
-            <span class="inline-flex items-center px-2.5 py-1 rounded-xl text-xs font-bold {{ $cost > 0 ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-gray-100 text-gray-600' }}">
-                {{ $cost > 0 ? number_format($cost, 0, ',', '.') . ' VND' : __('Free') }}
-            </span>
-
-            {{-- Action Buttons (Edit / Delete) --}}
-            <div class="flex items-center gap-1 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-                @if(!$isRoom)
-                    <button
-                        type="button"
-                        class="p-1 rounded-lg text-gray-400 hover:text-primary hover:bg-gray-100 transition-colors"
-                        title="{{ __('Edit Activity') }}"
-                        @click="$dispatch('open-activity-modal', {
-                            mode: 'edit',
-                            activity: {
-                                id: {{ $id }},
-                                title: @js($title),
-                                day: {{ $day }},
-                                time_slot: @js($slot),
-                                start_time: @js($startTime),
-                                end_time: @js($endTime),
-                                cost: {{ $cost }},
-                                category: @js($category),
-                                location: @js($location),
-                                address: @js($address),
-                                notes: @js($notes)
-                            }
-                        })"
-                    >
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                    </button>
+        {{-- Right: Category Chip + Cost Badge + Hover Actions --}}
+        <div class="flex sm:flex-col items-end justify-between sm:justify-start gap-2 shrink-0 sm:min-w-[130px] pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100">
+            <div class="flex flex-wrap items-center sm:flex-col sm:items-end gap-1.5">
+                {{-- Category Chip --}}
+                @if(!$isRoom && !$isBooking)
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium border {{ $categoryConfig['bg'] }}">
+                        <span class="w-1.5 h-1.5 rounded-full {{ $categoryConfig['dot'] }}"></span>
+                        {{ $categoryConfig['label'] }}
+                    </span>
                 @endif
 
-                <button
-                    type="button"
-                    class="p-1 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                    title="{{ __('Delete') }}"
-                    @click="$dispatch('delete-activity', { id: {{ $id }}, title: @js($title), type: @js($type) })"
-                >
-                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    </svg>
-                </button>
+                {{-- Cost Badge --}}
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold {{ $cost > 0 ? 'bg-teal-50 text-teal-800 border border-teal-200' : 'bg-gray-100 text-gray-600' }}">
+                    {{ $cost > 0 ? number_format($cost, 0, ',', '.') . ' ₫' : __('Free') }}
+                </span>
             </div>
+
+            {{-- Hover Actions: Edit & Delete (clean text buttons, only for editors) --}}
+            @if($canEdit)
+                <div class="flex items-center gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-150 pt-1">
+                    @if(!$isRoom)
+                        <button
+                            type="button"
+                            class="px-2 py-1 text-xs font-semibold text-gray-600 hover:text-teal-700 hover:bg-gray-100 rounded transition"
+                            title="{{ __('Edit Activity') }}"
+                            @click="$dispatch('open-activity-modal', {
+                                mode: 'edit',
+                                activity: {
+                                    id: {{ $id }},
+                                    title: @js($title),
+                                    day: {{ $day }},
+                                    time_slot: @js($slot),
+                                    start_time: @js($startTime),
+                                    end_time: @js($endTime),
+                                    cost: {{ $cost }},
+                                    category: @js($category),
+                                    location: @js($location),
+                                    address: @js($address),
+                                    notes: @js($notes)
+                                }
+                            })"
+                        >
+                            {{ __('Edit') }}
+                        </button>
+                    @endif
+
+                    <button
+                        type="button"
+                        class="px-2 py-1 text-xs font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition"
+                        title="{{ __('Delete') }}"
+                        @click="$dispatch('delete-activity', { id: {{ $id }}, title: @js($title), type: @js($type) })"
+                    >
+                        {{ __('Delete') }}
+                    </button>
+                </div>
+            @endif
         </div>
     </div>
 </div>
