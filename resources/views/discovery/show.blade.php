@@ -276,7 +276,7 @@
                             name="trip_id"
                             required
                             x-model="selectedTripId"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white"
+                            class="w-full pl-4 pr-10 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white cursor-pointer shadow-xs"
                         >
                             @foreach($userTrips as $t)
                                 <option value="{{ $t->id }}">
@@ -298,7 +298,7 @@
                                 max="60"
                                 value="1"
                                 required
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                                class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 shadow-xs"
                             />
                         </div>
 
@@ -309,7 +309,7 @@
                             <select
                                 name="time_slot"
                                 required
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white"
+                                class="w-full pl-4 pr-10 py-2.5 rounded-xl border border-gray-300 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white cursor-pointer shadow-xs"
                             >
                                 <option value="morning">{{ __('Morning') }}</option>
                                 <option value="midday">{{ __('Midday') }}</option>

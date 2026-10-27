@@ -253,7 +253,7 @@
                         <select
                             x-model.number="form.day"
                             :disabled="!canEdit"
-                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                            class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"
                         >
                             @for($d = 1; $d <= max(1, $tripDays); $d++)
                                 <option value="{{ $d }}">{{ __('Day :day', ['day' => $d]) }}</option>
@@ -268,7 +268,7 @@
                         <select
                             x-model="form.time_slot"
                             :disabled="!canEdit"
-                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                            class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"
                         >
                             <option value="morning">{{ __('Morning (06:00 – 11:00)') }}</option>
                             <option value="midday">{{ __('Midday (11:00 – 14:00)') }}</option>
@@ -333,7 +333,7 @@
                         <select
                             x-model="form.category"
                             :disabled="!canEdit"
-                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                            class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"
                         >
                             <option value="sightseeing">{{ __('Sightseeing') }}</option>
                             <option value="dining">{{ __('Dining / Food') }}</option>
