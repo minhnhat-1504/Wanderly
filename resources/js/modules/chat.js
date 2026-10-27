@@ -44,6 +44,7 @@ export function initChatDrawer(config = {}) {
         content: '',
         file: null,
         imagePreview: null,
+        lightboxImage: null,
 
         loading: false,
         sending: false,

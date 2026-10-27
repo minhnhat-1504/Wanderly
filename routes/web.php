@@ -102,6 +102,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('provider')->name('provider.')->group(function () {
         Route::get('/register', [ProviderDashboardController::class, 'create'])->name('register');
         Route::post('/register', [ProviderDashboardController::class, 'store'])->name('register.store');
+        Route::get('/contract', [ProviderDashboardController::class, 'showContract'])->name('contract');
+        Route::post('/contract', [ProviderDashboardController::class, 'signContract'])->name('contract.sign');
         Route::get('/dashboard', [ProviderDashboardController::class, 'dashboard'])->name('dashboard');
         Route::get('/calendar', [ProviderDashboardController::class, 'calendar'])->name('calendar');
         Route::post('/calendar/block', [ProviderDashboardController::class, 'blockDate'])->name('calendar.block');
