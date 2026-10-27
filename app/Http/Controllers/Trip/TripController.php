@@ -71,7 +71,7 @@ class TripController extends Controller
         $this->authorize('view', $trip);
 
         $tripDays = $this->tripService->calculateTripDays($trip);
-        $trip->load(['members.user', 'owner']);
+        $trip->load(['members.user', 'owner', 'activities.participants.user', 'activities.payer']);
 
         return view('trips.show', compact('trip', 'tripDays'));
     }

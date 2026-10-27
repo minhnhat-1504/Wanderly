@@ -123,6 +123,14 @@
                             {{ __('Marketplace') }}
                         </a>
 
+                        <button
+                            type="button"
+                            @click="window.dispatchEvent(new CustomEvent('open-settlement-drawer')); menuOpen = false"
+                            class="w-full text-left px-4 py-2 text-teal-700 hover:bg-teal-50 transition font-medium"
+                        >
+                            {{ __('Debt Settlement & VietQR') }}
+                        </button>
+
                         @can('delete', $trip)
                             <div class="border-t border-gray-100 my-1"></div>
                             <form method="POST" action="{{ route('trips.destroy', $trip) }}" onsubmit="return confirm('{{ __('Are you sure you want to delete this trip? This action cannot be undone.') }}');">
@@ -259,6 +267,16 @@
             class="py-3 px-3.5 sm:px-4 text-gray-500 hover:text-teal-700 transition font-medium border-b-2 border-transparent -mb-px shrink-0"
         >
             {{ __('Chat') }}
+        </button>
+
+        <button
+            type="button"
+            @click="window.dispatchEvent(new CustomEvent('open-settlement-drawer'))"
+            class="py-3 px-3.5 sm:px-4 text-teal-700 hover:text-teal-900 transition font-bold border-b-2 border-teal-600 -mb-px shrink-0 flex items-center gap-1.5"
+            title="{{ __('Min-Cash-Flow Debt Settlement & VietQR') }}"
+        >
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            {{ __('Split & VietQR') }}
         </button>
     </nav>
 
@@ -583,6 +601,8 @@
     @include('trips.partials.voting-drawer', ['trip' => $trip])
     @include('trips.partials.match-engine-modal', ['trip' => $trip])
     <x-chat-drawer :trip="$trip" />
+    @include('trips.partials.split-bill-modal', ['trip' => $trip])
+    @include('trips.partials.settlement-drawer', ['trip' => $trip])
 
     {{-- Global Activity Delete Listener with Permission Check & Notifications --}}
     <script>
