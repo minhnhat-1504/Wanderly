@@ -12,5 +12,7 @@ window.Chart = Chart?.default || Chart;
 window.initTimeline = initTimeline;
 window.initChatDrawer = initChatDrawer;
 
+import './modules/ai-copilot';
+
 Alpine.start();
 

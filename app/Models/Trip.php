@@ -90,8 +90,19 @@ class Trip extends Model
         return $this->hasMany(Vote::class);
     }
 
+    public function destination(): BelongsTo
+    {
+        return $this->belongsTo(Destination::class);
+    }
+
     public function settlementPayments(): HasMany
     {
         return $this->hasMany(SettlementPayment::class);
     }
+
+    public function aiChatMessages(): HasMany
+    {
+        return $this->hasMany(AiChatMessage::class);
+    }
 }
+
