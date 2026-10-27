@@ -49,9 +49,11 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        event(new \Illuminate\Auth\Events\Registered($user));
+
         Auth::login($user);
 
-        return redirect('/trips');
+        return redirect()->route('verification.notice');
     }
 
     public function logout(Request $request): RedirectResponse

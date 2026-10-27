@@ -142,6 +142,18 @@ Route::middleware('auth')->group(function () {
         ->name('trips.settlements.vietqr');
     Route::post('/trips/{trip}/settlements/confirm', [SplitBillController::class, 'confirmPayment'])
         ->name('trips.settlements.confirm');
+
+    // AI Co-pilot & Action Engine AJAX routes (Sprint 4 - F1)
+    Route::get('/trips/{trip}/ai-copilot/messages', [\App\Http\Controllers\Trip\AiCopilotController::class, 'getMessages'])
+        ->name('trips.ai-copilot.messages');
+    Route::post('/trips/{trip}/ai-copilot/chat', [\App\Http\Controllers\Trip\AiCopilotController::class, 'sendMessage'])
+        ->name('trips.ai-copilot.chat');
+    Route::post('/trips/{trip}/ai-copilot/apply-action/{message}', [\App\Http\Controllers\Trip\AiCopilotController::class, 'applyAction'])
+        ->name('trips.ai-copilot.apply-action');
+    Route::post('/trips/{trip}/ai-copilot/ingest-review', [\App\Http\Controllers\Trip\AiCopilotController::class, 'ingestReview'])
+        ->name('trips.ai-copilot.ingest-review');
+    Route::get('/trips/{trip}/ai-copilot/weather-alerts', [\App\Http\Controllers\Trip\AiCopilotController::class, 'getWeatherAlerts'])
+        ->name('trips.ai-copilot.weather-alerts');
 });
 
 // Profile Tab lazy loading (Accessible publicly or authenticated based on profile visibility)

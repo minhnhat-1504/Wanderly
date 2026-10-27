@@ -44,7 +44,7 @@ class AuthTest extends TestCase
             'email' => 'john@wanderly.test',
             'role' => 'traveler',
         ]);
-        $response->assertRedirect('/trips');
+        $response->assertRedirect(route('verification.notice'));
     }
 
     public function test_registration_validation_fails_with_invalid_data(): void
