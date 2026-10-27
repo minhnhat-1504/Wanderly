@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Chat\ChatController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Provider\ProviderDashboardController;
 use App\Http\Controllers\Social\NotificationController;
 use App\Http\Controllers\Social\SocialFeedController;
@@ -127,7 +128,7 @@ Route::middleware('auth')->group(function () {
         ->name('provider.calendar.unblock');
 
     // Profile Module AJAX routes
-    Route::get('/settings/check-username', [\App\Http\Controllers\ProfileController::class, 'checkUsername'])
+    Route::get('/settings/check-username', [ProfileController::class, 'checkUsername'])
         ->name('profile.check-username');
 
     // Split-Bill & Settlements AJAX routes (Sprint 4 - F2)
@@ -144,5 +145,5 @@ Route::middleware('auth')->group(function () {
 });
 
 // Profile Tab lazy loading (Accessible publicly or authenticated based on profile visibility)
-Route::get('/u/{user:username}/tab/{tab}', [\App\Http\Controllers\ProfileController::class, 'loadTab'])
+Route::get('/u/{user:username}/tab/{tab}', [ProfileController::class, 'loadTab'])
     ->name('profile.tab');

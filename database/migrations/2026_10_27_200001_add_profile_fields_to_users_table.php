@@ -35,6 +35,7 @@ return new class extends Migration
         foreach ($users as $user) {
             if (! empty($user->username)) {
                 $usedUsernames[$user->username] = true;
+
                 continue;
             }
 
@@ -42,7 +43,7 @@ return new class extends Migration
             $baseUsername = preg_replace('/[^a-z0-9_]/', '', strtolower($baseUsername));
 
             if (empty($baseUsername) || strlen($baseUsername) < 3) {
-                $baseUsername = 'user_' . $user->id;
+                $baseUsername = 'user_'.$user->id;
             } elseif (strlen($baseUsername) > 20) {
                 $baseUsername = substr($baseUsername, 0, 20);
             }
@@ -51,7 +52,7 @@ return new class extends Migration
             $counter = 1;
 
             while (isset($usedUsernames[$candidate]) || DB::table('users')->where('username', $candidate)->where('id', '!=', $user->id)->exists()) {
-                $candidate = substr($baseUsername, 0, 24) . '_' . $counter;
+                $candidate = substr($baseUsername, 0, 24).'_'.$counter;
                 $counter++;
             }
 

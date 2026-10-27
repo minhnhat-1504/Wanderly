@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminDestinationController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Discovery\DiscoveryController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Provider\ProviderDashboardController;
 use App\Http\Controllers\Provider\ProviderServiceController;
 use App\Http\Controllers\Social\SocialFeedController;
@@ -164,20 +165,20 @@ Route::middleware('auth')->group(function () {
     });
 
     // ─── Account Settings (Profile Module) ──────────────────────────────────
-    Route::get('/settings', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/settings', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
-    Route::patch('/settings/preferences', [\App\Http\Controllers\ProfileController::class, 'updatePreferences'])->name('profile.preferences.update');
-    Route::patch('/settings/privacy', [\App\Http\Controllers\ProfileController::class, 'updatePrivacy'])->name('profile.privacy.update');
-    Route::patch('/settings/notifications', [\App\Http\Controllers\ProfileController::class, 'updateNotifications'])->name('profile.notifications.update');
-    Route::put('/settings/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('password.update');
-    Route::post('/settings/logout-others', [\App\Http\Controllers\ProfileController::class, 'logoutOthers'])->name('profile.logout-others');
-    Route::delete('/settings/avatar', [\App\Http\Controllers\ProfileController::class, 'removeAvatar'])->name('profile.avatar.destroy');
-    Route::delete('/settings/cover', [\App\Http\Controllers\ProfileController::class, 'removeCover'])->name('profile.cover.destroy');
-    Route::delete('/settings', [\App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/settings', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/settings', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/settings/preferences', [ProfileController::class, 'updatePreferences'])->name('profile.preferences.update');
+    Route::patch('/settings/privacy', [ProfileController::class, 'updatePrivacy'])->name('profile.privacy.update');
+    Route::patch('/settings/notifications', [ProfileController::class, 'updateNotifications'])->name('profile.notifications.update');
+    Route::put('/settings/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::post('/settings/logout-others', [ProfileController::class, 'logoutOthers'])->name('profile.logout-others');
+    Route::delete('/settings/avatar', [ProfileController::class, 'removeAvatar'])->name('profile.avatar.destroy');
+    Route::delete('/settings/cover', [ProfileController::class, 'removeCover'])->name('profile.cover.destroy');
+    Route::delete('/settings', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 // Public User Profile (M17)
-Route::get('/u/{user:username}', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
+Route::get('/u/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
 
 // Read-only Public Share (M7)
 Route::get('/s/{slug}', [PublicShareController::class, 'show'])->name('trips.share.show');
