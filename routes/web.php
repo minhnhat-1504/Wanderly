@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminDestinationController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Discovery\DiscoveryController;
 use App\Http\Controllers\Provider\ProviderDashboardController;
 use App\Http\Controllers\Provider\ProviderServiceController;
 use App\Http\Controllers\Social\SocialFeedController;
@@ -23,6 +24,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// ─── Vietnam Travel Discovery Portal (Sprint 4 - E4-04) ──────────────────────
+Route::get('/discovery', [DiscoveryController::class, 'index'])->name('discovery.index');
+Route::get('/discovery/{slug}', [DiscoveryController::class, 'show'])->name('discovery.show');
 
 Route::get('/dashboard', function () {
     return redirect()->route('trips.index');
@@ -117,6 +122,9 @@ Route::middleware('auth')->group(function () {
     // ─── Reverse Memory Scrapbook (Sprint 4 - E4-03) ──────────────────────────
     Route::get('/trips/{trip}/memory-scrapbook', [MemoryScrapbookController::class, 'show'])->name('trips.memory-scrapbook');
     Route::get('/trips/{trip}/memory-scrapbook/data', [MemoryScrapbookController::class, 'data'])->name('trips.memory-scrapbook.data');
+
+    // ─── 1-Click Add to Trip (Sprint 4 - E4-04) ───────────────────────────────
+    Route::post('/discovery/{article}/add-to-trip', [DiscoveryController::class, 'addToTrip'])->name('discovery.add-to-trip');
 
     // ─── Social Feed (D4-02 M13) ──────────────────────────────────────────────
     Route::get('/social', [SocialFeedController::class, 'index'])->name('social.feed');

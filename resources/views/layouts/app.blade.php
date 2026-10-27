@@ -66,6 +66,12 @@
                                 {{ __('Community Feed') }}
                             </a>
 
+                            <a href="{{ route('discovery.index') }}"
+                               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium {{ request()->is('discovery*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
+                                <span>🇻🇳</span>
+                                <span>{{ __('Discover Vietnam') }}</span>
+                            </a>
+
                             @auth
                                 @if(auth()->user()->role === 'provider')
                                 <a href="{{ route('provider.dashboard') }}"
@@ -217,6 +223,12 @@
                             <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
                         </svg>
                         {{ __('Community Feed') }}
+                    </a>
+
+                    <a href="{{ route('discovery.index') }}"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->is('discovery*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
+                        <span>🇻🇳</span>
+                        {{ __('Discover Vietnam') }}
                     </a>
 
                     @auth
