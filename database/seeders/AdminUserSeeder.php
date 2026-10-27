@@ -18,6 +18,7 @@ class AdminUserSeeder extends Seeder
             ['email' => 'admin@wanderly.test'],
             [
                 'name' => 'System Administrator',
+                'username' => 'admin',
                 'password' => Hash::make('password'),
                 'role' => 'admin',
                 'email_verified_at' => now(),
@@ -29,6 +30,7 @@ class AdminUserSeeder extends Seeder
             ['email' => 'demo@wanderly.test'],
             [
                 'name' => 'Demo Traveler',
+                'username' => 'demotraveler',
                 'password' => Hash::make('password'),
                 'role' => 'traveler',
                 'email_verified_at' => now(),

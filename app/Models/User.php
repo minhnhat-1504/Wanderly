@@ -9,10 +9,30 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
+
+    protected static function booted(): void
+    {
+        static::creating(function (User $user) {
+            if (empty($user->username)) {
+                $base = Str::slug($user->name ?: 'user', '_');
+                $base = preg_replace('/[^a-z0-9_]/', '', strtolower($base));
+                if (empty($base) || strlen($base) < 3) {
+                    $base = 'traveler';
+                }
+                $candidate = substr($base, 0, 20);
+                $unique = $candidate.'_'.rand(100, 999);
+                while (static::where('username', $unique)->exists()) {
+                    $unique = $candidate.'_'.rand(1000, 99999);
+                }
+                $user->username = $unique;
+            }
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -64,6 +84,21 @@ class User extends Authenticatable implements MustVerifyEmail
             'notify_in_app' => 'boolean',
             'notify_email' => 'boolean',
         ];
+    }
+
+    /**
+     * Accessor for username with automatic fallback if null.
+     */
+    public function getUsernameAttribute(?string $value): string
+    {
+        if (! empty($value)) {
+            return $value;
+        }
+
+        $fallback = Str::slug($this->name ?: 'user', '_');
+        $clean = preg_replace('/[^a-z0-9_]/', '', strtolower($fallback));
+
+        return (! empty($clean) && strlen($clean) >= 3) ? $clean : 'user_'.$this->id;
     }
 
     /**

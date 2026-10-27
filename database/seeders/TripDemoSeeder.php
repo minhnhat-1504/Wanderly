@@ -227,6 +227,7 @@ class TripDemoSeeder extends Seeder
                 ['email' => 'provider@wanderly.test'],
                 [
                     'name' => 'Dalat Highland Drivers & Tours',
+                    'username' => 'dalat_explorer',
                     'password' => bcrypt('password'),
                     'role' => 'provider',
                 ]

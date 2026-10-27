@@ -50,7 +50,7 @@
     {{-- Breadcrumb / Header --}}
     <div class="mb-8">
         <div class="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <a href="{{ route('profile.show', $user->username) }}" class="hover:text-primary transition-colors">{{ __('My Profile') }}</a>
+            <a href="{{ $user->username ? route('profile.show', $user->username) : '#' }}" class="hover:text-primary transition-colors">{{ __('My Profile') }}</a>
             <span>/</span>
             <span class="text-gray-900">{{ __('Settings') }}</span>
         </div>
