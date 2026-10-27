@@ -159,8 +159,8 @@
                     <span>{{ __('About this Destination') }}</span>
                 </h2>
 
-                <div class="prose max-w-none text-gray-700 leading-relaxed text-sm space-y-4">
-                    {!! nl2br(e($article->content)) !!}
+                <div class="prose prose-teal max-w-none text-gray-700 leading-relaxed text-sm [&>h3]:text-base [&>h3]:font-black [&>h3]:text-gray-900 [&>h3]:mt-6 [&>h3]:mb-3 [&>p]:mb-4 [&>p]:leading-relaxed [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:space-y-2 [&>ul]:mb-4 [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:space-y-2.5 [&>ol]:mb-4 [&>ol>li]:pl-1 [&>ul>li]:pl-1 [&_strong]:text-gray-900 [&_strong]:font-bold">
+                    {!! \Illuminate\Support\Str::markdown($article->content) !!}
                 </div>
             </div>
 

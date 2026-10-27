@@ -179,7 +179,7 @@
                         {{-- Body Content --}}
                         <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
                             <p class="text-xs sm:text-sm text-gray-600 line-clamp-3 leading-relaxed">
-                                {{ $art->summary ?: strip_tags($art->content) }}
+                                {{ $art->summary ?: Str::limit(strip_tags(\Illuminate\Support\Str::markdown($art->content)), 160) }}
                             </p>
 
                             <div class="space-y-2 pt-2 border-t border-gray-100 text-xs text-gray-600">
