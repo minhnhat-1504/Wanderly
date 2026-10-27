@@ -82,7 +82,10 @@
 
         {{-- Header --}}
         <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50/80">
-            <span class="text-sm font-semibold text-gray-900">🔔 {{ __('Notifications') }}</span>
+            <span class="text-sm font-semibold text-gray-900 flex items-center gap-1.5">
+                <x-icon name="bell" class="w-4 h-4 text-primary" />
+                <span>{{ __('Notifications') }}</span>
+            </span>
             <button type="button"
                     @click="markAllRead()"
                     x-show="unread > 0"
@@ -105,7 +108,9 @@
         <div x-show="!loading" class="max-h-80 overflow-y-auto divide-y divide-gray-50">
             <template x-if="notifications.length === 0">
                 <div class="text-center py-10 text-gray-400">
-                    <div class="text-3xl mb-2">🎉</div>
+                    <div class="w-12 h-12 mx-auto mb-2 rounded-2xl bg-teal-50 flex items-center justify-center text-teal-600">
+                        <x-icon name="check-circle" class="w-6 h-6" />
+                    </div>
                     <p class="text-sm font-medium">{{ __("You're all caught up!") }}</p>
                 </div>
             </template>

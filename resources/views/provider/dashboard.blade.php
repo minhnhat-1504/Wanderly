@@ -11,14 +11,14 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary mb-1">
-                <span>🏢 {{ __('Partner Portal') }}</span>
+                <span class="inline-flex items-center gap-1.5"><x-icon name="store" class="w-3.5 h-3.5 text-primary" /> {{ __('Partner Portal') }}</span>
                 <span>•</span>
                 <span class="inline-flex items-center gap-1 text-gray-500 font-normal">
-                    📍 {{ $provider->destination?->name ?? __('Unknown') }}
+                    <x-icon name="map-pin" class="w-3.5 h-3.5 text-gray-400" /> {{ $provider->destination?->name ?? __('Unknown') }}
                 </span>
                 @if($provider->is_verified)
                     <span class="inline-flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full text-[11px] font-bold border border-emerald-200">
-                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                        <x-icon name="badge-check" class="w-3.5 h-3.5 text-emerald-600" />
                         {{ __('Verified Partner') }}
                     </span>
                 @endif
@@ -33,15 +33,15 @@
 
         <div class="flex flex-wrap items-center gap-2">
             <a href="{{ route('provider.calendar') }}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-gray-200 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
-                <span>📅</span>
+                <x-icon name="calendar" class="w-4 h-4 text-gray-500" />
                 <span>{{ __('Manage Calendar') }}</span>
             </a>
             <a href="{{ route('provider.services.index') }}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-gray-200 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
-                <span>📦</span>
+                <x-icon name="package" class="w-4 h-4 text-gray-500" />
                 <span>{{ __('Catalog Services') }} ({{ $stats['total_services'] }})</span>
             </a>
             <a href="{{ route('provider.bookings.index') }}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-primary text-white text-xs sm:text-sm font-semibold hover:bg-teal-800 transition-colors shadow-md shadow-primary/20">
-                <span>🎫</span>
+                <x-icon name="ticket" class="w-4 h-4 text-white" />
                 <span>{{ __('All Bookings') }}</span>
             </a>
         </div>
@@ -56,7 +56,9 @@
         <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ __('This Month Revenue') }}</span>
-                <span class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base">💰</span>
+                <span class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <x-icon name="wallet" class="w-5 h-5 text-emerald-600" />
+                </span>
             </div>
             <p class="text-2xl font-bold text-gray-900 mt-3">
                 {{ number_format($stats['monthly_revenue'], 0, ',', '.') }} <span class="text-sm font-semibold text-gray-500">VND</span>
@@ -70,7 +72,9 @@
         <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ __('New Bookings Today') }}</span>
-                <span class="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-base">⚡</span>
+                <span class="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                    <x-icon name="zap" class="w-5 h-5 text-primary" />
+                </span>
             </div>
             <p class="text-2xl font-bold text-gray-900 mt-3">
                 {{ $stats['today_bookings'] }}
@@ -84,7 +88,9 @@
         <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ __('30-Day Occupancy') }}</span>
-                <span class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-base">📊</span>
+                <span class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                    <x-icon name="bar-chart-2" class="w-5 h-5 text-indigo-600" />
+                </span>
             </div>
             <p class="text-2xl font-bold text-gray-900 mt-3">
                 {{ $stats['occupancy_rate'] }}%
@@ -98,7 +104,9 @@
         <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ __('Customer Rating') }}</span>
-                <span class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-base">⭐</span>
+                <span class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                    <x-icon name="star" class="w-5 h-5 text-amber-500 fill-amber-400" />
+                </span>
             </div>
             <p class="text-2xl font-bold text-gray-900 mt-3 flex items-center gap-1.5">
                 <span>{{ number_format($stats['rating'], 1) }}</span>
@@ -144,7 +152,7 @@
             <div>
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
-                        <span>🎫</span>
+                        <x-icon name="ticket" class="w-4 h-4 text-primary" />
                         <span>{{ __('Upcoming Bookings') }}</span>
                     </h2>
                     <a href="{{ route('provider.bookings.index') }}" class="text-xs font-semibold text-primary hover:underline">
@@ -154,7 +162,9 @@
 
                 @if($stats['upcoming_bookings']->isEmpty())
                     <div class="text-center py-10 bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
-                        <span class="text-3xl">🌴</span>
+                        <div class="w-12 h-12 mx-auto mb-2 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
+                            <x-icon name="tree-palm" class="w-6 h-6" />
+                        </div>
                         <p class="text-sm font-semibold text-gray-700 mt-2">{{ __('No upcoming bookings scheduled') }}</p>
                         <p class="text-xs text-gray-400 mt-1">{{ __('Traveler reservations will appear here once accepted.') }}</p>
                     </div>
@@ -180,7 +190,8 @@
                                         {{ number_format($booking->price, 0, ',', '.') }} VND
                                     </p>
                                     <a href="{{ route('provider.bookings.show', $booking) }}" class="inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline mt-0.5">
-                                        <span>💬 {{ __('Chat / Details') }}</span>
+                                        <x-icon name="message-circle" class="w-3.5 h-3.5 text-primary" />
+                                        <span>{{ __('Chat / Details') }}</span>
                                     </a>
                                 </div>
                             </div>
@@ -195,14 +206,16 @@
             <div>
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
-                        <span>📢</span>
+                        <x-icon name="megaphone" class="w-4 h-4 text-primary" />
                         <span>{{ __('Open Travel Requests in :dest', ['dest' => $provider->destination?->name ?? '']) }}</span>
                     </h2>
                 </div>
 
                 @if($stats['open_requests']->isEmpty())
                     <div class="text-center py-10 bg-gray-50/50 rounded-xl border border-dashed border-gray-200">
-                        <span class="text-3xl">✅</span>
+                        <div class="w-12 h-12 mx-auto mb-2 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                            <x-icon name="check-circle" class="w-6 h-6" />
+                        </div>
                         <p class="text-sm font-semibold text-gray-700 mt-2">{{ __('All matched requests have been responded to') }}</p>
                         <p class="text-xs text-gray-400 mt-1">{{ __('New traveler requests at your destination will appear automatically.') }}</p>
                     </div>
@@ -231,7 +244,7 @@
                                 </div>
                                 <div class="shrink-0">
                                     <a href="{{ route('marketplace.proposals.create', $request) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white text-xs font-semibold transition-colors">
-                                        <span>📝</span>
+                                        <x-icon name="edit-3" class="w-3.5 h-3.5" />
                                         <span>{{ __('Submit Proposal') }}</span>
                                     </a>
                                 </div>

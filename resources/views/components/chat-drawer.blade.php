@@ -5,6 +5,8 @@
 <div
     x-data="initChatDrawer({ tripId: {{ $trip->id }} })"
     @keydown.escape.window="if (open) closeDrawer()"
+    @open-chat-drawer.window="open = true; loadActiveChannel(); startPolling(); fetchChannels();"
+    @close-chat-drawer.window="closeDrawer()"
     class="relative z-[65]"
     id="chat-drawer-root"
 >
@@ -38,7 +40,7 @@
         <div class="px-5 py-4 border-b border-gray-100 bg-gray-50/80 flex items-center justify-between shrink-0">
             <div>
                 <div class="flex items-center gap-2">
-                    <span class="text-base">💬</span>
+                    <x-icon name="message-circle" class="w-4 h-4 text-primary" />
                     <h2 class="text-base font-bold text-gray-900 leading-tight">
                         {{ __('Trip & Provider Messages') }}
                     </h2>
@@ -68,7 +70,7 @@
                 :class="activeTab === 'group' ? 'bg-primary text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
                 class="flex-1 py-1.5 px-3 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5"
             >
-                <span>👥</span>
+                <x-icon name="users" class="w-3.5 h-3.5 text-inherit" />
                 <span>{{ __('Trip Group Chat') }}</span>
             </button>
 
@@ -78,7 +80,7 @@
                 :class="activeTab === 'direct' ? 'bg-primary text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
                 class="flex-1 py-1.5 px-3 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5 relative"
             >
-                <span>🏢</span>
+                <x-icon name="store" class="w-3.5 h-3.5 text-inherit" />
                 <span>{{ __('Provider 1-1 Chat') }}</span>
                 <template x-if="directChannels.some(c => c.unread > 0)">
                     <span class="w-2 h-2 rounded-full bg-red-500 absolute top-1 right-2"></span>
@@ -128,7 +130,9 @@
 
             <template x-if="!loading && messages.length === 0">
                 <div class="text-center py-16 text-gray-400 text-xs space-y-2">
-                    <span class="text-3xl">💬</span>
+                    <div class="w-12 h-12 mx-auto rounded-2xl bg-teal-50 flex items-center justify-center text-teal-600 mb-2">
+                        <x-icon name="message-circle" class="w-6 h-6" />
+                    </div>
                     <p class="font-medium text-gray-600">
                         <span x-show="activeTab === 'group'">{{ __('No group messages yet') }}</span>
                         <span x-show="activeTab === 'direct'">{{ __('No messages with this provider yet') }}</span>
@@ -162,7 +166,12 @@
                         </div>
 
                         <div class="flex items-center gap-1.5 text-[10px] text-gray-400" :class="msg.is_mine ? 'justify-end' : 'justify-start'">
-                            <span x-text="msg.sender.name" x-show="!msg.is_mine" class="font-semibold text-gray-600"></span>
+                            <template x-if="!msg.is_mine && msg.sender.username">
+                                <a :href="'/u/' + msg.sender.username" class="font-semibold text-gray-600 hover:text-primary transition-colors" x-text="msg.sender.name"></a>
+                            </template>
+                            <template x-if="!msg.is_mine && !msg.sender.username">
+                                <span x-text="msg.sender.name" class="font-semibold text-gray-600"></span>
+                            </template>
                             <span x-show="!msg.is_mine">•</span>
                             <span x-text="msg.time_label"></span>
                         </div>
@@ -195,7 +204,9 @@
                     x-model="content"
                     placeholder="{{ __('Type your message...') }}"
                     :disabled="sending"
-                    class="flex-1 rounded-xl border-gray-200 text-xs focus:border-primary focus:ring-primary shadow-sm"
+                    @keydown.enter.prevent="if (!$event.isComposing) sendMessage()"
+                    class="flex-1 rounded-xl border border-gray-200 text-xs px-3 py-2 outline-none focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-500/20 shadow-sm transition"
+                    style="outline: none !important;"
                 >
 
                 <button

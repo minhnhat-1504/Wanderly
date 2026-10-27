@@ -125,7 +125,7 @@ class ProposalService
     public function getComparisonMatrix(TravelRequest $request): array
     {
         $proposals = $request->proposals()
-            ->with(['provider.user', 'provider.destination', 'items'])
+            ->with(['provider.user', 'provider.destination', 'items', 'insight'])
             ->get();
 
         $prices = $proposals->pluck('total_price')->map(fn ($p) => (float) $p)->filter(fn ($p) => $p > 0);
@@ -146,8 +146,20 @@ class ProposalService
                 'status' => $proposal->status,
                 'is_lowest_price' => $totalPrice > 0 && $totalPrice <= $minPrice,
                 'savings' => $savings,
+                'insight' => $proposal->insight ? [
+                    'score' => $proposal->insight->score,
+                    'badge' => $proposal->insight->badge,
+                    'badge_label' => $proposal->insight->badge_label,
+                    'badge_classes' => $proposal->insight->badge_classes,
+                    'pros' => $proposal->insight->pros ?? [],
+                    'cons' => $proposal->insight->cons ?? [],
+                    'hidden_costs' => $proposal->insight->hidden_costs ?? [],
+                    'summary_verdict' => $proposal->insight->summary_verdict,
+                ] : null,
                 'provider' => [
                     'id' => $proposal->provider?->id,
+                    'user_id' => $proposal->provider?->user_id,
+                    'username' => $proposal->provider?->user?->username,
                     'business_name' => $proposal->provider?->business_name ?? __('Local Provider'),
                     'service_type' => $proposal->provider?->service_type,
                     'rating' => (float) ($proposal->provider?->rating ?? 5.0),

@@ -64,6 +64,8 @@
 
     $isRoom = ($type === 'room');
     $isBooking = ($type === 'booking');
+    $participantsCount = is_object($activity) && isset($activity->participants) ? $activity->participants->count() : 0;
+    $payerName = is_object($activity) && isset($activity->payer) && $activity->payer ? $activity->payer->name : null;
 @endphp
 
 <div
@@ -112,6 +114,15 @@
                     @if($isConflict)
                         <span class="inline-flex items-center text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-md">
                             {{ __('Time Conflict') }}
+                        </span>
+                    @endif
+
+                    @if($participantsCount > 0 || $payerName)
+                        <span class="inline-flex items-center text-[11px] font-semibold text-teal-800 bg-teal-50 border border-teal-200 px-1.5 py-0.5 rounded-md" title="{{ $payerName ? __('Paid by :name', ['name' => $payerName]) : '' }}">
+                            {{ __('Split (:count)', ['count' => $participantsCount]) }}
+                            @if($payerName)
+                                • {{ $payerName }}
+                            @endif
                         </span>
                     @endif
                 </div>
@@ -180,6 +191,22 @@
                             })"
                         >
                             {{ __('Edit') }}
+                        </button>
+                    @endif
+
+                    @if(!$isRoom && $cost > 0)
+                        <button
+                            type="button"
+                            class="px-2 py-1 text-xs font-semibold text-teal-700 hover:text-teal-800 hover:bg-teal-50 rounded transition cursor-pointer"
+                            title="{{ __('Split Bill') }}"
+                            @click="$dispatch('open-split-bill-modal', {
+                                activityId: {{ $id }},
+                                activityTitle: @js($title),
+                                activityCost: {{ $cost }}
+                            })"
+                            onclick="window.dispatchEvent(new CustomEvent('open-split-bill-modal', { detail: { activityId: {{ $id }}, activityTitle: {{ json_encode($title) }}, activityCost: {{ $cost }} } }))"
+                        >
+                            {{ __('Split') }}
                         </button>
                     @endif
 

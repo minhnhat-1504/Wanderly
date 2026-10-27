@@ -60,14 +60,20 @@
                     <div class="text-base font-bold text-gray-900 mt-0.5">{{ $booking->provider?->business_name ?? __('Local Provider') }}</div>
                     <div class="text-xs text-gray-500 mt-0.5">{{ $booking->provider?->address }}</div>
                     @if ($booking->provider?->phone)
-                        <div class="text-xs text-primary font-medium mt-1">📞 {{ $booking->provider->phone }}</div>
+                        <div class="text-xs text-primary font-medium mt-1 flex items-center gap-1">
+                            <x-icon name="phone" class="w-3.5 h-3.5" />
+                            <span>{{ $booking->provider->phone }}</span>
+                        </div>
                     @endif
                 </div>
 
                 <div>
                     <div class="text-xs text-gray-400 font-semibold uppercase">{{ __('Booking Value') }}</div>
                     <div class="text-xl font-bold text-gray-900 mt-0.5">{{ number_format((float) $booking->price, 0, ',', '.') }} VND</div>
-                    <div class="text-xs text-emerald-600 font-medium mt-0.5">✓ {{ __('Paid / Confirmed') }}</div>
+                    <div class="text-xs text-emerald-600 font-medium mt-0.5 flex items-center gap-1">
+                        <x-icon name="check-circle" class="w-3.5 h-3.5 text-emerald-600" />
+                        <span>{{ __('Paid / Confirmed') }}</span>
+                    </div>
                 </div>
             </div>
 
