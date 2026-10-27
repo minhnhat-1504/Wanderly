@@ -70,13 +70,13 @@
                                 @if(auth()->user()->role === 'provider')
                                 <a href="{{ route('provider.dashboard') }}"
                                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium {{ request()->is('provider*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
-                                    <span>🏢</span>
+                                    <x-icon name="store" class="w-4 h-4 text-primary" />
                                     {{ __('Partner Portal') }}
                                 </a>
                                 @elseif(auth()->user()->role === 'traveler')
                                 <a href="{{ route('provider.register') }}"
                                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium {{ request()->is('provider*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
-                                    <span>🤝</span>
+                                    <x-icon name="handshake" class="w-4 h-4 text-teal-600" />
                                     {{ __('Become Partner') }}
                                 </a>
                                 @endif
@@ -147,13 +147,22 @@
                                 </div>
 
                                 <div class="p-1.5">
-                                    <a href="#"
+                                    <a href="{{ auth()->user()->username ? route('profile.show', auth()->user()->username) : route('profile.edit') }}"
                                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
                                         <svg class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                             <circle cx="12" cy="7" r="4"></circle>
                                         </svg>
                                         {{ __('My Profile') }}
+                                    </a>
+
+                                    <a href="{{ route('profile.edit') }}"
+                                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
+                                        <svg class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                                        </svg>
+                                        {{ __('Settings') }}
                                     </a>
                                 </div>
 
@@ -223,13 +232,13 @@
                         @if(auth()->user()->role === 'provider')
                         <a href="{{ route('provider.dashboard') }}"
                            class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->is('provider*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
-                            <span>🏢</span>
+                            <x-icon name="store" class="w-4 h-4 text-primary" />
                             {{ __('Partner Portal') }}
                         </a>
                         @elseif(auth()->user()->role === 'traveler')
                         <a href="{{ route('provider.register') }}"
                            class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->is('provider*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
-                            <span>🤝</span>
+                            <x-icon name="handshake" class="w-4 h-4 text-teal-600" />
                             {{ __('Become Partner') }}
                         </a>
                         @endif

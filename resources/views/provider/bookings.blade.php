@@ -10,7 +10,7 @@
         <div>
             <div class="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-1">
                 <a href="{{ route('provider.dashboard') }}" class="hover:text-primary transition-colors flex items-center gap-1">
-                    <span>🏢</span>
+                    <x-icon name="store" class="w-3.5 h-3.5 text-primary" />
                     <span>{{ $provider->business_name }}</span>
                 </a>
                 <span>/</span>
@@ -28,7 +28,9 @@
     {{-- Bookings Table --}}
     @if($bookings->isEmpty())
         <div class="bg-white rounded-2xl p-12 text-center border border-dashed border-gray-200">
-            <span class="text-4xl">🎫</span>
+            <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-teal-50 flex items-center justify-center text-teal-600">
+                <x-icon name="ticket" class="w-8 h-8" />
+            </div>
             <h3 class="text-base font-bold text-gray-900 mt-3">{{ __('No bookings received yet') }}</h3>
             <p class="text-sm text-gray-500 mt-1 max-w-md mx-auto">
                 {{ __('When travelers accept your marketplace proposals, confirmed bookings and vouchers will appear here.') }}
@@ -92,7 +94,7 @@
                                 </td>
                                 <td class="py-4 px-4 sm:px-6 text-right">
                                     <a href="{{ route('provider.bookings.show', $booking) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white text-xs font-semibold transition-colors">
-                                        <span>💬</span>
+                                        <x-icon name="message-circle" class="w-3.5 h-3.5" />
                                         <span>{{ __('Chat with Traveler') }}</span>
                                         @if($unread > 0)
                                             <span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">

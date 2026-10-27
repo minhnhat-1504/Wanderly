@@ -126,6 +126,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/provider/calendar/unblock', [ProviderDashboardController::class, 'unblockDate'])
         ->name('provider.calendar.unblock');
 
+    // Profile Module AJAX routes
+    Route::get('/settings/check-username', [\App\Http\Controllers\ProfileController::class, 'checkUsername'])
+        ->name('profile.check-username');
+
     // Split-Bill & Settlements AJAX routes (Sprint 4 - F2)
     Route::get('/trips/{trip}/settlements', [SplitBillController::class, 'getSettlementPlan'])
         ->name('trips.settlements');
@@ -138,3 +142,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/trips/{trip}/settlements/confirm', [SplitBillController::class, 'confirmPayment'])
         ->name('trips.settlements.confirm');
 });
+
+// Profile Tab lazy loading (Accessible publicly or authenticated based on profile visibility)
+Route::get('/u/{user:username}/tab/{tab}', [\App\Http\Controllers\ProfileController::class, 'loadTab'])
+    ->name('profile.tab');

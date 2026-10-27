@@ -21,10 +21,22 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
         'role',
         'avatar',
+        'cover_image',
+        'location',
+        'phone',
+        'website',
+        'bio',
+        'is_profile_public',
+        'show_budget_publicly',
+        'locale',
+        'currency',
+        'notify_in_app',
+        'notify_email',
     ];
 
     /**
@@ -47,7 +59,36 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_profile_public' => 'boolean',
+            'show_budget_publicly' => 'boolean',
+            'notify_in_app' => 'boolean',
+            'notify_email' => 'boolean',
         ];
+    }
+
+    /**
+     * Accessor for avatar URL with UI-Avatars fallback.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->avatar) {
+            return asset('storage/' . $this->avatar);
+        }
+
+        $name = urlencode($this->name ?: 'User');
+        return "https://ui-avatars.com/api/?name={$name}&color=FFFFFF&background=0F766E&bold=true";
+    }
+
+    /**
+     * Accessor for cover image URL with fallback to null.
+     */
+    public function getCoverUrlAttribute(): ?string
+    {
+        if ($this->cover_image) {
+            return asset('storage/' . $this->cover_image);
+        }
+
+        return null;
     }
 
     public function trips(): HasMany

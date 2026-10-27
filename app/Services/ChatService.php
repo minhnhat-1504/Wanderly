@@ -222,6 +222,7 @@ class ChatService
             'sender' => [
                 'id' => $message->sender_id,
                 'name' => $senderName,
+                'username' => $message->sender?->username,
                 'initial' => Str::upper(Str::substr($senderName, 0, 1)),
             ],
             'created_at' => $message->created_at?->toIso8601String(),

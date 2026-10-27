@@ -141,9 +141,15 @@
                                 </div>
                                 <div>
                                     <div class="flex items-center gap-1.5">
-                                        <h2 class="text-base font-bold text-gray-900 leading-tight">
-                                            {{ $proposal['provider']['business_name'] }}
-                                        </h2>
+                                        @if(!empty($proposal['provider']['username']))
+                                            <a href="{{ route('profile.show', $proposal['provider']['username']) }}" class="text-base font-bold text-gray-900 leading-tight hover:text-primary transition-colors">
+                                                {{ $proposal['provider']['business_name'] }}
+                                            </a>
+                                        @else
+                                            <h2 class="text-base font-bold text-gray-900 leading-tight">
+                                                {{ $proposal['provider']['business_name'] }}
+                                            </h2>
+                                        @endif
                                         @if ($proposal['provider']['is_verified'])
                                             <span title="{{ __('Verified Provider') }}" class="text-blue-500">
                                                 <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">

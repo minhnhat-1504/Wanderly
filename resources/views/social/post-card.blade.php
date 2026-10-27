@@ -14,11 +14,23 @@
     {{-- Post Header --}}
     <div class="flex items-start justify-between p-5 pb-3">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl post-avatar flex items-center justify-center text-white font-bold text-base shrink-0">
-                {{ $avatarInitial }}
-            </div>
+            @if($post->author && $post->author->username)
+                <a href="{{ route('profile.show', $post->author->username) }}" class="shrink-0 group">
+                    <x-profile.avatar :user="$post->author" size="md" class="group-hover:ring-primary/40 transition-all" />
+                </a>
+            @else
+                <div class="w-10 h-10 rounded-xl post-avatar flex items-center justify-center text-white font-bold text-base shrink-0">
+                    {{ $avatarInitial }}
+                </div>
+            @endif
             <div>
-                <p class="font-semibold text-gray-900 text-sm">{{ $post->author->name ?? __('Unknown') }}</p>
+                @if($post->author && $post->author->username)
+                    <a href="{{ route('profile.show', $post->author->username) }}" class="font-semibold text-gray-900 text-sm hover:text-primary transition-colors">
+                        {{ $post->author->name }}
+                    </a>
+                @else
+                    <p class="font-semibold text-gray-900 text-sm">{{ $post->author->name ?? __('Unknown') }}</p>
+                @endif
                 <p class="text-xs text-gray-400">{{ $post->created_at->diffForHumans() }}</p>
             </div>
         </div>
@@ -51,12 +63,15 @@
         <div class="px-4 py-3 flex items-center justify-between gap-4">
             <div>
                 <p class="font-semibold text-gray-900 text-sm">{{ $post->trip->name }}</p>
-                <p class="text-xs text-gray-500 mt-0.5">
-                    📍 {{ $post->trip->destination }} ·
-                    {{ $post->trip->start_date->format('d M') }} — {{ $post->trip->end_date->format('d M Y') }}
+                <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
+                    <x-icon name="map-pin" class="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                    <span>{{ $post->trip->destination }} · {{ $post->trip->start_date->format('d M') }} — {{ $post->trip->end_date->format('d M Y') }}</span>
                 </p>
                 @if($post->trip->budget > 0)
-                <p class="text-xs text-gray-400 mt-0.5">💰 {{ __('Budget') }}: {{ number_format($post->trip->budget, 0, ',', '.') }} VND</p>
+                <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
+                    <x-icon name="wallet" class="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                    <span>{{ __('Budget') }}: {{ number_format($post->trip->budget, 0, ',', '.') }} VND</span>
+                </p>
                 @endif
             </div>
             {{-- Clone Trip Button --}}
@@ -107,14 +122,27 @@
         <div class="comment-list space-y-0 mb-3 max-h-48 overflow-y-auto">
             @foreach($post->comments->take(5) as $comment)
             <div class="flex gap-2 items-start py-2 {{ !$loop->first ? 'border-t border-gray-50' : '' }}">
-                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center text-white text-xs font-semibold shrink-0">
-                    {{ strtoupper(substr($comment->author->name ?? 'U', 0, 1)) }}
-                </div>
-                <div class="flex-1 min-w-0">
-                    <span class="text-xs font-semibold text-gray-700">{{ $comment->author->name ?? __('User') }}</span>
-                    <span class="text-xs text-gray-400 ml-2">{{ $comment->created_at->diffForHumans() }}</span>
-                    <p class="text-sm text-gray-600 mt-0.5">{{ $comment->content }}</p>
-                </div>
+                @if($comment->author && $comment->author->username)
+                    <a href="{{ route('profile.show', $comment->author->username) }}" class="shrink-0">
+                        <x-profile.avatar :user="$comment->author" size="sm" />
+                    </a>
+                    <div class="flex-1 min-w-0">
+                        <a href="{{ route('profile.show', $comment->author->username) }}" class="text-xs font-semibold text-gray-700 hover:text-primary transition-colors">
+                            {{ $comment->author->name }}
+                        </a>
+                        <span class="text-xs text-gray-400 ml-2">{{ $comment->created_at->diffForHumans() }}</span>
+                        <p class="text-sm text-gray-600 mt-0.5">{{ $comment->content }}</p>
+                    </div>
+                @else
+                    <div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center text-white text-xs font-semibold shrink-0">
+                        {{ strtoupper(substr($comment->author->name ?? 'U', 0, 1)) }}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <span class="text-xs font-semibold text-gray-700">{{ $comment->author->name ?? __('User') }}</span>
+                        <span class="text-xs text-gray-400 ml-2">{{ $comment->created_at->diffForHumans() }}</span>
+                        <p class="text-sm text-gray-600 mt-0.5">{{ $comment->content }}</p>
+                    </div>
+                @endif
             </div>
             @endforeach
         </div>

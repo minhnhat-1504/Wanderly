@@ -20,13 +20,16 @@
     {{-- Header --}}
     <div class="flex items-center justify-between mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">🌍 {{ __('Community Feed') }}</h1>
+            <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-2.5">
+                <x-icon name="globe" class="w-8 h-8 text-primary" />
+                <span>{{ __('Community Feed') }}</span>
+            </h1>
             <p class="text-gray-500 mt-1">{{ __('Discover and share travel stories with fellow wanderers.') }}</p>
         </div>
         <button type="button" onclick="document.getElementById('create-post-modal').classList.remove('hidden')"
                 class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition-colors shadow-lg shadow-primary/25"
                 id="btn-create-post">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+            <x-icon name="plus" class="w-5 h-5 text-white" />
             {{ __('Share a Story') }}
         </button>
     </div>
@@ -34,20 +37,23 @@
     {{-- Tabs --}}
     <div class="flex gap-1 mb-6 bg-gray-100 p-1 rounded-xl w-fit">
         <a href="{{ route('social.feed', ['tab' => 'feed']) }}"
-           class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ $tab === 'feed' ? 'bg-white text-gray-900 shadow' : 'text-gray-500 hover:text-gray-700' }}"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ $tab === 'feed' ? 'bg-white text-gray-900 shadow' : 'text-gray-500 hover:text-gray-700' }}"
            id="tab-feed">
-            🌐 {{ __('All Posts') }}
+            <x-icon name="globe" class="w-4 h-4 text-inherit" />
+            <span>{{ __('All Posts') }}</span>
         </a>
         <a href="{{ route('social.feed', ['tab' => 'saved']) }}"
-           class="px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ $tab === 'saved' ? 'bg-white text-gray-900 shadow' : 'text-gray-500 hover:text-gray-700' }}"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ $tab === 'saved' ? 'bg-white text-gray-900 shadow' : 'text-gray-500 hover:text-gray-700' }}"
            id="tab-saved">
-            🔖 {{ __('Saved') }}
+            <x-icon name="bookmark" class="w-4 h-4 text-inherit" />
+            <span>{{ __('Saved') }}</span>
         </a>
     </div>
 
     @if(session('success'))
-        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm font-medium">
-            ✅ {{ session('success') }}
+        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm font-medium flex items-center gap-2">
+            <x-icon name="check-circle" class="w-4 h-4 text-green-600 shrink-0" />
+            <span>{{ session('success') }}</span>
         </div>
     @endif
 
@@ -57,7 +63,9 @@
             @include('social.post-card', ['post' => $post])
         @empty
             <div class="text-center py-20 text-gray-400">
-                <div class="text-6xl mb-4">✈️</div>
+                <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-teal-50 flex items-center justify-center text-teal-600">
+                    <x-icon name="plane" class="w-8 h-8" />
+                </div>
                 <p class="text-lg font-medium text-gray-500">{{ __('No posts yet. Be the first to share!') }}</p>
             </div>
         @endforelse
@@ -74,9 +82,12 @@
     <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="document.getElementById('create-post-modal').classList.add('hidden')"></div>
     <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-            <h2 class="text-lg font-semibold text-gray-900">✍️ {{ __('Share Your Story') }}</h2>
+            <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <x-icon name="edit-3" class="w-5 h-5 text-primary" />
+                <span>{{ __('Share Your Story') }}</span>
+            </h2>
             <button type="button" onclick="document.getElementById('create-post-modal').classList.add('hidden')" class="p-2 rounded-xl hover:bg-gray-100 transition-colors">
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                <x-icon name="x" class="w-5 h-5 text-gray-400" />
             </button>
         </div>
         <form method="POST" action="{{ route('social.posts.store') }}" class="p-6 space-y-4">
@@ -96,7 +107,10 @@
             {{-- Attach Trip --}}
             @if($myTrips->isNotEmpty())
             <div>
-                <label for="post-trip" class="block text-sm font-medium text-gray-700 mb-1">📎 {{ __('Attach a Trip Card (optional)') }}</label>
+                <label for="post-trip" class="flex items-center gap-1.5 text-sm font-medium text-gray-700 mb-1">
+                    <x-icon name="paperclip" class="w-4 h-4 text-gray-500" />
+                    <span>{{ __('Attach a Trip Card (optional)') }}</span>
+                </label>
                 <select name="trip_id" id="post-trip"
                         class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm outline-none transition bg-white">
                     <option value="">— {{ __('No trip attached') }} —</option>
@@ -112,9 +126,10 @@
                     {{ __('Cancel') }}
                 </button>
                 <button type="submit"
-                        class="px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors shadow-md shadow-primary/25"
+                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors shadow-md shadow-primary/25"
                         id="btn-submit-post">
-                    🚀 {{ __('Publish Post') }}
+                    <x-icon name="send" class="w-4 h-4 text-white" />
+                    <span>{{ __('Publish Post') }}</span>
                 </button>
             </div>
         </form>

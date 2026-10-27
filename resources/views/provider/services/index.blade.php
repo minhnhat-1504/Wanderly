@@ -10,7 +10,7 @@
         <div>
             <div class="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-1">
                 <a href="{{ route('provider.dashboard') }}" class="hover:text-primary transition-colors flex items-center gap-1">
-                    <span>🏢</span>
+                    <x-icon name="store" class="w-3.5 h-3.5 text-primary" />
                     <span>{{ $provider->business_name }}</span>
                 </a>
                 <span>/</span>
@@ -25,7 +25,7 @@
         </div>
 
         <a href="{{ route('provider.services.create') }}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white text-xs sm:text-sm font-semibold hover:bg-teal-800 transition-colors shadow-md shadow-primary/20">
-            <span>+</span>
+            <x-icon name="plus" class="w-4 h-4 text-white" />
             <span>{{ __('Add New Service') }}</span>
         </a>
     </div>
@@ -33,14 +33,16 @@
     {{-- Services List --}}
     @if($services->isEmpty())
         <div class="bg-white rounded-2xl p-12 text-center border border-dashed border-gray-200">
-            <span class="text-4xl">📦</span>
+            <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-teal-50 flex items-center justify-center text-teal-600">
+                <x-icon name="package" class="w-8 h-8" />
+            </div>
             <h3 class="text-base font-bold text-gray-900 mt-3">{{ __('Your service catalog is empty') }}</h3>
             <p class="text-sm text-gray-500 mt-1 max-w-md mx-auto">
                 {{ __('Add your vehicles, tour packages, or accommodation options so you can quickly bundle them into proposals.') }}
             </p>
             <div class="mt-6">
                 <a href="{{ route('provider.services.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold shadow-md shadow-primary/20 hover:bg-teal-800 transition-all">
-                    <span>+</span>
+                    <x-icon name="plus" class="w-4 h-4 text-white" />
                     <span>{{ __('Add Your First Service') }}</span>
                 </a>
             </div>
@@ -60,7 +62,9 @@
                             </div>
                         @else
                             <div class="h-32 w-full bg-gradient-to-br from-teal-50 to-emerald-50 flex items-center justify-between p-4 border-b border-gray-100">
-                                <span class="text-3xl">🚗</span>
+                                <span class="w-10 h-10 rounded-xl bg-white/80 flex items-center justify-center text-primary shadow-sm">
+                                    <x-icon name="briefcase" class="w-5 h-5" />
+                                </span>
                                 <span class="bg-white text-primary text-xs font-bold px-3 py-1.5 rounded-xl shadow-sm border border-primary/20">
                                     {{ number_format($service->price, 0, ',', '.') }} VND
                                 </span>
