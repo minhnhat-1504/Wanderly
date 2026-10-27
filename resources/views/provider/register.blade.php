@@ -55,12 +55,12 @@
                         class="w-full rounded-xl border-gray-300 text-sm focus:border-primary focus:ring-primary shadow-sm"
                     >
                         <option value="">{{ __('Select category...') }}</option>
-                        <option value="transport" @selected(old('service_type') === 'transport')>🚗 {{ __('Transport & Car Rental') }}</option>
-                        <option value="tour" @selected(old('service_type') === 'tour')>🎒 {{ __('Guided Tours & Experiences') }}</option>
-                        <option value="accommodation" @selected(old('service_type') === 'accommodation')>🏨 {{ __('Accommodation & Homestay') }}</option>
-                        <option value="restaurant" @selected(old('service_type') === 'restaurant')>🍽️ {{ __('Restaurant & Culinary') }}</option>
-                        <option value="photo" @selected(old('service_type') === 'photo')>📷 {{ __('Photography & Media') }}</option>
-                        <option value="guide" @selected(old('service_type') === 'guide')>🗺️ {{ __('Private Tour Guide') }}</option>
+                        <option value="transport" @selected(old('service_type') === 'transport')>{{ __('Transport & Car Rental') }}</option>
+                        <option value="tour" @selected(old('service_type') === 'tour')>{{ __('Guided Tours & Experiences') }}</option>
+                        <option value="accommodation" @selected(old('service_type') === 'accommodation')>{{ __('Accommodation & Homestay') }}</option>
+                        <option value="restaurant" @selected(old('service_type') === 'restaurant')>{{ __('Restaurant & Culinary') }}</option>
+                        <option value="photo" @selected(old('service_type') === 'photo')>{{ __('Photography & Media') }}</option>
+                        <option value="guide" @selected(old('service_type') === 'guide')>{{ __('Private Tour Guide') }}</option>
                     </select>
                     @error('service_type')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -80,7 +80,7 @@
                         <option value="">{{ __('Select destination...') }}</option>
                         @foreach($destinations as $dest)
                             <option value="{{ $dest->id }}" @selected(old('destination_id') == $dest->id)>
-                                📍 {{ $dest->name }}
+                                {{ $dest->name }}
                             </option>
                         @endforeach
                     </select>

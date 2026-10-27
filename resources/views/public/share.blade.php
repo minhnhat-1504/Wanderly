@@ -32,8 +32,9 @@
                     <span class="text-xl font-extrabold tracking-tight text-gray-900">Wanderly</span>
                 </a>
                 <span class="text-gray-300">|</span>
-                <span class="text-xs sm:text-sm font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                    👁️ {{ __('Read-only Public View') }}
+                <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                    <x-icon name="eye" class="w-3.5 h-3.5 text-emerald-600" />
+                    <span>{{ __('Read-only Public View') }}</span>
                 </span>
             </div>
 
@@ -76,7 +77,7 @@
             @else
                 <div class="h-44 sm:h-56 w-full bg-gradient-to-br from-teal-700 via-teal-800 to-emerald-900 relative overflow-hidden flex items-center justify-center">
                     <div class="text-center text-white/20 select-none">
-                        <span class="text-7xl">✈️</span>
+                        <x-icon name="plane" class="w-16 h-16" />
                     </div>
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </div>
@@ -86,27 +87,36 @@
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                     <div class="space-y-2">
                         <div class="flex items-center gap-2">
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200">
-                                📍 {{ $trip->destination }}
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200">
+                                <x-icon name="map-pin" class="w-3.5 h-3.5 text-teal-600" />
+                                <span>{{ $trip->destination }}</span>
                             </span>
-                            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
-                                ⏱️ {{ __(':count Days', ['count' => $tripDays]) }}
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
+                                <x-icon name="clock" class="w-3.5 h-3.5 text-gray-500" />
+                                <span>{{ __(':count Days', ['count' => $tripDays]) }}</span>
                             </span>
                         </div>
                         <h1 class="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
                             {{ $trip->name }}
                         </h1>
-                        <p class="text-sm text-gray-500 flex items-center gap-2">
-                            <span>📅 {{ $trip->start_date ? \Carbon\Carbon::parse($trip->start_date)->format('M d, Y') : '' }} – {{ $trip->end_date ? \Carbon\Carbon::parse($trip->end_date)->format('M d, Y') : '' }}</span>
+                        <p class="text-sm text-gray-500 flex flex-wrap items-center gap-3">
+                            <span class="inline-flex items-center gap-1">
+                                <x-icon name="calendar-days" class="w-3.5 h-3.5 text-gray-400" />
+                                <span>{{ $trip->start_date ? \Carbon\Carbon::parse($trip->start_date)->format('M d, Y') : '' }} – {{ $trip->end_date ? \Carbon\Carbon::parse($trip->end_date)->format('M d, Y') : '' }}</span>
+                            </span>
                             <span>•</span>
-                            <span>👤 {{ __('Organized by :name', ['name' => $trip->owner->name ?? __('Traveler')]) }}</span>
+                            <span class="inline-flex items-center gap-1">
+                                <x-icon name="user" class="w-3.5 h-3.5 text-gray-400" />
+                                <span>{{ __('Organized by :name', ['name' => $trip->owner->name ?? __('Traveler')]) }}</span>
+                            </span>
                         </p>
                     </div>
 
                     {{-- Public Badge --}}
                     <div class="shrink-0 text-right">
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold uppercase tracking-wider bg-sky-50 text-sky-700 border border-sky-200">
-                            🌐 {{ __('Public Itinerary') }}
+                            <x-icon name="globe" class="w-3.5 h-3.5 text-sky-600" />
+                            <span>{{ __('Public Itinerary') }}</span>
                         </span>
                     </div>
                 </div>
@@ -119,7 +129,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-100">
                     <div>
                         <h2 class="text-base font-bold text-gray-900 flex items-center gap-2">
-                            <span>💰</span>
+                            <x-icon name="wallet" class="w-4 h-4 text-primary" />
                             <span>{{ __('Trip Budget Overview') }}</span>
                         </h2>
                         <p class="text-xs text-gray-500">{{ __('Estimated expenditure and allocated resources') }}</p>
@@ -149,8 +159,9 @@
                 </div>
             </div>
         @else
-            <div class="bg-gray-100/70 border border-dashed border-gray-300 rounded-2xl p-4 text-center text-xs text-gray-500">
-                🔒 {{ __('Budget and cost details are kept private by the organizer.') }}
+            <div class="bg-gray-100/70 border border-dashed border-gray-300 rounded-2xl p-4 text-center text-xs text-gray-500 flex items-center justify-center gap-1.5">
+                <x-icon name="lock" class="w-3.5 h-3.5 text-gray-400" />
+                <span>{{ __('Budget and cost details are kept private by the organizer.') }}</span>
             </div>
         @endif
 
@@ -185,10 +196,15 @@
                             <div class="bg-white rounded-3xl p-5 border border-gray-200/80 shadow-sm flex flex-col min-h-[350px]">
                                 <div class="flex items-center justify-between pb-3 mb-4 border-b border-gray-100">
                                     <h3 class="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
-                                        @if($slotKey === 'morning') 🌅
-                                        @elseif($slotKey === 'midday') ☀️
-                                        @elseif($slotKey === 'afternoon') 🌤️
-                                        @else 🌙 @endif
+                                        @if($slotKey === 'morning')
+                                            <x-icon name="sun-medium" class="w-4 h-4 text-amber-500" />
+                                        @elseif($slotKey === 'midday')
+                                            <x-icon name="sun" class="w-4 h-4 text-amber-500" />
+                                        @elseif($slotKey === 'afternoon')
+                                            <x-icon name="cloud-sun" class="w-4 h-4 text-orange-500" />
+                                        @else
+                                            <x-icon name="moon" class="w-4 h-4 text-indigo-500" />
+                                        @endif
                                         <span>{{ __($slotKey) }}</span>
                                     </h3>
                                     <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
@@ -202,7 +218,10 @@
                                             <div class="flex items-start justify-between gap-2">
                                                 <h4 class="text-sm font-bold text-gray-900 leading-snug">{{ $activity->title }}</h4>
                                                 @if($activity->type === 'room')
-                                                    <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-purple-200 shrink-0">🏨 {{ __('Stay') }}</span>
+                                                    <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-purple-200 shrink-0">
+                                                        <x-icon name="hotel" class="w-3 h-3 text-purple-600" />
+                                                        <span>{{ __('Stay') }}</span>
+                                                    </span>
                                                 @else
                                                     <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-teal-50 text-teal-700 border border-teal-200 shrink-0">{{ ucfirst($activity->category) }}</span>
                                                 @endif
@@ -210,7 +229,8 @@
 
                                             @if($activity->start_time)
                                                 <p class="text-xs text-gray-500 flex items-center gap-1">
-                                                    <span>⏰ {{ substr($activity->start_time, 0, 5) }}</span>
+                                                    <x-icon name="clock" class="w-3 h-3 text-gray-400" />
+                                                    <span>{{ substr($activity->start_time, 0, 5) }}</span>
                                                     @if($activity->end_time)
                                                         <span>– {{ substr($activity->end_time, 0, 5) }}</span>
                                                     @endif
@@ -219,7 +239,7 @@
 
                                             @if($activity->location)
                                                 <p class="text-xs text-gray-600 flex items-center gap-1 truncate" title="{{ $activity->location }}">
-                                                    <span>📍</span>
+                                                    <x-icon name="map-pin" class="w-3 h-3 text-gray-400 shrink-0" />
                                                     <span class="truncate">{{ $activity->location }}</span>
                                                 </p>
                                             @endif
@@ -236,8 +256,8 @@
                                         </div>
                                     @empty
                                         <div class="h-32 flex flex-col items-center justify-center text-center text-gray-300">
-                                            <span class="text-2xl mb-1">💤</span>
-                                            <span class="text-xs">{{ __('No planned activities') }}</span>
+                                            <x-icon name="coffee" class="w-8 h-8 mb-1 text-gray-300" />
+                                            <span class="text-xs text-gray-400">{{ __('No planned activities') }}</span>
                                         </div>
                                     @endforelse
                                 </div>
@@ -253,8 +273,8 @@
             <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-200/80 space-y-6">
                 <div class="flex items-center justify-between pb-4 border-b border-gray-100">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-2xl bg-teal-50 text-primary flex items-center justify-center text-xl">
-                            🧳
+                        <div class="w-10 h-10 rounded-2xl bg-teal-50 text-primary flex items-center justify-center">
+                            <x-icon name="luggage" class="w-5 h-5 text-primary" />
                         </div>
                         <div>
                             <h2 class="text-lg font-bold text-gray-900">{{ __('Trip Packing & Checklist') }}</h2>
@@ -271,7 +291,9 @@
                         <div class="flex items-center justify-between p-3 rounded-2xl border {{ $item->is_completed ? 'bg-gray-50 border-gray-200 opacity-70' : 'bg-white border-gray-200/80 shadow-sm' }}">
                             <div class="flex items-center gap-2.5 min-w-0">
                                 <span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] {{ $item->is_completed ? 'bg-emerald-500 text-white' : 'border border-gray-300' }}">
-                                    @if($item->is_completed) ✓ @endif
+                                    @if($item->is_completed)
+                                        <x-icon name="check" class="w-3 h-3 text-white" />
+                                    @endif
                                 </span>
                                 <span class="text-xs font-medium text-gray-800 truncate {{ $item->is_completed ? 'line-through text-gray-400' : '' }}">
                                     {{ $item->title }}

@@ -10,7 +10,7 @@
         <div>
             <div class="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-1">
                 <a href="{{ route('provider.bookings.index') }}" class="hover:text-primary transition-colors flex items-center gap-1">
-                    <span>🎫</span>
+                    <x-icon name="ticket" class="w-3.5 h-3.5 text-primary" />
                     <span>{{ __('All Bookings') }}</span>
                 </a>
                 <span>/</span>
@@ -69,7 +69,9 @@
 
             <template x-if="!loading && messages.length === 0">
                 <div class="text-center py-16 text-gray-400 text-xs space-y-2">
-                    <span class="text-3xl">💬</span>
+                    <div class="w-12 h-12 mx-auto rounded-2xl bg-teal-50 flex items-center justify-center text-teal-600 mb-2">
+                        <x-icon name="message-circle" class="w-6 h-6" />
+                    </div>
                     <p class="font-medium text-gray-600">{{ __('No messages yet in this conversation') }}</p>
                     <p class="text-[11px] text-gray-400">{{ __('Send a greeting, confirm arrival time, or provide meeting instructions.') }}</p>
                 </div>

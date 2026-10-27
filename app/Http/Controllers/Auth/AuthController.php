@@ -34,8 +34,16 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request): RedirectResponse
     {
+        $baseUsername = \Illuminate\Support\Str::slug($request->name, '_');
+        $baseUsername = preg_replace('/[^a-z0-9_]/', '', strtolower($baseUsername));
+        if (empty($baseUsername) || strlen($baseUsername) < 3) {
+            $baseUsername = 'traveler';
+        }
+        $username = substr($baseUsername, 0, 20) . '_' . rand(100, 999);
+
         $user = User::create([
             'name' => $request->name,
+            'username' => $username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);

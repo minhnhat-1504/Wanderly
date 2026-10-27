@@ -148,6 +148,8 @@ class ProposalService
                 'savings' => $savings,
                 'provider' => [
                     'id' => $proposal->provider?->id,
+                    'user_id' => $proposal->provider?->user_id,
+                    'username' => $proposal->provider?->user?->username,
                     'business_name' => $proposal->provider?->business_name ?? __('Local Provider'),
                     'service_type' => $proposal->provider?->service_type,
                     'rating' => (float) ($proposal->provider?->rating ?? 5.0),

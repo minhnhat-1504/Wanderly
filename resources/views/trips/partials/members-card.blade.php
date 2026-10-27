@@ -31,18 +31,33 @@
         @foreach($displayedMembers as $member)
             <div class="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/70 border border-gray-100">
                 <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="w-8 h-8 rounded-full bg-teal-700 text-white font-bold text-xs flex items-center justify-center shrink-0">
-                        {{ strtoupper(substr($member->user->name ?? 'U', 0, 1)) }}
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-xs font-semibold text-gray-900 truncate">
-                            {{ $member->user->name ?? __('Member') }}
-                            @if($member->user_id === auth()->id())
-                                <span class="text-teal-700 font-normal">({{ __('You') }})</span>
-                            @endif
-                        </p>
-                        <p class="text-[11px] text-gray-500 truncate">{{ $member->user->email ?? '' }}</p>
-                    </div>
+                    @if($member->user && $member->user->username)
+                        <a href="{{ route('profile.show', $member->user->username) }}" class="shrink-0">
+                            <x-profile.avatar :user="$member->user" size="sm" />
+                        </a>
+                        <div class="min-w-0">
+                            <a href="{{ route('profile.show', $member->user->username) }}" class="text-xs font-semibold text-gray-900 hover:text-primary transition-colors truncate block">
+                                {{ $member->user->name }}
+                                @if($member->user_id === auth()->id())
+                                    <span class="text-teal-700 font-normal">({{ __('You') }})</span>
+                                @endif
+                            </a>
+                            <p class="text-[11px] text-gray-500 truncate">@<span>{{ $member->user->username }}</span></p>
+                        </div>
+                    @else
+                        <div class="w-8 h-8 rounded-full bg-teal-700 text-white font-bold text-xs flex items-center justify-center shrink-0">
+                            {{ strtoupper(substr($member->user->name ?? 'U', 0, 1)) }}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-xs font-semibold text-gray-900 truncate">
+                                {{ $member->user->name ?? __('Member') }}
+                                @if($member->user_id === auth()->id())
+                                    <span class="text-teal-700 font-normal">({{ __('You') }})</span>
+                                @endif
+                            </p>
+                            <p class="text-[11px] text-gray-500 truncate">{{ $member->user->email ?? '' }}</p>
+                        </div>
+                    @endif
                 </div>
 
                 <span class="shrink-0 text-[11px] font-semibold px-2 py-0.5 rounded-md

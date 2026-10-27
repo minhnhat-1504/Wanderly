@@ -14,7 +14,7 @@
         <div>
             <div class="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-1">
                 <a href="{{ route('provider.dashboard') }}" class="hover:text-primary transition-colors flex items-center gap-1">
-                    <span>🏢</span>
+                    <x-icon name="store" class="w-3.5 h-3.5 text-primary" />
                     <span>{{ $provider->business_name }}</span>
                 </a>
                 <span>/</span>

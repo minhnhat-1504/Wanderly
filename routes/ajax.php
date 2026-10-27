@@ -124,4 +124,12 @@ Route::middleware('auth')->group(function () {
         ->name('provider.calendar.block');
     Route::post('/provider/calendar/unblock', [ProviderDashboardController::class, 'unblockDate'])
         ->name('provider.calendar.unblock');
+
+    // Profile Module AJAX routes
+    Route::get('/settings/check-username', [\App\Http\Controllers\ProfileController::class, 'checkUsername'])
+        ->name('profile.check-username');
 });
+
+// Profile Tab lazy loading (Accessible publicly or authenticated based on profile visibility)
+Route::get('/u/{user:username}/tab/{tab}', [\App\Http\Controllers\ProfileController::class, 'loadTab'])
+    ->name('profile.tab');
