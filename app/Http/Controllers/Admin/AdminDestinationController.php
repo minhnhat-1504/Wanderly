@@ -32,7 +32,6 @@ class AdminDestinationController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:destinations,name'],
-            'country' => ['nullable', 'string', 'max:100'],
             'description' => ['nullable', 'string'],
         ]);
 
@@ -51,7 +50,6 @@ class AdminDestinationController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:destinations,name,'.$destination->id],
-            'country' => ['nullable', 'string', 'max:100'],
             'description' => ['nullable', 'string'],
         ]);
 

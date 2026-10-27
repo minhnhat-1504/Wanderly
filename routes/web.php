@@ -119,7 +119,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/social/posts/{post}/clone-trip', [SocialFeedController::class, 'cloneTrip'])->name('social.posts.clone-trip');
 
     // ─── Admin Destination Management (D4-05 M16) ─────────────────────────────
-    Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
         Route::get('/destinations', [AdminDestinationController::class, 'index'])->name('destinations.index');
         Route::get('/destinations/create', [AdminDestinationController::class, 'createDestination'])->name('destinations.create');
         Route::post('/destinations', [AdminDestinationController::class, 'storeDestination'])->name('destinations.store');
