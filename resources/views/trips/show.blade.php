@@ -208,7 +208,7 @@
     {{-- ================================================================
          3. TAB NAVIGATION (Underline style, brand teal accent, no icons)
     ================================================================= --}}
-    <nav class="border-b border-gray-200 overflow-x-auto scrollbar-none flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium" aria-label="Trip tabs">
+    <nav x-data class="border-b border-gray-200 overflow-x-auto scrollbar-none flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium" aria-label="Trip tabs">
         <button
             type="button"
             class="py-3 px-3.5 sm:px-4 text-teal-700 font-bold border-b-2 border-teal-700 -mb-px shrink-0 transition"
@@ -264,6 +264,7 @@
         <button
             type="button"
             @click="window.dispatchEvent(new CustomEvent('open-chat-drawer'))"
+            onclick="window.dispatchEvent(new CustomEvent('open-chat-drawer'))"
             class="py-3 px-3.5 sm:px-4 text-gray-500 hover:text-teal-700 transition font-medium border-b-2 border-transparent -mb-px shrink-0"
         >
             {{ __('Chat') }}
@@ -569,16 +570,16 @@
          FLOATING ACTION BUBBLES (Quick Actions: Marketplace & Trip Chat)
          Vertical stack on right side of screen - accessible without scrolling
     ================================================================= --}}
-    <div class="fixed right-5 sm:right-6 bottom-6 sm:bottom-8 z-40 flex flex-col items-end gap-3.5 select-none pointer-events-auto">
+    <div x-data class="fixed right-5 sm:right-6 bottom-6 sm:bottom-8 z-40 flex flex-col items-end gap-3.5 select-none pointer-events-auto">
         {{-- 1. Marketplace Bubble --}}
         <a
             href="{{ route('trips.marketplace.index', $trip) }}"
-            class="group relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white text-teal-700 shadow-lg shadow-teal-950/10 border border-teal-100 hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800 hover:shadow-xl hover:shadow-teal-950/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus:outline-none"
+            class="group relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white text-teal-700 shadow-lg shadow-teal-950/10 border border-teal-100 hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800 hover:shadow-xl hover:shadow-teal-950/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus:outline-none cursor-pointer"
             title="{{ __('Marketplace') }}"
             aria-label="{{ __('Marketplace') }}"
         >
             {{-- Marketplace Storefront SVG Icon --}}
-            <svg class="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-200 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 pointer-events-none transition-transform duration-200 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
 
@@ -592,18 +593,20 @@
         {{-- 2. Trip Chat Bubble --}}
         <button
             type="button"
+            id="trip-chat-floating-btn"
             @click="window.dispatchEvent(new CustomEvent('open-chat-drawer'))"
-            class="group relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-teal-800 via-teal-600 to-emerald-500 text-white shadow-xl shadow-teal-900/30 hover:shadow-2xl hover:shadow-teal-900/40 hover:-translate-y-0.5 active:translate-y-0 hover:brightness-105 transition-all duration-200 border-2 border-white/25 focus:outline-none"
+            onclick="window.dispatchEvent(new CustomEvent('open-chat-drawer'))"
+            class="group relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-teal-800 via-teal-600 to-emerald-500 text-white shadow-xl shadow-teal-900/30 hover:shadow-2xl hover:shadow-teal-900/40 hover:-translate-y-0.5 active:translate-y-0 hover:brightness-105 transition-all duration-200 border-2 border-white/25 focus:outline-none cursor-pointer"
             title="{{ __('Trip Chat') }}"
             aria-label="{{ __('Trip Chat') }}"
         >
             {{-- Chat Bubble SVG Icon --}}
-            <svg class="w-6 h-6 sm:w-6.5 sm:h-6.5 transition-transform duration-200 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="w-6 h-6 sm:w-6.5 sm:h-6.5 pointer-events-none transition-transform duration-200 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
 
             {{-- Pulsing Indicator / Ping effect --}}
-            <span class="absolute top-0 right-0 -mt-0.5 -mr-0.5 flex h-3.5 w-3.5">
+            <span class="absolute top-0 right-0 -mt-0.5 -mr-0.5 flex h-3.5 w-3.5 pointer-events-none">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-400 border-2 border-white"></span>
             </span>

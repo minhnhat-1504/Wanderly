@@ -5,6 +5,8 @@
 <div
     x-data="initChatDrawer({ tripId: {{ $trip->id }} })"
     @keydown.escape.window="if (open) closeDrawer()"
+    @open-chat-drawer.window="open = true; loadActiveChannel(); startPolling(); fetchChannels();"
+    @close-chat-drawer.window="closeDrawer()"
     class="relative z-[65]"
     id="chat-drawer-root"
 >
