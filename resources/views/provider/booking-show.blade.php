@@ -134,7 +134,8 @@
                     x-model="content"
                     placeholder="{{ __('Type your message to traveler...') }}"
                     :disabled="sending"
-                    class="flex-1 rounded-xl border-gray-200 text-xs focus:border-primary focus:ring-primary shadow-sm"
+                    class="flex-1 rounded-xl border border-gray-200 text-xs px-3 py-2 outline-none focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-500/20 shadow-sm transition"
+                    style="outline: none !important;"
                 >
 
                 {{-- Send Button --}}
