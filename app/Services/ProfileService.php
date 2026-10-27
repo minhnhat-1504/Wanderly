@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Activity;
 use App\Models\Booking;
 use App\Models\MemberPreference;
 use App\Models\Post;
@@ -95,7 +94,7 @@ class ProfileService
             $clonesCount = 0;
             $userTripNames = Trip::where('owner_id', $user->id)->pluck('name')->toArray();
             if (! empty($userTripNames)) {
-                $patterns = array_map(fn ($name) => 'Copy of ' . $name, $userTripNames);
+                $patterns = array_map(fn ($name) => 'Copy of '.$name, $userTripNames);
                 $clonesCount = Trip::whereIn('name', $patterns)
                     ->where('owner_id', '!=', $user->id)
                     ->count();
@@ -129,7 +128,7 @@ class ProfileService
     public function getBadges(User $user, ?array $stats = null, bool $forOwner = false): array
     {
         $stats = $stats ?? $this->getStats($user);
-        
+
         $definitions = [
             [
                 'id' => 'first_trip',
@@ -137,7 +136,7 @@ class ProfileService
                 'description' => __('Created their first trip on Wanderly'),
                 'icon_name' => 'compass',
                 'earned' => $stats['total_trips_count'] >= 1,
-                'progress' => min($stats['total_trips_count'], 1) . '/1 trips',
+                'progress' => min($stats['total_trips_count'], 1).'/1 trips',
             ],
             [
                 'id' => 'five_trips',
@@ -145,7 +144,7 @@ class ProfileService
                 'description' => __('Planned 5 or more trips'),
                 'icon_name' => 'map',
                 'earned' => $stats['total_trips_count'] >= 5,
-                'progress' => min($stats['total_trips_count'], 5) . '/5 trips',
+                'progress' => min($stats['total_trips_count'], 5).'/5 trips',
             ],
             [
                 'id' => 'top_planner',
@@ -153,7 +152,7 @@ class ProfileService
                 'description' => __('Itineraries are inspiring and loved by the community'),
                 'icon_name' => 'copy',
                 'earned' => ($stats['clones_count'] >= 1 || $stats['total_trips_count'] >= 10),
-                'progress' => min($stats['clones_count'], 1) . '/1 clones',
+                'progress' => min($stats['clones_count'], 1).'/1 clones',
             ],
             [
                 'id' => 'social_butterfly',
@@ -161,7 +160,7 @@ class ProfileService
                 'description' => __('Actively sharing adventures on the community feed'),
                 'icon_name' => 'heart',
                 'earned' => ($stats['posts_count'] >= 3 || $stats['likes_count'] >= 10),
-                'progress' => min($stats['posts_count'], 3) . '/3 posts',
+                'progress' => min($stats['posts_count'], 3).'/3 posts',
             ],
         ];
 
@@ -334,7 +333,8 @@ class ProfileService
             Storage::disk('public')->delete($user->avatar);
         }
 
-        $filename = Str::random(32) . '.' . $file->getClientOriginalExtension();
+        $filename = Str::random(32).'.'.$file->getClientOriginalExtension();
+
         return $file->storeAs(self::AVATAR_DIRECTORY, $filename, 'public');
     }
 
@@ -347,7 +347,8 @@ class ProfileService
             Storage::disk('public')->delete($user->cover_image);
         }
 
-        $filename = Str::random(32) . '.' . $file->getClientOriginalExtension();
+        $filename = Str::random(32).'.'.$file->getClientOriginalExtension();
+
         return $file->storeAs(self::COVER_DIRECTORY, $filename, 'public');
     }
 
@@ -361,6 +362,7 @@ class ProfileService
         }
 
         $user->update(['avatar' => null]);
+
         return true;
     }
 
@@ -374,6 +376,7 @@ class ProfileService
         }
 
         $user->update(['cover_image' => null]);
+
         return true;
     }
 

@@ -90,6 +90,11 @@ class Trip extends Model
         return $this->hasMany(Vote::class);
     }
 
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
+    }
+
     public function settlementPayments(): HasMany
     {
         return $this->hasMany(SettlementPayment::class);

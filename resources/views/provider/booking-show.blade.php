@@ -91,10 +91,8 @@
                             <p class="whitespace-pre-wrap leading-relaxed" x-text="msg.content" x-show="msg.content"></p>
 
                             <template x-if="msg.attachment_url">
-                                <div class="mt-2 rounded-lg overflow-hidden border" :class="msg.is_mine ? 'border-teal-700' : 'border-gray-200'">
-                                    <a :href="msg.attachment_url" target="_blank">
-                                        <img :src="msg.attachment_url" alt="Attachment" class="max-w-xs max-h-56 object-cover hover:opacity-90 transition-opacity">
-                                    </a>
+                                <div class="mt-2 rounded-lg overflow-hidden border cursor-pointer group/img" :class="msg.is_mine ? 'border-teal-700' : 'border-gray-200'" @click="lightboxImage = msg.attachment_url">
+                                    <img :src="msg.attachment_url" alt="Attachment" class="max-w-xs max-h-56 object-cover group-hover/img:scale-105 transition-transform duration-200">
                                 </div>
                             </template>
                         </div>
@@ -156,6 +154,33 @@
 
     </div>
 
+    {{-- Image Lightbox Modal --}}
+    <div
+        x-show="lightboxImage"
+        x-cloak
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"
+        @click="lightboxImage = null"
+        @keydown.escape.window="lightboxImage = null"
+    >
+        <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center" @click.stop>
+            <button
+                type="button"
+                @click="lightboxImage = null"
+                class="absolute -top-10 right-0 text-white hover:text-gray-300 text-3xl font-bold p-1 leading-none"
+            >&times;</button>
+            <img :src="lightboxImage" class="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl border border-white/10">
+            <div class="mt-3 flex items-center gap-3">
+                <a :href="lightboxImage" target="_blank" class="text-xs font-semibold text-teal-300 hover:text-teal-200 hover:underline flex items-center gap-1">
+                    <span>↗</span>
+                    <span>{{ __('Open original in new window') }}</span>
+                </a>
+                <button type="button" @click="lightboxImage = null" class="text-xs text-gray-300 hover:text-white px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20">
+                    {{ __('Close') }}
+                </button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 @push('scripts')
@@ -167,6 +192,7 @@ function bookingChat(bookingId) {
         content: '',
         file: null,
         imagePreview: null,
+        lightboxImage: null,
         loading: true,
         sending: false,
         pollTimer: null,

@@ -18,8 +18,6 @@
             title: '',
             day: 1,
             time_slot: 'morning',
-            start_time: '',
-            end_time: '',
             cost: 0,
             category: 'sightseeing',
             location: '',
@@ -45,8 +43,6 @@
                         title: '',
                         day: e.detail?.day || 1,
                         time_slot: e.detail?.time_slot || 'morning',
-                        start_time: '',
-                        end_time: '',
                         cost: 0,
                         category: 'sightseeing',
                         location: '',
@@ -253,7 +249,7 @@
                         <select
                             x-model.number="form.day"
                             :disabled="!canEdit"
-                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                            class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"
                         >
                             @for($d = 1; $d <= max(1, $tripDays); $d++)
                                 <option value="{{ $d }}">{{ __('Day :day', ['day' => $d]) }}</option>
@@ -268,40 +264,13 @@
                         <select
                             x-model="form.time_slot"
                             :disabled="!canEdit"
-                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                            class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"
                         >
                             <option value="morning">{{ __('Morning (06:00 – 11:00)') }}</option>
                             <option value="midday">{{ __('Midday (11:00 – 14:00)') }}</option>
                             <option value="afternoon">{{ __('Afternoon (14:00 – 18:00)') }}</option>
                             <option value="evening">{{ __('Evening (18:00 – 23:00)') }}</option>
                         </select>
-                    </div>
-                </div>
-
-                {{-- Start Time & End Time --}}
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">
-                            {{ __('Start Time') }}
-                        </label>
-                        <input
-                            type="time"
-                            x-model="form.start_time"
-                            :disabled="!canEdit"
-                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
-                        >
-                    </div>
-
-                    <div>
-                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">
-                            {{ __('End Time') }}
-                        </label>
-                        <input
-                            type="time"
-                            x-model="form.end_time"
-                            :disabled="!canEdit"
-                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
-                        >
                     </div>
                 </div>
 
@@ -333,7 +302,7 @@
                         <select
                             x-model="form.category"
                             :disabled="!canEdit"
-                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                            class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"
                         >
                             <option value="sightseeing">{{ __('Sightseeing') }}</option>
                             <option value="dining">{{ __('Dining / Food') }}</option>
@@ -345,8 +314,8 @@
                     </div>
                 </div>
 
-                {{-- Location Name & Address --}}
-                <div class="space-y-3">
+                {{-- Location Name & Address (2-columns) --}}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">
                             {{ __('Location / Venue Name') }} <span class="text-red-500">*</span>
@@ -390,7 +359,7 @@
                 </div>
 
                 {{-- Actions --}}
-                <div class="pt-2 flex items-center justify-end gap-2 border-t border-gray-100">
+                <div class="pt-3 flex items-center justify-end gap-3 border-t border-gray-100">
                     <button
                         type="button"
                         @click="closeModal()"

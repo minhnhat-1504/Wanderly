@@ -119,8 +119,24 @@
                             </form>
                         @endauth
 
-                        <a href="{{ route('trips.marketplace.index', $trip) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-teal-700 transition font-medium">
-                            {{ __('Marketplace') }}
+                        <a href="{{ route('trips.offline-passport', $trip) }}" class="flex items-center gap-2 px-4 py-2 text-teal-800 hover:bg-teal-50 transition font-semibold">
+                            <span>📶</span>
+                            <span>{{ __('Offline Passport') }}</span>
+                        </a>
+
+                        <a href="{{ route('trips.memory-scrapbook', $trip) }}" class="flex items-center gap-2 px-4 py-2 text-amber-800 hover:bg-amber-50 transition font-semibold">
+                            <span>📖</span>
+                            <span>{{ __('Memory Scrapbook') }}</span>
+                        </a>
+
+                        <a href="{{ route('trips.export-pdf', $trip) }}" class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-teal-700 transition font-medium">
+                            <span>📄</span>
+                            <span>{{ __('Export PDF') }}</span>
+                        </a>
+
+                        <a href="{{ route('trips.marketplace.index', $trip) }}" class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-teal-700 transition font-medium">
+                            <span>🏪</span>
+                            <span>{{ __('Marketplace') }}</span>
                         </a>
 
                         <button

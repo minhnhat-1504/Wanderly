@@ -67,7 +67,7 @@ class ProviderPortalTest extends TestCase
             'bio' => 'Professional mountain guides and camping tours.',
         ]);
 
-        $response->assertRedirect(route('provider.dashboard'));
+        $response->assertRedirect(route('provider.contract'));
         $this->assertDatabaseHas('providers', [
             'user_id' => $traveler->id,
             'business_name' => 'Da Lat Eco Trekking',
@@ -75,6 +75,22 @@ class ProviderPortalTest extends TestCase
         ]);
 
         $this->assertEquals('provider', $traveler->fresh()->role);
+    }
+
+    public function test_provider_can_view_and_sign_contract(): void
+    {
+        $response = $this->actingAs($this->providerUser)->get(route('provider.contract'));
+        $response->assertStatus(200);
+        $response->assertSee('Wanderly Partner Cooperation Agreement');
+        $response->assertSee($this->provider->business_name);
+
+        $signResponse = $this->actingAs($this->providerUser)->post(route('provider.contract.sign'), [
+            'agree_terms' => '1',
+            'signature_name' => 'Test Representative',
+        ]);
+
+        $signResponse->assertRedirect(route('provider.dashboard'));
+        $this->assertTrue($this->provider->fresh()->is_verified);
     }
 
     public function test_registered_provider_is_redirected_away_from_registration_form(): void
