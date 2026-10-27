@@ -431,4 +431,27 @@ class ProviderService
             Storage::disk('public')->delete($path);
         }
     }
+
+    /**
+     * Retrieve featured services from verified providers matching a destination (E3-05).
+     * Used by the Vietnam Discovery portal to cross-link local partner offerings with destination articles.
+     *
+     * @return Collection<int, Service>
+     */
+    public function getRecommendedServicesForDestination(string|int $destination, int $limit = 4): Collection
+    {
+        return Service::query()
+            ->with(['provider.user'])
+            ->whereHas('provider', function ($query) use ($destination) {
+                if (is_numeric($destination)) {
+                    $query->where('destination_id', (int) $destination);
+                } else {
+                    $query->whereHas('destination', fn ($d) => $d->where('name', 'like', "%{$destination}%"));
+                }
+                $query->where('is_verified', true);
+            })
+            ->latest('id')
+            ->limit($limit)
+            ->get();
+    }
 }
