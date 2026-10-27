@@ -8,6 +8,7 @@ use App\Http\Controllers\Social\SocialFeedController;
 use App\Http\Controllers\Trip\ActivityController;
 use App\Http\Controllers\Trip\BookingController;
 use App\Http\Controllers\Trip\BudgetController;
+use App\Http\Controllers\Trip\OfflinePassportController;
 use App\Http\Controllers\Trip\PdfExportController;
 use App\Http\Controllers\Trip\ProposalController;
 use App\Http\Controllers\Trip\PublicShareController;
@@ -107,6 +108,10 @@ Route::middleware('auth')->group(function () {
 
     // ─── PDF Export (D4-04 M7) ─────────────────────────────────────────────────
     Route::get('/trips/{trip}/export-pdf', [PdfExportController::class, 'export'])->name('trips.export-pdf');
+
+    // ─── Offline Travel Passport (Sprint 4 - E4-02) ───────────────────────────
+    Route::get('/trips/{trip}/offline-passport', [OfflinePassportController::class, 'show'])->name('trips.offline-passport');
+    Route::get('/trips/{trip}/offline-passport/data', [OfflinePassportController::class, 'data'])->name('trips.offline-passport.data');
 
     // ─── Social Feed (D4-02 M13) ──────────────────────────────────────────────
     Route::get('/social', [SocialFeedController::class, 'index'])->name('social.feed');
