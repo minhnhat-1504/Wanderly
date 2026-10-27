@@ -53,8 +53,48 @@ class ProviderDashboardController extends Controller
             return back()->withInput()->with('error', $e->getMessage());
         }
 
+        return redirect()->route('provider.contract')
+            ->with('success', __('Profile submitted! Please review and sign the Partnership Contract to activate your account.'));
+    }
+
+    /**
+     * Show the partnership contract signing page.
+     */
+    public function showContract(Request $request): View|RedirectResponse
+    {
+        $provider = $request->user()->provider;
+
+        if (! $provider) {
+            return redirect()->route('provider.register');
+        }
+
+        $provider->load('destination');
+
+        return view('provider.contract', compact('provider'));
+    }
+
+    /**
+     * Process contract acceptance and activation.
+     */
+    public function signContract(Request $request): RedirectResponse
+    {
+        $provider = $request->user()->provider;
+
+        if (! $provider) {
+            return redirect()->route('provider.register');
+        }
+
+        $request->validate([
+            'agree_terms' => 'accepted',
+            'signature_name' => 'required|string|max:100',
+        ]);
+
+        $provider->update([
+            'is_verified' => true,
+        ]);
+
         return redirect()->route('provider.dashboard')
-            ->with('success', __('Welcome aboard! Your provider profile has been created.'));
+            ->with('success', __('Partnership contract signed! Your provider portal is fully activated.'));
     }
 
     /**

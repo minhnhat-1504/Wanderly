@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -34,12 +35,12 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request): RedirectResponse
     {
-        $baseUsername = \Illuminate\Support\Str::slug($request->name, '_');
+        $baseUsername = Str::slug($request->name, '_');
         $baseUsername = preg_replace('/[^a-z0-9_]/', '', strtolower($baseUsername));
         if (empty($baseUsername) || strlen($baseUsername) < 3) {
             $baseUsername = 'traveler';
         }
-        $username = substr($baseUsername, 0, 20) . '_' . rand(100, 999);
+        $username = substr($baseUsername, 0, 20).'_'.rand(100, 999);
 
         $user = User::create([
             'name' => $request->name,

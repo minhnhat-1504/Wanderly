@@ -2,12 +2,16 @@
 
 use App\Http\Controllers\Admin\AdminDestinationController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Discovery\DiscoveryController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Provider\ProviderDashboardController;
 use App\Http\Controllers\Provider\ProviderServiceController;
 use App\Http\Controllers\Social\SocialFeedController;
 use App\Http\Controllers\Trip\ActivityController;
 use App\Http\Controllers\Trip\BookingController;
 use App\Http\Controllers\Trip\BudgetController;
+use App\Http\Controllers\Trip\MemoryScrapbookController;
+use App\Http\Controllers\Trip\OfflinePassportController;
 use App\Http\Controllers\Trip\PdfExportController;
 use App\Http\Controllers\Trip\ProposalController;
 use App\Http\Controllers\Trip\PublicShareController;
@@ -20,12 +24,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    if (auth()->check()) {
-        return redirect()->route('trips.index');
-    }
-
     return view('welcome');
 });
+
+// ─── Vietnam Travel Discovery Portal (Sprint 4 - E4-04) ──────────────────────
+Route::get('/discovery', [DiscoveryController::class, 'index'])->name('discovery.index');
+Route::get('/discovery/{slug}', [DiscoveryController::class, 'show'])->name('discovery.show');
 
 Route::get('/dashboard', function () {
     return redirect()->route('trips.index');
@@ -108,6 +112,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('provider')->name('provider.')->group(function () {
         Route::get('/register', [ProviderDashboardController::class, 'create'])->name('register');
         Route::post('/register', [ProviderDashboardController::class, 'store'])->name('register.store');
+        Route::get('/contract', [ProviderDashboardController::class, 'showContract'])->name('contract');
+        Route::post('/contract', [ProviderDashboardController::class, 'signContract'])->name('contract.sign');
         Route::get('/dashboard', [ProviderDashboardController::class, 'dashboard'])->name('dashboard');
         Route::get('/calendar', [ProviderDashboardController::class, 'calendar'])->name('calendar');
         Route::post('/calendar/block', [ProviderDashboardController::class, 'blockDate'])->name('calendar.block');
@@ -120,6 +126,17 @@ Route::middleware('auth')->group(function () {
 
     // ─── PDF Export (D4-04 M7) ─────────────────────────────────────────────────
     Route::get('/trips/{trip}/export-pdf', [PdfExportController::class, 'export'])->name('trips.export-pdf');
+
+    // ─── Offline Travel Passport (Sprint 4 - E4-02) ───────────────────────────
+    Route::get('/trips/{trip}/offline-passport', [OfflinePassportController::class, 'show'])->name('trips.offline-passport');
+    Route::get('/trips/{trip}/offline-passport/data', [OfflinePassportController::class, 'data'])->name('trips.offline-passport.data');
+
+    // ─── Reverse Memory Scrapbook (Sprint 4 - E4-03) ──────────────────────────
+    Route::get('/trips/{trip}/memory-scrapbook', [MemoryScrapbookController::class, 'show'])->name('trips.memory-scrapbook');
+    Route::get('/trips/{trip}/memory-scrapbook/data', [MemoryScrapbookController::class, 'data'])->name('trips.memory-scrapbook.data');
+
+    // ─── 1-Click Add to Trip (Sprint 4 - E4-04) ───────────────────────────────
+    Route::post('/discovery/{article}/add-to-trip', [DiscoveryController::class, 'addToTrip'])->name('discovery.add-to-trip');
 
     // ─── Social Feed (D4-02 M13) ──────────────────────────────────────────────
     Route::get('/social', [SocialFeedController::class, 'index'])->name('social.feed');
@@ -148,20 +165,20 @@ Route::middleware('auth')->group(function () {
     });
 
     // ─── Account Settings (Profile Module) ──────────────────────────────────
-    Route::get('/settings', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/settings', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
-    Route::patch('/settings/preferences', [\App\Http\Controllers\ProfileController::class, 'updatePreferences'])->name('profile.preferences.update');
-    Route::patch('/settings/privacy', [\App\Http\Controllers\ProfileController::class, 'updatePrivacy'])->name('profile.privacy.update');
-    Route::patch('/settings/notifications', [\App\Http\Controllers\ProfileController::class, 'updateNotifications'])->name('profile.notifications.update');
-    Route::put('/settings/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('password.update');
-    Route::post('/settings/logout-others', [\App\Http\Controllers\ProfileController::class, 'logoutOthers'])->name('profile.logout-others');
-    Route::delete('/settings/avatar', [\App\Http\Controllers\ProfileController::class, 'removeAvatar'])->name('profile.avatar.destroy');
-    Route::delete('/settings/cover', [\App\Http\Controllers\ProfileController::class, 'removeCover'])->name('profile.cover.destroy');
-    Route::delete('/settings', [\App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/settings', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/settings', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/settings/preferences', [ProfileController::class, 'updatePreferences'])->name('profile.preferences.update');
+    Route::patch('/settings/privacy', [ProfileController::class, 'updatePrivacy'])->name('profile.privacy.update');
+    Route::patch('/settings/notifications', [ProfileController::class, 'updateNotifications'])->name('profile.notifications.update');
+    Route::put('/settings/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::post('/settings/logout-others', [ProfileController::class, 'logoutOthers'])->name('profile.logout-others');
+    Route::delete('/settings/avatar', [ProfileController::class, 'removeAvatar'])->name('profile.avatar.destroy');
+    Route::delete('/settings/cover', [ProfileController::class, 'removeCover'])->name('profile.cover.destroy');
+    Route::delete('/settings', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 // Public User Profile (M17)
-Route::get('/u/{user:username}', [\App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
+Route::get('/u/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
 
 // Read-only Public Share (M7)
 Route::get('/s/{slug}', [PublicShareController::class, 'show'])->name('trips.share.show');

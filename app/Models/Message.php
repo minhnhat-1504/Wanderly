@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 class Message extends Model
 {
@@ -58,7 +57,11 @@ class Message extends Model
      */
     public function getAttachmentUrlAttribute(): ?string
     {
-        return $this->attachment ? Storage::disk('public')->url($this->attachment) : null;
+        if (! $this->attachment) {
+            return null;
+        }
+
+        return asset('storage/'.ltrim($this->attachment, '/'));
     }
 
     /**

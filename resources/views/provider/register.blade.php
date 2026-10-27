@@ -35,7 +35,7 @@
                     value="{{ old('business_name') }}"
                     required
                     placeholder="{{ __('e.g., Dalat Pine Explorer Travel') }}"
-                    class="w-full rounded-xl border-gray-300 text-sm focus:border-primary focus:ring-primary shadow-sm"
+                    class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-primary shadow-xs"
                 >
                 @error('business_name')
                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -52,7 +52,7 @@
                         name="service_type"
                         id="service_type"
                         required
-                        class="w-full rounded-xl border-gray-300 text-sm focus:border-primary focus:ring-primary shadow-sm"
+                        class="w-full pl-4 pr-10 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-primary shadow-xs cursor-pointer"
                     >
                         <option value="">{{ __('Select category...') }}</option>
                         <option value="transport" @selected(old('service_type') === 'transport')>{{ __('Transport & Car Rental') }}</option>
@@ -75,7 +75,7 @@
                         name="destination_id"
                         id="destination_id"
                         required
-                        class="w-full rounded-xl border-gray-300 text-sm focus:border-primary focus:ring-primary shadow-sm"
+                        class="w-full pl-4 pr-10 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-primary shadow-xs cursor-pointer"
                     >
                         <option value="">{{ __('Select destination...') }}</option>
                         @foreach($destinations as $dest)
@@ -103,7 +103,7 @@
                         value="{{ old('phone') }}"
                         required
                         placeholder="{{ __('+84 909 888 777') }}"
-                        class="w-full rounded-xl border-gray-300 text-sm focus:border-primary focus:ring-primary shadow-sm"
+                        class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-primary shadow-xs"
                     >
                     @error('phone')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -121,7 +121,7 @@
                         value="{{ old('address') }}"
                         required
                         placeholder="{{ __('12 Phan Dinh Phung, Da Lat') }}"
-                        class="w-full rounded-xl border-gray-300 text-sm focus:border-primary focus:ring-primary shadow-sm"
+                        class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-primary shadow-xs"
                     >
                     @error('address')
                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -139,7 +139,7 @@
                     id="bio"
                     rows="3"
                     placeholder="{{ __('Describe your fleet, experience, certifications, and what makes your service special...') }}"
-                    class="w-full rounded-xl border-gray-300 text-sm focus:border-primary focus:ring-primary shadow-sm"
+                    class="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-primary shadow-xs"
                 >{{ old('bio') }}</textarea>
                 @error('bio')
                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
