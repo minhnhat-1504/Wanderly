@@ -87,6 +87,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/trips/{trip}/marketplace/requests/{travelRequest}', [TravelRequestController::class, 'destroy'])->name('trips.marketplace.requests.destroy');
 
     Route::get('/trips/{trip}/marketplace/requests/{travelRequest}/compare', [ProposalController::class, 'compare'])->name('trips.marketplace.compare');
+    Route::post('/trips/{trip}/marketplace/proposals/{proposal}/analyze', [ProposalController::class, 'analyze'])->name('trips.marketplace.proposals.analyze');
     Route::get('/marketplace/requests/{travelRequest}/proposals/create', [ProposalController::class, 'create'])->name('marketplace.proposals.create');
     Route::post('/marketplace/requests/{travelRequest}/proposals', [ProposalController::class, 'store'])->name('marketplace.proposals.store');
 

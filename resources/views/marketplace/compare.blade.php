@@ -112,6 +112,67 @@
         </div>
     </div>
 
+    {{-- Dynamic Budget Advisor Banner (Sprint 4 - E3-03) --}}
+    @if ((isset($budgetAdvice) && !empty($budgetAdvice['has_suggestion'])) || (isset($comboAdvice) && !empty($comboAdvice['has_suggestion'])))
+        <div class="mb-8 rounded-2xl bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-sky-50/70 p-5 sm:p-6 border border-emerald-200/80 shadow-xs">
+            <div class="flex items-center gap-2 mb-3">
+                <span class="p-1.5 bg-emerald-600 text-white rounded-lg text-sm">💡</span>
+                <h2 class="text-base font-bold text-gray-900">
+                    {{ __('AI Dynamic Budget Advisor Tips') }}
+                </h2>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800">
+                    {{ __('Savings Opportunities') }}
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @if (isset($budgetAdvice) && !empty($budgetAdvice['has_suggestion']))
+                    <div class="p-4 rounded-xl bg-white/90 border border-emerald-100 shadow-xs flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-1">
+                                <span class="text-xs font-bold text-emerald-700 uppercase tracking-wide">
+                                    {{ $budgetAdvice['headline'] }}
+                                </span>
+                                <span class="px-2 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    -{{ number_format($budgetAdvice['estimated_savings_vnd'], 0, ',', '.') }} VND
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-600 leading-relaxed mt-1">
+                                {{ $budgetAdvice['message'] }}
+                            </p>
+                        </div>
+                        <div class="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500">
+                            <span>{{ __('Current:') }} <strong>{{ $budgetAdvice['current_period'] }}</strong></span>
+                            <span>➔ {{ __('Shift to:') }} <strong class="text-emerald-700">{{ $budgetAdvice['recommended_period'] }}</strong></span>
+                        </div>
+                    </div>
+                @endif
+
+                @if (isset($comboAdvice) && !empty($comboAdvice['has_suggestion']))
+                    <div class="p-4 rounded-xl bg-white/90 border border-teal-100 shadow-xs flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-1">
+                                <span class="text-xs font-bold text-teal-700 uppercase tracking-wide">
+                                    ✨ {{ $comboAdvice['combo_name'] }}
+                                </span>
+                                <span class="px-2 py-0.5 rounded-full text-xs font-extrabold bg-teal-50 text-teal-700 border border-teal-200">
+                                    -{{ number_format($comboAdvice['savings_vnd'], 0, ',', '.') }} VND
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-600 leading-relaxed mt-1">
+                                {{ $comboAdvice['tip'] }}
+                            </p>
+                        </div>
+                        <div class="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500">
+                            <span>{{ __('Cheapest Full Bundle:') }} {{ number_format($comboAdvice['bundle_price'], 0, ',', '.') }} VND</span>
+                            <span class="text-teal-700 font-bold">➔ {{ __('Hybrid Total:') }} {{ number_format($comboAdvice['combo_price'], 0, ',', '.') }} VND</span>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </div>
+    @endif
+
     {{-- Comparison Cards Section --}}
     @if (empty($matrix['proposals']))
         {{-- Empty State --}}
@@ -133,6 +194,25 @@
                     {{ $proposal['status'] === 'accepted' ? 'border-emerald-500 ring-2 ring-emerald-500/20 shadow-md' : ($proposal['is_lowest_price'] ? 'border-primary shadow-sm hover:shadow-md' : 'border-gray-200 hover:border-gray-300 shadow-sm') }}">
 
                     <div>
+                        {{-- AI Insights Badge Bar (Sprint 4 - E3-04) --}}
+                        @if (!empty($proposal['insight']['badge']))
+                            <div class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center justify-between border-b
+                                {{ $proposal['insight']['badge_classes']['bg'] ?? 'bg-emerald-50' }}
+                                {{ $proposal['insight']['badge_classes']['text'] ?? 'text-emerald-800' }}
+                                {{ $proposal['insight']['badge_classes']['border'] ?? 'border-emerald-200' }}">
+                                <div class="flex items-center gap-1.5">
+                                    <span>{{ $proposal['insight']['badge_classes']['icon'] ?? '✨' }}</span>
+                                    <span>{{ $proposal['insight']['badge_label'] }}</span>
+                                </div>
+                                <div class="flex items-center gap-1 text-[11px] font-semibold">
+                                    <span class="text-gray-500 font-normal">{{ __('AI Score:') }}</span>
+                                    <span class="px-1.5 py-0.5 rounded-md bg-white/80 shadow-xs text-gray-900 font-bold">
+                                        {{ $proposal['insight']['score'] }}/100
+                                    </span>
+                                </div>
+                            </div>
+                        @endif
+
                         {{-- Card Header: Provider Info --}}
                         <div class="p-5 border-b border-gray-100 flex items-start justify-between bg-gradient-to-b from-gray-50/50 to-white">
                             <div class="flex items-center gap-3">
@@ -197,6 +277,73 @@
                                 {{ __('Valid until:') }} {{ \Carbon\Carbon::parse($proposal['valid_until'])->format('d/m/Y H:i') }}
                             </div>
                         </div>
+
+                        {{-- AI Proposal Insights & Hidden Costs Alert (Sprint 4 - E3-04) --}}
+                        @if (!empty($proposal['insight']))
+                            <div class="p-5 bg-gradient-to-b from-gray-50/40 to-white border-b border-gray-100 text-xs">
+                                {{-- AI Verdict --}}
+                                @if (!empty($proposal['insight']['summary_verdict']))
+                                    <div class="mb-3.5 p-3 rounded-xl bg-gray-50/90 border border-gray-100 text-gray-700 leading-relaxed shadow-2xs">
+                                        <span class="font-bold text-[10px] text-primary uppercase tracking-wider block mb-1">
+                                            💡 {{ __('AI Co-pilot Analysis:') }}
+                                        </span>
+                                        <p class="italic text-xs text-gray-600">"{{ $proposal['insight']['summary_verdict'] }}"</p>
+                                    </div>
+                                @endif
+
+                                {{-- Hidden Costs Callout Alert --}}
+                                @if (!empty($proposal['insight']['hidden_costs']))
+                                    <div class="p-3.5 rounded-xl bg-amber-50/90 border border-amber-200/80 text-amber-900 mb-3.5 shadow-2xs">
+                                        <div class="flex items-center gap-1.5 font-bold text-xs text-amber-800 mb-1.5">
+                                            <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                            </svg>
+                                            <span>{{ __('Hidden Costs & Unincluded Fees:') }}</span>
+                                        </div>
+                                        <ul class="space-y-1 text-[11px] list-disc list-inside text-amber-900/90 pl-1">
+                                            @foreach ($proposal['insight']['hidden_costs'] as $cost)
+                                                <li>{{ $cost }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+
+                                {{-- Pros & Cons Grid --}}
+                                <div class="grid grid-cols-1 gap-2.5">
+                                    @if (!empty($proposal['insight']['pros']))
+                                        <div>
+                                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 block mb-1">
+                                                ✓ {{ __('Strengths:') }}
+                                            </span>
+                                            <ul class="space-y-1 text-[11px] text-gray-600">
+                                                @foreach (array_slice($proposal['insight']['pros'], 0, 3) as $pro)
+                                                    <li class="flex items-start gap-1.5">
+                                                        <span class="text-emerald-500 font-bold shrink-0">✓</span>
+                                                        <span>{{ $pro }}</span>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+
+                                    @if (!empty($proposal['insight']['cons']))
+                                        <div>
+                                            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500 block mb-1">
+                                                • {{ __('Considerations:') }}
+                                            </span>
+                                            <ul class="space-y-1 text-[11px] text-gray-500">
+                                                @foreach (array_slice($proposal['insight']['cons'], 0, 2) as $con)
+                                                    <li class="flex items-start gap-1.5">
+                                                        <span class="text-gray-400 font-bold shrink-0">•</span>
+                                                        <span>{{ $con }}</span>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
 
                         {{-- Included Services / Items --}}
                         <div class="p-5">
