@@ -13,7 +13,7 @@
 @endphp
 
 @section('content')
-<div class="w-full max-w-[1280px] mx-auto space-y-6" id="timeline-board" data-trip-id="{{ $trip->id }}" data-can-edit="{{ $canEdit ? 'true' : 'false' }}">
+<div x-data class="w-full max-w-[1280px] mx-auto space-y-6" id="timeline-board" data-trip-id="{{ $trip->id }}" data-can-edit="{{ $canEdit ? 'true' : 'false' }}">
 
     {{-- ================================================================
          1. BREADCRUMB (Single clean row)
