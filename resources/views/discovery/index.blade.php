@@ -212,7 +212,7 @@
             </div>
 
             {{-- Pagination --}}
-            <div class="pt-4">
+            <div class="pt-6 border-t border-gray-100">
                 {{ $articles->links() }}
             </div>
         @endif
