@@ -66,6 +66,12 @@
                                 {{ __('Community Feed') }}
                             </a>
 
+                            <a href="{{ route('discovery.index') }}"
+                               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium {{ request()->is('discovery*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
+                                <span>🇻🇳</span>
+                                <span>{{ __('Discover Vietnam') }}</span>
+                            </a>
+
                             @auth
                                 @if(auth()->user()->role === 'provider')
                                 <a href="{{ route('provider.dashboard') }}"
@@ -119,8 +125,8 @@
                                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                     </div>
                                 @endif
-                                <span class="hidden md:block text-sm font-medium text-gray-700 max-w-[120px] truncate">
-                                    {{ auth()->user()->name }}
+                                <span class="hidden md:block text-sm font-medium text-gray-700 max-w-[140px] truncate">
+                                    {{ (request()->is('provider*') && auth()->user()->provider) ? auth()->user()->provider->business_name : auth()->user()->name }}
                                 </span>
                                 <svg class="w-4 h-4 text-gray-400 hidden md:block transition-transform duration-200"
                                      :class="{ 'rotate-180': open }"
@@ -144,6 +150,12 @@
                                 <div class="px-4 py-3 bg-gray-50/80 border-b border-gray-100">
                                     <p class="text-sm font-semibold text-gray-900 truncate">{{ auth()->user()->name }}</p>
                                     <p class="text-xs text-gray-500 mt-0.5 truncate">{{ auth()->user()->email }}</p>
+                                    @if(auth()->user()->provider)
+                                        <div class="mt-2 pt-2 border-t border-gray-200/60 flex items-center justify-between">
+                                            <span class="text-[10px] uppercase font-bold text-teal-800 tracking-wider truncate max-w-[150px]">🏢 {{ auth()->user()->provider->business_name }}</span>
+                                            <span class="text-[10px] text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full font-semibold border border-teal-200">{{ ucfirst(auth()->user()->provider->service_type) }}</span>
+                                        </div>
+                                    @endif
                                 </div>
 
                                 <div class="p-1.5">
@@ -226,6 +238,12 @@
                             <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
                         </svg>
                         {{ __('Community Feed') }}
+                    </a>
+
+                    <a href="{{ route('discovery.index') }}"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium {{ request()->is('discovery*') ? 'text-primary bg-primary/10' : 'text-gray-600 hover:text-primary hover:bg-primary/5' }} transition-all duration-200">
+                        <span>🇻🇳</span>
+                        {{ __('Discover Vietnam') }}
                     </a>
 
                     @auth

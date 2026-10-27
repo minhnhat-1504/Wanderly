@@ -197,13 +197,14 @@
                     @if(!$isRoom && $cost > 0)
                         <button
                             type="button"
-                            class="px-2 py-1 text-xs font-semibold text-teal-700 hover:text-teal-800 hover:bg-teal-50 rounded transition"
+                            class="px-2 py-1 text-xs font-semibold text-teal-700 hover:text-teal-800 hover:bg-teal-50 rounded transition cursor-pointer"
                             title="{{ __('Split Bill') }}"
                             @click="$dispatch('open-split-bill-modal', {
                                 activityId: {{ $id }},
                                 activityTitle: @js($title),
                                 activityCost: {{ $cost }}
                             })"
+                            onclick="window.dispatchEvent(new CustomEvent('open-split-bill-modal', { detail: { activityId: {{ $id }}, activityTitle: {{ json_encode($title) }}, activityCost: {{ $cost }} } }))"
                         >
                             {{ __('Split') }}
                         </button>

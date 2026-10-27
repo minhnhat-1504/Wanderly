@@ -72,10 +72,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getAvatarUrlAttribute(): string
     {
         if ($this->avatar) {
-            return asset('storage/' . $this->avatar);
+            return asset('storage/'.$this->avatar);
         }
 
         $name = urlencode($this->name ?: 'User');
+
         return "https://ui-avatars.com/api/?name={$name}&color=FFFFFF&background=0F766E&bold=true";
     }
 
@@ -85,7 +86,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getCoverUrlAttribute(): ?string
     {
         if ($this->cover_image) {
-            return asset('storage/' . $this->cover_image);
+            return asset('storage/'.$this->cover_image);
         }
 
         return null;

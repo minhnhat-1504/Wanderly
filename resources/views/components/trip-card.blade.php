@@ -82,7 +82,7 @@
     $tripUrl = Route::has('trips.show') ? route('trips.show', $trip) : url('/trips/' . $trip->id);
 @endphp
 
-<article class="group bg-white rounded-2xl border border-gray-200/80 hover:border-primary/40 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden">
+<a href="{{ $tripUrl }}" class="group bg-white rounded-2xl border border-gray-200/80 hover:border-primary/40 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden cursor-pointer block text-inherit no-underline">
     {{-- Card Cover Image Area --}}
     <div class="relative h-48 w-full overflow-hidden bg-gray-100">
         @if(!empty($trip->cover))
@@ -125,9 +125,7 @@
         <div>
             {{-- Trip Title --}}
             <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors duration-200 line-clamp-1">
-                <a href="{{ $tripUrl }}" class="focus:outline-none">
-                    {{ $trip->name }}
-                </a>
+                {{ $trip->name }}
             </h3>
 
             {{-- Destination --}}
@@ -210,4 +208,4 @@
             </span>
         </div>
     </div>
-</article>
+</a>
