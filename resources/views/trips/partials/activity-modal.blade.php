@@ -18,8 +18,6 @@
             title: '',
             day: 1,
             time_slot: 'morning',
-            start_time: '',
-            end_time: '',
             cost: 0,
             category: 'sightseeing',
             location: '',
@@ -45,8 +43,6 @@
                         title: '',
                         day: e.detail?.day || 1,
                         time_slot: e.detail?.time_slot || 'morning',
-                        start_time: '',
-                        end_time: '',
                         cost: 0,
                         category: 'sightseeing',
                         location: '',
@@ -198,10 +194,10 @@
             class="bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-xl max-h-[90vh] flex flex-col border border-gray-100"
         >
             {{-- Modal Header (Zero icons/emojis) --}}
-            <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-gray-50/70">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/70">
                 <div class="flex items-center gap-2">
-                    <span class="text-[11px] font-bold uppercase tracking-wider text-teal-700 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md" x-text="mode === 'edit' ? 'Edit' : 'Add'"></span>
-                    <h3 class="text-sm sm:text-base font-bold text-gray-900" id="activity-modal-title">
+                    <span class="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-md" x-text="mode === 'edit' ? 'Edit' : 'Add'"></span>
+                    <h3 class="text-base sm:text-lg font-bold text-gray-900" id="activity-modal-title">
                         <span x-text="mode === 'edit' ? '{{ __('Edit Activity') }}' : '{{ __('Add New Activity') }}'"></span>
                     </h3>
                 </div>
@@ -209,7 +205,7 @@
                 <button
                     type="button"
                     @click="closeModal()"
-                    class="h-7 w-7 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition flex items-center justify-center text-lg font-bold select-none"
+                    class="h-8 w-8 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition flex items-center justify-center text-lg font-bold select-none"
                     aria-label="{{ __('Close modal') }}"
                 >
                     &times;
@@ -218,16 +214,16 @@
 
             {{-- Permission Error Banner --}}
             <template x-if="authError">
-                <div class="mx-5 mt-2.5 p-2.5 bg-red-50 border border-red-200 text-red-800 rounded-xl text-xs font-semibold">
+                <div class="mx-6 mt-4 p-3 bg-red-50 border border-red-200 text-red-800 rounded-xl text-xs font-semibold">
                     <span x-text="authError"></span>
                 </div>
             </template>
 
             {{-- Modal Body Form --}}
-            <form @submit.prevent="submitForm()" class="overflow-y-auto px-5 py-3.5 space-y-2.5 flex-1">
+            <form @submit.prevent="submitForm()" class="overflow-y-auto p-6 space-y-4 flex-1">
                 {{-- Title --}}
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-0.5">
+                    <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">
                         {{ __('Activity Title') }} <span class="text-red-500">*</span>
                     </label>
                     <input
@@ -236,24 +232,24 @@
                         required
                         :disabled="!canEdit"
                         placeholder="{{ __('e.g., Morning Coffee at Tu Mo To') }}"
-                        class="w-full px-3 py-1.5 rounded-lg border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                        class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
                         :class="errors.title ? 'border-red-400' : 'border-gray-300'"
                     >
                     <template x-if="errors.title">
-                        <p class="text-[11px] text-red-600 mt-0.5" x-text="errors.title[0]"></p>
+                        <p class="text-xs text-red-600 mt-1" x-text="errors.title[0]"></p>
                     </template>
                 </div>
 
                 {{-- Day & Time Slot Row (Zero icons/emojis) --}}
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-0.5">
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">
                             {{ __('Day') }} <span class="text-red-500">*</span>
                         </label>
                         <select
                             x-model.number="form.day"
                             :disabled="!canEdit"
-                            class="w-full pl-3 pr-8 py-1.5 rounded-lg border border-gray-300 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"
+                            class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"
                         >
                             @for($d = 1; $d <= max(1, $tripDays); $d++)
                                 <option value="{{ $d }}">{{ __('Day :day', ['day' => $d]) }}</option>
@@ -262,13 +258,13 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-0.5">
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">
                             {{ __('Time Slot') }} <span class="text-red-500">*</span>
                         </label>
                         <select
                             x-model="form.time_slot"
                             :disabled="!canEdit"
-                            class="w-full pl-3 pr-8 py-1.5 rounded-lg border border-gray-300 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"
+                            class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"
                         >
                             <option value="morning">{{ __('Morning (06:00 – 11:00)') }}</option>
                             <option value="midday">{{ __('Midday (11:00 – 14:00)') }}</option>
@@ -278,37 +274,10 @@
                     </div>
                 </div>
 
-                {{-- Start Time & End Time --}}
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-0.5">
-                            {{ __('Start Time') }}
-                        </label>
-                        <input
-                            type="time"
-                            x-model="form.start_time"
-                            :disabled="!canEdit"
-                            class="w-full px-3 py-1.5 rounded-lg border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
-                        >
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-0.5">
-                            {{ __('End Time') }}
-                        </label>
-                        <input
-                            type="time"
-                            x-model="form.end_time"
-                            :disabled="!canEdit"
-                            class="w-full px-3 py-1.5 rounded-lg border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
-                        >
-                    </div>
-                </div>
-
                 {{-- Cost & Category Row (Zero icons/emojis) --}}
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-0.5">
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">
                             {{ __('Estimated Cost (VND)') }} <span class="text-red-500">*</span>
                         </label>
                         <input
@@ -318,22 +287,22 @@
                             x-model.number="form.cost"
                             :disabled="!canEdit"
                             placeholder="0"
-                            class="w-full px-3 py-1.5 rounded-lg border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
                             :class="errors.cost ? 'border-red-400' : 'border-gray-300'"
                         >
                         <template x-if="errors.cost">
-                            <p class="text-[11px] text-red-600 mt-0.5" x-text="errors.cost[0]"></p>
+                            <p class="text-xs text-red-600 mt-1" x-text="errors.cost[0]"></p>
                         </template>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-0.5">
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">
                             {{ __('Category') }} <span class="text-red-500">*</span>
                         </label>
                         <select
                             x-model="form.category"
                             :disabled="!canEdit"
-                            class="w-full pl-3 pr-8 py-1.5 rounded-lg border border-gray-300 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"
+                            class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed cursor-pointer"
                         >
                             <option value="sightseeing">{{ __('Sightseeing') }}</option>
                             <option value="dining">{{ __('Dining / Food') }}</option>
@@ -346,9 +315,9 @@
                 </div>
 
                 {{-- Location Name & Address (2-columns) --}}
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-0.5">
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">
                             {{ __('Location / Venue Name') }} <span class="text-red-500">*</span>
                         </label>
                         <input
@@ -357,12 +326,12 @@
                             required
                             :disabled="!canEdit"
                             placeholder="{{ __('e.g., Tuyen Lam Lake') }}"
-                            class="w-full px-3 py-1.5 rounded-lg border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
                         >
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-0.5">
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">
                             {{ __('Text Address / Landmark') }}
                         </label>
                         <input
@@ -370,31 +339,31 @@
                             x-model="form.address"
                             :disabled="!canEdit"
                             placeholder="{{ __('e.g., Ward 4, Da Lat City') }}"
-                            class="w-full px-3 py-1.5 rounded-lg border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                            class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
                         >
                     </div>
                 </div>
 
                 {{-- Notes --}}
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-0.5">
+                    <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">
                         {{ __('Personal Notes / Tips') }}
                     </label>
                     <textarea
                         x-model="form.notes"
-                        rows="1"
+                        rows="2"
                         :disabled="!canEdit"
                         placeholder="{{ __('e.g., Book tickets in advance, bring warm jackets...') }}"
-                        class="w-full px-3 py-1.5 rounded-lg border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                        class="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600 disabled:bg-gray-100 disabled:cursor-not-allowed"
                     ></textarea>
                 </div>
 
                 {{-- Actions --}}
-                <div class="pt-2 flex items-center justify-end gap-2 border-t border-gray-100">
+                <div class="pt-3 flex items-center justify-end gap-3 border-t border-gray-100">
                     <button
                         type="button"
                         @click="closeModal()"
-                        class="px-3.5 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-700 hover:bg-gray-50 transition"
+                        class="px-4 py-2.5 rounded-xl border border-gray-200 text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
                     >
                         {{ __('Cancel') }}
                     </button>
@@ -402,7 +371,7 @@
                     <button
                         type="submit"
                         :disabled="loading || !canEdit"
-                        class="px-4 py-1.5 rounded-lg text-xs font-bold text-white bg-teal-700 hover:bg-teal-800 transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-teal-700 hover:bg-teal-800 transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <span x-show="!loading" x-text="mode === 'edit' ? '{{ __('Update Activity') }}' : '{{ __('Create Activity') }}'"></span>
                         <span x-show="loading">{{ __('Saving...') }}</span>
