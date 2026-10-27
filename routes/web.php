@@ -12,6 +12,7 @@ use App\Http\Controllers\Trip\PdfExportController;
 use App\Http\Controllers\Trip\ProposalController;
 use App\Http\Controllers\Trip\PublicShareController;
 use App\Http\Controllers\Trip\RoomBookingController;
+use App\Http\Controllers\Trip\SplitBillController;
 use App\Http\Controllers\Trip\TravelRequestController;
 use App\Http\Controllers\Trip\TripController;
 use App\Http\Controllers\Trip\TripMemberController;
@@ -67,6 +68,13 @@ Route::middleware('auth')->group(function () {
 
     // Budget Endpoints (D2-05)
     Route::get('/trips/{trip}/budget', [BudgetController::class, 'show'])->name('trips.budget');
+
+    // Split-Bill & Settlements Endpoints (Sprint 4 - F2)
+    Route::get('/trips/{trip}/settlements', [SplitBillController::class, 'getSettlementPlan'])->name('trips.settlements');
+    Route::get('/trips/{trip}/activities/{activity}/split', [SplitBillController::class, 'getActivitySplit'])->name('trips.activities.split');
+    Route::post('/trips/{trip}/activities/{activity}/split', [SplitBillController::class, 'assignParticipants'])->name('trips.activities.split.assign');
+    Route::post('/trips/{trip}/settlements/vietqr', [SplitBillController::class, 'generateVietQr'])->name('trips.settlements.vietqr');
+    Route::post('/trips/{trip}/settlements/confirm', [SplitBillController::class, 'confirmPayment'])->name('trips.settlements.confirm');
 
     // Room Bookings Endpoints (D2-03)
     Route::post('/trips/{trip}/rooms', [RoomBookingController::class, 'store'])->name('trips.rooms.store');

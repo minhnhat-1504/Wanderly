@@ -29,6 +29,7 @@ class Activity extends Model
         'notes',
         'type',
         'position',
+        'payer_id',
     ];
 
     /**
@@ -51,5 +52,31 @@ class Activity extends Model
     public function trip(): BelongsTo
     {
         return $this->belongsTo(Trip::class);
+    }
+
+    /**
+     * Get the user who paid for this activity.
+     */
+    public function payer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'payer_id');
+    }
+
+    /**
+     * Get the participant records for this activity.
+     */
+    public function participants()
+    {
+        return $this->hasMany(ActivityParticipant::class);
+    }
+
+    /**
+     * Get the users participating in this activity.
+     */
+    public function participantUsers()
+    {
+        return $this->belongsToMany(User::class, 'activity_participants')
+            ->withPivot('custom_amount')
+            ->withTimestamps();
     }
 }
