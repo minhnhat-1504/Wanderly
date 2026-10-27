@@ -135,4 +135,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Vote::class);
     }
+
+    public function settlementPaymentsSent(): HasMany
+    {
+        return $this->hasMany(SettlementPayment::class, 'from_user_id');
+    }
+
+    public function settlementPaymentsReceived(): HasMany
+    {
+        return $this->hasMany(SettlementPayment::class, 'to_user_id');
+    }
 }
