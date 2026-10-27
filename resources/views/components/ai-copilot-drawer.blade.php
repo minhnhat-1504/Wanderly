@@ -2,20 +2,35 @@
      x-init="init()"
      class="relative z-50">
 
-    <!-- Floating Trigger Button (Bottom Right) -->
-    <button @click="openDrawer()"
-            type="button"
-            class="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-medium text-sm rounded-full shadow-xl shadow-teal-900/20 hover:shadow-teal-900/40 transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
-        <span class="relative flex h-3 w-3">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-300 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
-        </span>
-        <x-icon name="sparkles" class="w-5 h-5 text-amber-300" />
-        <span>{{ __('AI Co-pilot') }}</span>
-        <template x-if="weatherAlertsCount > 0">
-            <span class="px-1.5 py-0.5 text-xs font-bold bg-amber-400 text-amber-950 rounded-full" x-text="weatherAlertsCount"></span>
-        </template>
-    </button>
+    <!-- Floating Trigger Button (Top of Floating Stack) -->
+    <div class="fixed right-5 sm:right-6 bottom-[148px] sm:bottom-[164px] z-40 select-none pointer-events-auto">
+        <button @click="openDrawer()"
+                type="button"
+                id="ai-copilot-floating-btn"
+                class="group relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-amber-500 via-teal-600 to-emerald-500 text-white shadow-xl shadow-teal-900/30 hover:shadow-2xl hover:shadow-teal-900/40 hover:-translate-y-0.5 active:translate-y-0 hover:brightness-110 transition-all duration-200 border-2 border-white/40 focus:outline-none cursor-pointer"
+                title="{{ __('Wanderly AI Co-pilot') }}"
+                aria-label="{{ __('Wanderly AI Co-pilot') }}">
+            
+            <x-icon name="sparkles" class="w-6 h-6 sm:w-6.5 sm:h-6.5 text-amber-200 pointer-events-none transition-transform duration-200 group-hover:scale-110" />
+
+            <!-- Weather Alert Badge -->
+            <template x-if="weatherAlertsCount > 0">
+                <span class="absolute -top-1 -right-1 px-1.5 py-0.5 text-[10px] font-extrabold bg-amber-400 text-amber-950 border-2 border-white rounded-full shadow-sm" x-text="weatherAlertsCount"></span>
+            </template>
+            <template x-if="weatherAlertsCount === 0">
+                <span class="absolute top-0 right-0 -mt-0.5 -mr-0.5 flex h-3.5 w-3.5 pointer-events-none">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-300 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-amber-300 border-2 border-white"></span>
+                </span>
+            </template>
+
+            <!-- Floating Tooltip Pill (Left Side) -->
+            <span class="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-gray-900/90 text-white text-xs font-semibold whitespace-nowrap shadow-xl backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none translate-x-2 group-hover:translate-x-0 flex items-center gap-1.5">
+                <span>✨</span>
+                <span>{{ __('AI Co-pilot') }}</span>
+            </span>
+        </button>
+    </div>
 
     <!-- Backdrop -->
     <div x-show="isOpen"
