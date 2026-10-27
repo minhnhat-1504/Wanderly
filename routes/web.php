@@ -8,6 +8,7 @@ use App\Http\Controllers\Social\SocialFeedController;
 use App\Http\Controllers\Trip\ActivityController;
 use App\Http\Controllers\Trip\BookingController;
 use App\Http\Controllers\Trip\BudgetController;
+use App\Http\Controllers\Trip\MemoryScrapbookController;
 use App\Http\Controllers\Trip\OfflinePassportController;
 use App\Http\Controllers\Trip\PdfExportController;
 use App\Http\Controllers\Trip\ProposalController;
@@ -112,6 +113,10 @@ Route::middleware('auth')->group(function () {
     // ─── Offline Travel Passport (Sprint 4 - E4-02) ───────────────────────────
     Route::get('/trips/{trip}/offline-passport', [OfflinePassportController::class, 'show'])->name('trips.offline-passport');
     Route::get('/trips/{trip}/offline-passport/data', [OfflinePassportController::class, 'data'])->name('trips.offline-passport.data');
+
+    // ─── Reverse Memory Scrapbook (Sprint 4 - E4-03) ──────────────────────────
+    Route::get('/trips/{trip}/memory-scrapbook', [MemoryScrapbookController::class, 'show'])->name('trips.memory-scrapbook');
+    Route::get('/trips/{trip}/memory-scrapbook/data', [MemoryScrapbookController::class, 'data'])->name('trips.memory-scrapbook.data');
 
     // ─── Social Feed (D4-02 M13) ──────────────────────────────────────────────
     Route::get('/social', [SocialFeedController::class, 'index'])->name('social.feed');
