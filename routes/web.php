@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\AdminDestinationController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Provider\ProviderDashboardController;
+use App\Http\Controllers\Provider\ProviderServiceController;
 use App\Http\Controllers\Social\SocialFeedController;
 use App\Http\Controllers\Trip\ActivityController;
 use App\Http\Controllers\Trip\BookingController;
@@ -92,6 +94,20 @@ Route::middleware('auth')->group(function () {
     Route::post('/marketplace/items/{item}/accept-item', [BookingController::class, 'acceptItem'])->name('marketplace.items.accept-item');
     Route::get('/trips/{trip}/marketplace/bookings', [BookingController::class, 'index'])->name('trips.marketplace.bookings');
     Route::get('/marketplace/bookings/{booking}', [BookingController::class, 'show'])->name('marketplace.bookings.show');
+
+    // ─── Provider Portal & Catalog (Sprint 3 - D3-04) ──────────────────────────
+    Route::prefix('provider')->name('provider.')->group(function () {
+        Route::get('/register', [ProviderDashboardController::class, 'create'])->name('register');
+        Route::post('/register', [ProviderDashboardController::class, 'store'])->name('register.store');
+        Route::get('/dashboard', [ProviderDashboardController::class, 'dashboard'])->name('dashboard');
+        Route::get('/calendar', [ProviderDashboardController::class, 'calendar'])->name('calendar');
+        Route::post('/calendar/block', [ProviderDashboardController::class, 'blockDate'])->name('calendar.block');
+        Route::post('/calendar/unblock', [ProviderDashboardController::class, 'unblockDate'])->name('calendar.unblock');
+        Route::get('/bookings', [ProviderDashboardController::class, 'bookings'])->name('bookings.index');
+        Route::get('/bookings/{booking}', [ProviderDashboardController::class, 'showBooking'])->name('bookings.show');
+
+        Route::resource('services', ProviderServiceController::class)->except(['show']);
+    });
 
     // ─── PDF Export (D4-04 M7) ─────────────────────────────────────────────────
     Route::get('/trips/{trip}/export-pdf', [PdfExportController::class, 'export'])->name('trips.export-pdf');

@@ -95,6 +95,17 @@
                 <span>{{ __('Match Engine') }}</span>
             </button>
 
+            {{-- In-App & 1-1 Chat Drawer (Sprint 3 - M12) --}}
+            <button
+                type="button"
+                @click="window.dispatchEvent(new CustomEvent('open-chat-drawer'))"
+                class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition-colors shadow-sm cursor-pointer"
+                title="{{ __('Trip & Provider Chat') }}"
+            >
+                <span>💬</span>
+                <span>{{ __('Chat') }}</span>
+            </button>
+
             {{-- Reverse Marketplace Button (Sprint 3 - M10) --}}
             <a href="{{ route('trips.marketplace.index', $trip) }}">
                 <x-button variant="outline" type="button" class="text-xs sm:text-sm border-primary/40 text-primary hover:bg-primary/5">
@@ -565,6 +576,9 @@
 
     {{-- Match Engine Modal (Sprint 3 - M9) --}}
     @include('trips.partials.match-engine-modal', ['trip' => $trip])
+
+    {{-- Chat Drawer (Sprint 3 - D3-05) --}}
+    <x-chat-drawer :trip="$trip" />
 
 </div>
 @endsection
