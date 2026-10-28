@@ -115,6 +115,10 @@
     @case('trash-2')
         <x-lucide-trash-2 class="{{ $class }}" aria-hidden="true" {{ $attributes }} />
         @break
+    @case('send')
+    @case('paper-plane')
+        <x-lucide-send class="{{ $class }}" aria-hidden="true" {{ $attributes }} />
+        @break
     @case('user')
         <x-lucide-user class="{{ $class }}" aria-hidden="true" {{ $attributes }} />
         @break

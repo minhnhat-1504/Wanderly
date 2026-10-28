@@ -1,3 +1,11 @@
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
+
+marked.setOptions({
+    breaks: true,
+    gfm: true
+});
+
 document.addEventListener('alpine:init', () => {
     Alpine.data('aiCopilotDrawer', (config) => ({
         tripId: config?.tripId || null,
@@ -8,6 +16,7 @@ document.addEventListener('alpine:init', () => {
         isIngesting: false,
         isCreatingTrip: false,
         isClearing: false,
+        showClearConfirmModal: false,
         inputMessage: '',
         reviewRawText: '',
         messages: [],
@@ -17,6 +26,25 @@ document.addEventListener('alpine:init', () => {
         init() {
             if (this.tripId) {
                 this.fetchWeather();
+            }
+        },
+
+        renderMarkdown(content) {
+            if (!content) return '';
+            try {
+                const rawHtml = marked.parse(content);
+                return DOMPurify.sanitize(rawHtml, {
+                    ALLOWED_TAGS: [
+                        'p', 'br', 'strong', 'b', 'em', 'i', 'u', 's',
+                        'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                        'ul', 'ol', 'li', 'blockquote',
+                        'code', 'pre', 'hr', 'a', 'span'
+                    ],
+                    ALLOWED_ATTR: ['href', 'target', 'rel', 'class']
+                });
+            } catch (err) {
+                console.error('Markdown rendering error:', err);
+                return content;
             }
         },
 
@@ -39,19 +67,24 @@ document.addEventListener('alpine:init', () => {
                 const data = await res.json();
                 if (data.success) {
                     this.messages = data.messages || [];
-                    this.scrollToBottom();
+                    this.scrollToBottom(true);
                 }
             } catch (err) {
                 console.error('Failed to load AI messages:', err);
             }
         },
 
+        confirmClearHistory() {
+            if (this.isClearing || this.messages.length === 0) return;
+            this.showClearConfirmModal = true;
+        },
+
+        cancelClearHistory() {
+            this.showClearConfirmModal = false;
+        },
+
         async clearHistory() {
             if (this.isClearing) return;
-            if (!confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện này không?')) {
-                return;
-            }
-
             this.isClearing = true;
             try {
                 const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
@@ -70,6 +103,7 @@ document.addEventListener('alpine:init', () => {
                 const data = await res.json();
                 if (data.success) {
                     this.messages = [];
+                    this.showClearConfirmModal = false;
                 } else {
                     alert(data.message || 'Không thể xóa lịch sử trò chuyện.');
                 }
@@ -97,6 +131,13 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
+        handleKeydown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.sendMessage();
+            }
+        },
+
         quickPrompt(promptText) {
             this.inputMessage = promptText;
             this.sendMessage();
@@ -118,7 +159,7 @@ document.addEventListener('alpine:init', () => {
                 is_applied: false
             };
             this.messages.push(tempUserMsg);
-            this.scrollToBottom();
+            this.scrollToBottom(true);
 
             try {
                 const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
@@ -272,11 +313,17 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
-        scrollToBottom() {
+        scrollToBottom(force = false) {
             this.$nextTick(() => {
                 const el = this.$refs.messagesContainer;
                 if (el) {
-                    el.scrollTop = el.scrollHeight;
+                    const isNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+                    if (force || isNearBottom) {
+                        el.scrollTo({
+                            top: el.scrollHeight,
+                            behavior: 'smooth'
+                        });
+                    }
                 }
             });
         },

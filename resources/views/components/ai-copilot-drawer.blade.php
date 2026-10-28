@@ -77,60 +77,86 @@
          x-transition:leave="transition ease-in-out duration-300 transform"
          x-transition:leave-start="translate-x-0"
          x-transition:leave-end="translate-x-full"
-         class="fixed inset-y-0 right-0 max-w-full flex pl-10 z-[70]"
+         class="fixed top-0 right-0 h-screen h-[100dvh] max-w-full flex z-[70]"
          style="display: none;"
          x-cloak>
         
-        <div class="w-screen max-w-md bg-white dark:bg-slate-900 shadow-2xl flex flex-col border-l border-slate-200 dark:border-slate-800">
+        <div class="w-screen max-w-md h-full bg-white dark:bg-slate-900 shadow-2xl flex flex-col border-l border-slate-200 dark:border-slate-800 overflow-hidden">
             
-            <!-- Header -->
-            <div class="p-4 bg-gradient-to-r from-teal-700 via-teal-800 to-slate-900 text-white flex items-center justify-between shadow-md">
-                <div class="flex items-center gap-2.5">
-                    <div class="p-2 bg-white/10 rounded-xl backdrop-blur-md">
-                        <x-icon name="bot" class="w-6 h-6 text-teal-300" />
+            <!-- Header (Issue 3: Tidy Flex Layout without wrapping) -->
+            <div class="px-4 py-3 bg-gradient-to-r from-teal-700 via-teal-800 to-slate-900 text-white flex items-center justify-between gap-2 shadow-md flex-shrink-0">
+                <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                    <div class="p-2 bg-white/10 rounded-xl backdrop-blur-md flex-shrink-0">
+                        <x-icon name="bot" class="w-5 h-5 text-teal-300" />
                     </div>
-                    <div>
-                        <div class="flex items-center gap-1.5">
-                            <h3 class="font-bold text-base tracking-tight text-white">
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center gap-1.5 flex-nowrap">
+                            <h3 class="font-bold text-sm sm:text-base tracking-tight text-white truncate">
                                 {{ $isGlobal ? __('Wanderly Travel Assistant') : __('Wanderly AI Co-pilot') }}
                             </h3>
-                            <span class="px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-teal-500/30 text-teal-200 border border-teal-400/30 rounded">
-                                {{ $isGlobal ? 'Global AI' : 'Trip Mode' }}
+                            <span class="px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-teal-500/30 text-teal-200 border border-teal-400/30 rounded whitespace-nowrap flex-shrink-0">
+                                {{ $isGlobal ? __('Trợ lý AI') : __('Chuyến đi') }}
                             </span>
                         </div>
-                        <p class="text-xs text-teal-100/80">
-                            {{ $isGlobal ? __('Tư vấn du lịch 34 tỉnh thành Việt Nam') : __('Group mediator & adaptive action assistant') }}
+                        <p class="text-[11px] text-teal-100/80 truncate">
+                            {{ $isGlobal ? __('Tư vấn du lịch 34 tỉnh thành Việt Nam') : __('Trợ lý điều phối & giải pháp lịch trình') }}
                         </p>
                     </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <!-- Clear History Button -->
-                    <button @click="clearHistory()" 
+                <div class="flex items-center gap-1 flex-shrink-0">
+                    <!-- Issue 2: ONLY ONE Clear History Button (compact icon button with aria-label) -->
+                    <button @click="confirmClearHistory()" 
                             type="button"
                             :disabled="isClearing || messages.length === 0"
-                            class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-rose-200 hover:text-white bg-rose-500/25 hover:bg-rose-600/60 border border-rose-400/40 rounded-lg transition-all cursor-pointer disabled:opacity-35 disabled:hover:bg-rose-500/25 disabled:hover:text-rose-200 disabled:cursor-not-allowed shadow-sm"
-                            title="{{ __('Xóa toàn bộ lịch sử trò chuyện') }}"
-                            aria-label="{{ __('Xóa toàn bộ lịch sử trò chuyện') }}">
-                        <span x-show="!isClearing" class="inline-flex items-center gap-1">
-                            <x-icon name="trash" class="w-3.5 h-3.5" />
-                            <span>{{ __('Xóa lịch sử') }}</span>
+                            class="p-2 text-white/75 hover:text-rose-300 hover:bg-white/10 disabled:opacity-30 disabled:hover:text-white/75 disabled:hover:bg-transparent rounded-lg transition-colors cursor-pointer"
+                            title="{{ __('Xóa lịch sử') }}"
+                            aria-label="{{ __('Xóa lịch sử') }}">
+                        <span x-show="!isClearing">
+                            <x-icon name="trash" class="w-4 h-4" />
                         </span>
-                        <span x-show="isClearing" class="inline-flex items-center gap-1" x-cloak>
-                            <span class="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin inline-block"></span>
-                            <span>{{ __('Đang xóa...') }}</span>
+                        <span x-show="isClearing" x-cloak>
+                            <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin inline-block"></span>
                         </span>
                     </button>
 
                     <!-- Close Button -->
-                    <button @click="isOpen = false" class="p-1.5 text-white/70 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer" title="{{ __('Đóng') }}">
+                    <button @click="isOpen = false" 
+                            type="button"
+                            class="p-2 text-white/75 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer" 
+                            title="{{ __('Đóng') }}"
+                            aria-label="{{ __('Đóng') }}">
                         <x-icon name="x" class="w-5 h-5" />
+                    </button>
+                </div>
+            </div>
+
+            <!-- Issue 2: Inline Clear History Confirmation Step -->
+            <div x-show="showClearConfirmModal" 
+                 x-transition 
+                 class="bg-rose-50 dark:bg-rose-950/70 border-b border-rose-200 dark:border-rose-900/50 px-4 py-2.5 flex items-center justify-between gap-2 flex-shrink-0 text-xs shadow-inner"
+                 style="display: none;"
+                 x-cloak>
+                <div class="flex items-center gap-1.5 text-rose-900 dark:text-rose-200 font-medium">
+                    <x-icon name="alert-triangle" class="w-4 h-4 text-rose-600 dark:text-rose-400 flex-shrink-0" />
+                    <span>{{ __('Bạn có chắc muốn xóa lịch sử chat?') }}</span>
+                </div>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                    <button @click="cancelClearHistory()" 
+                            type="button" 
+                            class="px-2.5 py-1 text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800 rounded font-medium transition-colors cursor-pointer">
+                        {{ __('Hủy') }}
+                    </button>
+                    <button @click="clearHistory()" 
+                            type="button" 
+                            class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded font-bold shadow-xs transition-colors cursor-pointer">
+                        {{ __('Xóa') }}
                     </button>
                 </div>
             </div>
 
             <!-- Weather Alert Bar (Conditional) -->
             <template x-if="weatherForecast">
-                <div class="px-4 py-2 bg-amber-50 dark:bg-amber-950/40 border-b border-amber-200 dark:border-amber-800/40 text-xs flex items-center justify-between">
+                <div class="px-4 py-2 bg-amber-50 dark:bg-amber-950/40 border-b border-amber-200 dark:border-amber-800/40 text-xs flex items-center justify-between flex-shrink-0">
                     <div class="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-medium">
                         <x-icon name="cloud-rain" class="w-4 h-4 text-amber-600 dark:text-amber-400" />
                         <span x-text="weatherForecast.destination + ': ' + weatherForecast.condition + ' (' + weatherForecast.current_temp + '°C)'"></span>
@@ -141,56 +167,56 @@
                 </div>
             </template>
 
-            <!-- Quick Action Prompts Bar -->
-            <div class="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex gap-2 overflow-x-auto no-scrollbar text-xs">
-                <!-- Clear History Chip in Action Bar when messages exist -->
-                <template x-if="messages.length > 0">
-                    <button @click="clearHistory()"
-                            type="button"
-                            class="whitespace-nowrap px-2.5 py-1 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 rounded-full hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors shadow-sm flex items-center gap-1 font-medium">
-                        <x-icon name="trash" class="w-3.5 h-3.5" />
-                        <span>{{ __('Xóa lịch sử chat') }}</span>
-                    </button>
-                </template>
-
-                @if($isGlobal)
-                    <button @click="quickPrompt('Gợi ý điểm du lịch Việt Nam hấp dẫn nhất mùa này')"
-                            class="whitespace-nowrap px-2.5 py-1 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-sm">
-                        🌸 {{ __('Đi đâu mùa này?') }}
-                    </button>
-                    <button @click="quickPrompt('Lịch trình gợi ý du lịch Đà Lạt 3 ngày 2 đêm')"
-                            class="whitespace-nowrap px-2.5 py-1 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-sm">
-                        🌲 {{ __('Gợi ý Đà Lạt 3N2Đ') }}
-                    </button>
-                    <button @click="quickPrompt('Món ăn ngon và đặc sản nhất định phải thử ở Đà Nẵng')"
-                            class="whitespace-nowrap px-2.5 py-1 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-sm">
-                        🍜 {{ __('Ẩm thực Đà Nẵng') }}
-                    </button>
-                @else
-                    <button @click="quickPrompt('Hòa giải: Người thích trekking, người thích cafe ngắm cảnh')"
-                            class="whitespace-nowrap px-2.5 py-1 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-sm">
-                        🤝 {{ __('Hòa giải bất đồng') }}
-                    </button>
-                    <button @click="isReviewModalOpen = true"
-                            class="whitespace-nowrap px-2.5 py-1 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-sm">
-                        📝 {{ __('Nhập bài review') }}
-                    </button>
-                    <button @click="quickPrompt('Gợi ý hoạt động trong nhà nếu trời mưa')"
-                            class="whitespace-nowrap px-2.5 py-1 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-sm">
-                        🌧️ {{ __('Ứng phó thời tiết') }}
-                    </button>
-                @endif
+            <!-- Issue 4: Quick Action Prompts Bar (Horizontally scrollable with hidden scrollbar & fade) -->
+            <div class="relative flex-shrink-0 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800">
+                <div class="px-4 py-2 flex gap-2 overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory text-xs" style="scrollbar-width: none; -ms-overflow-style: none;">
+                    @if($isGlobal)
+                        <button @click="quickPrompt('Gợi ý điểm du lịch Việt Nam hấp dẫn nhất mùa này')"
+                                type="button"
+                                class="snap-start whitespace-nowrap flex-shrink-0 px-3 py-1.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-2xs font-medium cursor-pointer">
+                            🌸 {{ __('Đi đâu mùa này?') }}
+                        </button>
+                        <button @click="quickPrompt('Lịch trình gợi ý du lịch Đà Lạt 3 ngày 2 đêm')"
+                                type="button"
+                                class="snap-start whitespace-nowrap flex-shrink-0 px-3 py-1.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-2xs font-medium cursor-pointer">
+                            🌲 {{ __('Gợi ý Đà Lạt 3N2Đ') }}
+                        </button>
+                        <button @click="quickPrompt('Món ăn ngon và đặc sản nhất định phải thử ở Đà Nẵng')"
+                                type="button"
+                                class="snap-start whitespace-nowrap flex-shrink-0 px-3 py-1.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-2xs font-medium cursor-pointer">
+                            🍜 {{ __('Ẩm thực Đà Nẵng') }}
+                        </button>
+                    @else
+                        <button @click="quickPrompt('Hòa giải: Người thích trekking, người thích cafe ngắm cảnh')"
+                                type="button"
+                                class="snap-start whitespace-nowrap flex-shrink-0 px-3 py-1.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-2xs font-medium cursor-pointer">
+                            🤝 {{ __('Hòa giải bất đồng') }}
+                        </button>
+                        <button @click="isReviewModalOpen = true"
+                                type="button"
+                                class="snap-start whitespace-nowrap flex-shrink-0 px-3 py-1.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-2xs font-medium cursor-pointer">
+                            📝 {{ __('Nhập bài review') }}
+                        </button>
+                        <button @click="quickPrompt('Gợi ý hoạt động trong nhà nếu trời mưa')"
+                                type="button"
+                                class="snap-start whitespace-nowrap flex-shrink-0 px-3 py-1.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-2xs font-medium cursor-pointer">
+                            🌧️ {{ __('Ứng phó thời tiết') }}
+                        </button>
+                    @endif
+                </div>
+                <!-- Subtle right edge fade gradient -->
+                <div class="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-50 dark:from-slate-800 to-transparent"></div>
             </div>
 
-            <!-- Messages Stream Area -->
-            <div x-ref="messagesContainer" class="flex-1 p-4 overflow-y-auto space-y-4">
+            <!-- Messages Stream Area (Issue 9: Custom Scrollbar) -->
+            <div x-ref="messagesContainer" class="flex-1 min-h-0 p-4 overflow-y-auto space-y-4 chat-scrollbar">
                 
                 <!-- Initial Welcome Message -->
                 <div class="flex gap-3">
-                    <div class="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-700 dark:text-teal-300 flex-shrink-0">
+                    <div class="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-700 dark:text-teal-300 flex-shrink-0 shadow-sm">
                         <x-icon name="bot" class="w-4 h-4" />
                     </div>
-                    <div class="bg-slate-100 dark:bg-slate-800 p-3.5 rounded-2xl rounded-tl-sm text-sm text-slate-800 dark:text-slate-200 max-w-[85%] space-y-2">
+                    <div class="bg-slate-100 dark:bg-slate-800 p-3.5 rounded-2xl rounded-tl-sm text-sm text-slate-800 dark:text-slate-200 max-w-[85%] space-y-2 leading-relaxed shadow-sm">
                         @if($isGlobal)
                             <p>{{ __('Xin chào! Mình là Wanderly AI Travel Assistant. Mình có thể tư vấn du lịch, gợi ý địa điểm vui chơi, món ăn đặc sản tại 34 tỉnh thành Việt Nam. Hãy hỏi mình bất kỳ điều gì!') }}</p>
                         @else
@@ -199,40 +225,36 @@
                     </div>
                 </div>
 
-                <!-- Clear thread indicator inside chat stream -->
-                <template x-if="messages.length > 0">
-                    <div class="flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 px-2 pt-1 border-t border-slate-200/60 dark:border-slate-700/60">
-                        <span x-text="messages.length + ' tin nhắn trong cuộc trò chuyện'"></span>
-                        <button @click="clearHistory()" type="button" class="text-rose-500 hover:text-rose-600 dark:hover:text-rose-400 hover:underline inline-flex items-center gap-1 font-medium cursor-pointer">
-                            <x-icon name="trash" class="w-3 h-3" />
-                            <span>{{ __('Xóa lịch sử') }}</span>
-                        </button>
-                    </div>
-                </template>
-
-                <!-- Chat Messages History Loop -->
+                <!-- Chat Messages History Loop (Issues 1, 6, 7: Markdown rendering, typography, i18n avatar) -->
                 <template x-for="msg in messages" :key="msg.id">
                     <div class="flex gap-3" :class="msg.role === 'user' ? 'flex-row-reverse' : ''">
                         <!-- Avatar -->
                         <template x-if="msg.role === 'user'">
-                            <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs font-semibold flex-shrink-0">
-                                <span>You</span>
+                            <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm" title="{{ auth()->user()?->name ?? __('Bạn') }}">
+                                <x-icon name="user" class="w-4 h-4" />
                             </div>
                         </template>
                         <template x-if="msg.role !== 'user'">
-                            <div class="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-700 dark:text-teal-300 flex-shrink-0">
+                            <div class="w-8 h-8 rounded-full bg-teal-100 dark:bg-teal-900/50 flex items-center justify-center text-teal-700 dark:text-teal-300 flex-shrink-0 shadow-sm">
                                 <x-icon name="bot" class="w-4 h-4" />
                             </div>
                         </template>
 
                         <!-- Content Bubble & Action Card -->
                         <div class="space-y-2 max-w-[85%]">
-                            <div class="p-3.5 rounded-2xl text-sm"
-                                 :class="msg.role === 'user' 
-                                    ? 'bg-teal-600 text-white rounded-tr-sm' 
-                                    : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-sm shadow-sm'">
-                                <p class="whitespace-pre-line leading-relaxed" x-text="msg.content"></p>
-                            </div>
+                            <!-- User Message (Plain Text) -->
+                            <template x-if="msg.role === 'user'">
+                                <div class="p-3.5 rounded-2xl text-sm bg-teal-600 text-white rounded-tr-sm shadow-sm">
+                                    <p class="whitespace-pre-line leading-relaxed" x-text="msg.content"></p>
+                                </div>
+                            </template>
+                            
+                            <!-- Bot Message (Rendered Markdown via marked + DOMPurify) -->
+                            <template x-if="msg.role !== 'user'">
+                                <div class="p-3.5 rounded-2xl text-sm bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-sm shadow-sm chat-markdown-body"
+                                     x-html="renderMarkdown(msg.content)">
+                                </div>
+                            </template>
 
                             <!-- Verified Trip Itinerary Card (Sprint 4 Step 7) -->
                             <template x-if="msg.suggested_action && (msg.suggested_action.action === 'create_trip_itinerary' || msg.suggested_action.type === 'create_trip_itinerary') && msg.suggested_action.params">
@@ -428,17 +450,20 @@
                 </div>
             </div>
 
-            <!-- Chat Input Footer -->
-            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-                <form @submit.prevent="sendMessage()" class="flex items-center gap-2">
-                    <input type="text"
-                           x-model="inputMessage"
-                           :disabled="isLoading"
-                           placeholder="{{ __('Hỏi AI hoặc yêu cầu gợi ý giải pháp...') }}"
-                           class="flex-1 px-3.5 py-2.5 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white dark:focus:bg-slate-900 transition-all text-slate-900 dark:text-white placeholder-slate-400">
+            <!-- Chat Input Footer (Issues 8, 10, 11: Textarea with Enter/Shift+Enter, proper placeholder, send affordance, safe area padding) -->
+            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex-shrink-0 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+                <form @submit.prevent="sendMessage()" class="flex items-end gap-2">
+                    <textarea x-model="inputMessage"
+                              @keydown="handleKeydown($event)"
+                              :disabled="isLoading"
+                              rows="1"
+                              placeholder="{{ __('Hỏi về địa điểm, lịch trình, món ăn...') }}"
+                              class="flex-1 px-3.5 py-2.5 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white dark:focus:bg-slate-900 transition-all text-slate-900 dark:text-white placeholder-slate-400 resize-none max-h-28 overflow-y-auto chat-scrollbar leading-normal"></textarea>
                     <button type="submit"
                             :disabled="isLoading || !inputMessage.trim()"
-                            class="p-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white rounded-xl shadow-md transition-all">
+                            title="{{ __('Gửi') }}"
+                            aria-label="{{ __('Gửi') }}"
+                            class="p-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl shadow-md transition-all flex-shrink-0 cursor-pointer">
                         <x-icon name="send" class="w-4 h-4" />
                     </button>
                 </form>
