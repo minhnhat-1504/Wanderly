@@ -103,20 +103,22 @@
                         </p>
                     </div>
                 </div>
-                <div class="flex items-center gap-1">
+                <div class="flex items-center gap-2">
                     <!-- Clear History Button -->
                     <button @click="clearHistory()" 
                             type="button"
                             :disabled="isClearing || messages.length === 0"
-                            class="p-1.5 text-white/70 hover:text-rose-300 disabled:opacity-30 disabled:hover:text-white/70 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
-                            title="{{ __('Xóa lịch sử trò chuyện') }}"
-                            aria-label="{{ __('Xóa lịch sử trò chuyện') }}">
-                        <template x-if="!isClearing">
-                            <x-icon name="trash" class="w-4.5 h-4.5" />
-                        </template>
-                        <template x-if="isClearing">
-                            <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin inline-block"></span>
-                        </template>
+                            class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-rose-200 hover:text-white bg-rose-500/25 hover:bg-rose-600/60 border border-rose-400/40 rounded-lg transition-all cursor-pointer disabled:opacity-35 disabled:hover:bg-rose-500/25 disabled:hover:text-rose-200 disabled:cursor-not-allowed shadow-sm"
+                            title="{{ __('Xóa toàn bộ lịch sử trò chuyện') }}"
+                            aria-label="{{ __('Xóa toàn bộ lịch sử trò chuyện') }}">
+                        <span x-show="!isClearing" class="inline-flex items-center gap-1">
+                            <x-icon name="trash" class="w-3.5 h-3.5" />
+                            <span>{{ __('Xóa lịch sử') }}</span>
+                        </span>
+                        <span x-show="isClearing" class="inline-flex items-center gap-1" x-cloak>
+                            <span class="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin inline-block"></span>
+                            <span>{{ __('Đang xóa...') }}</span>
+                        </span>
                     </button>
 
                     <!-- Close Button -->
@@ -141,6 +143,16 @@
 
             <!-- Quick Action Prompts Bar -->
             <div class="px-4 py-2.5 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex gap-2 overflow-x-auto no-scrollbar text-xs">
+                <!-- Clear History Chip in Action Bar when messages exist -->
+                <template x-if="messages.length > 0">
+                    <button @click="clearHistory()"
+                            type="button"
+                            class="whitespace-nowrap px-2.5 py-1 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 rounded-full hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors shadow-sm flex items-center gap-1 font-medium">
+                        <x-icon name="trash" class="w-3.5 h-3.5" />
+                        <span>{{ __('Xóa lịch sử chat') }}</span>
+                    </button>
+                </template>
+
                 @if($isGlobal)
                     <button @click="quickPrompt('Gợi ý điểm du lịch Việt Nam hấp dẫn nhất mùa này')"
                             class="whitespace-nowrap px-2.5 py-1 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-sm">
@@ -186,6 +198,17 @@
                         @endif
                     </div>
                 </div>
+
+                <!-- Clear thread indicator inside chat stream -->
+                <template x-if="messages.length > 0">
+                    <div class="flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 px-2 pt-1 border-t border-slate-200/60 dark:border-slate-700/60">
+                        <span x-text="messages.length + ' tin nhắn trong cuộc trò chuyện'"></span>
+                        <button @click="clearHistory()" type="button" class="text-rose-500 hover:text-rose-600 dark:hover:text-rose-400 hover:underline inline-flex items-center gap-1 font-medium cursor-pointer">
+                            <x-icon name="trash" class="w-3 h-3" />
+                            <span>{{ __('Xóa lịch sử') }}</span>
+                        </button>
+                    </div>
+                </template>
 
                 <!-- Chat Messages History Loop -->
                 <template x-for="msg in messages" :key="msg.id">
