@@ -8,10 +8,19 @@
 
 <div x-data="aiCopilotDrawer({ tripId: {{ $tripIdVal }} })"
      x-init="init()"
+     @keydown.escape.window="if (isOpen) isOpen = false"
      class="relative z-50">
 
     <!-- Floating Trigger Button (Top of Floating Stack when in trip, bottom when global) -->
-    <div class="fixed right-5 sm:right-6 {{ $isGlobal ? 'bottom-6 sm:bottom-8' : 'bottom-[148px] sm:bottom-[164px]' }} z-40 select-none pointer-events-auto">
+    <div x-show="!isOpen"
+         x-transition:enter="transition-all ease-out duration-200"
+         x-transition:enter-start="opacity-0 scale-75"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition-all ease-in duration-150"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-75"
+         class="fixed right-5 sm:right-6 {{ $isGlobal ? 'bottom-6 sm:bottom-8' : 'bottom-[148px] sm:bottom-[164px]' }} z-40 select-none pointer-events-auto"
+         x-cloak>
         <button @click="openDrawer()"
                 type="button"
                 id="ai-copilot-floating-btn"
@@ -49,8 +58,9 @@
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0"
          @click="isOpen = false"
-         class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm"
-         style="display: none;"></div>
+         class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[65]"
+         style="display: none;"
+         x-cloak></div>
 
     <!-- Sliding Drawer Panel -->
     <div x-show="isOpen"
@@ -60,8 +70,9 @@
          x-transition:leave="transition ease-in-out duration-300 transform"
          x-transition:leave-start="translate-x-0"
          x-transition:leave-end="translate-x-full"
-         class="fixed inset-y-0 right-0 max-w-full flex pl-10"
-         style="display: none;">
+         class="fixed inset-y-0 right-0 max-w-full flex pl-10 z-[70]"
+         style="display: none;"
+         x-cloak>
         
         <div class="w-screen max-w-md bg-white dark:bg-slate-900 shadow-2xl flex flex-col border-l border-slate-200 dark:border-slate-800">
             
