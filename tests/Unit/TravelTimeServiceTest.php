@@ -10,13 +10,14 @@ use Tests\TestCase;
 class TravelTimeServiceTest extends TestCase
 {
     protected TravelTimeService $travelService;
+
     protected PlaceRepository $placeRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->placeRepository = new PlaceRepository();
-        $provinceResolver = new ProvinceResolver();
+        $this->placeRepository = new PlaceRepository;
+        $provinceResolver = new ProvinceResolver;
         $this->travelService = new TravelTimeService($this->placeRepository, $provinceResolver);
     }
 

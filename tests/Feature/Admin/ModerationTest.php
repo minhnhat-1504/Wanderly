@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Comment;
+use App\Models\Notification;
 use App\Models\Post;
 use App\Models\Report;
 use App\Models\User;
@@ -381,7 +382,7 @@ class ModerationTest extends TestCase
         ]);
         $response->assertRedirect();
 
-        $notification = \App\Models\Notification::where('user_id', $this->reporter->id)
+        $notification = Notification::where('user_id', $this->reporter->id)
             ->where('type', 'report_resolved')
             ->first();
 

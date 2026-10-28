@@ -399,4 +399,3 @@ class VerifiedItineraryAiCopilotTest extends TestCase
         $this->assertStringContainsString('Hải Châu', $msg['content']);
     }
 }
-

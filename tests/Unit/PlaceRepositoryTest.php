@@ -12,7 +12,7 @@ class PlaceRepositoryTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repository = new PlaceRepository();
+        $this->repository = new PlaceRepository;
     }
 
     public function test_loads_verified_places_for_seeded_provinces(): void
@@ -25,7 +25,7 @@ class PlaceRepositoryTest extends TestCase
 
             foreach ($places as $place) {
                 $this->assertTrue($place['verified'], "Place {$place['id']} must be verified.");
-                $this->assertNotSame('llm_draft', $place['source'], "Verified places must not be llm_draft.");
+                $this->assertNotSame('llm_draft', $place['source'], 'Verified places must not be llm_draft.');
                 $this->assertSame($code, $place['province_code']);
                 $this->assertNotEmpty($place['name_vi']);
                 $this->assertIsFloat($place['lat']);

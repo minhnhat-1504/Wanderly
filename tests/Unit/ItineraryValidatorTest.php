@@ -11,14 +11,16 @@ use Tests\TestCase;
 class ItineraryValidatorTest extends TestCase
 {
     protected ItineraryValidator $validator;
+
     protected PlaceRepository $placeRepo;
+
     protected TravelTimeService $travelTime;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->placeRepo = new PlaceRepository();
-        $resolver = new ProvinceResolver();
+        $this->placeRepo = new PlaceRepository;
+        $resolver = new ProvinceResolver;
         $this->travelTime = new TravelTimeService($this->placeRepo, $resolver);
         $this->validator = new ItineraryValidator($this->placeRepo, $this->travelTime);
     }
@@ -68,7 +70,7 @@ class ItineraryValidatorTest extends TestCase
 
         $result = $this->validator->validate($plan, ['expected_days' => 1, 'month' => 4]);
 
-        $this->assertTrue($result['valid'], 'Errors: ' . implode('; ', $result['errors']));
+        $this->assertTrue($result['valid'], 'Errors: '.implode('; ', $result['errors']));
         $this->assertEmpty($result['errors']);
         $this->assertEquals(5, $result['stats']['total_places']);
         $this->assertLessThanOrEqual(180, $result['stats']['total_travel_minutes']);

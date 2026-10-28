@@ -236,7 +236,6 @@ class AiCopilotTest extends TestCase
 
         $response->assertOk()
             ->assertSee('bottom-[148px] sm:bottom-[164px]')
-            ->assertSee('aiCopilotDrawer({ tripId: ' . $this->trip->id . ' })', false);
+            ->assertSee('aiCopilotDrawer({ tripId: '.$this->trip->id.' })', false);
     }
 }
-

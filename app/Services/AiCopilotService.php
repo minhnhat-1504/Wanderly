@@ -188,12 +188,12 @@ params: { title, day, time_slot, cost, poi_id, location, description }";
 
             if ($plan['status'] === 'success') {
                 $summary = $plan['summary'];
-                $budgetStr = $summary['budget_formatted'] ?? ($budget ? number_format($budget, 0, ',', '.') . ' VNĐ' : '');
+                $budgetStr = $summary['budget_formatted'] ?? ($budget ? number_format($budget, 0, ',', '.').' VNĐ' : '');
                 $ticketStr = $summary['total_ticket_cost_formatted'] ?? '0 VNĐ';
 
                 $content = "Dưới đây là lịch trình {$days} ngày tại **{$province['name']}**";
                 if ($budget) {
-                    $content .= " phù hợp với ngân sách **" . number_format($budget, 0, ',', '.') . " VNĐ**";
+                    $content .= ' phù hợp với ngân sách **'.number_format($budget, 0, ',', '.').' VNĐ**';
                 }
                 if ($pace !== 'balanced') {
                     $paceDesc = $pace === 'relaxed' ? 'chill & thong thả' : 'khám phá năng động';
@@ -235,11 +235,11 @@ params: { title, day, time_slot, cost, poi_id, location, description }";
                 $placeSummaries = [];
                 foreach (array_slice($groundingPlaces, 0, 15) as $lp) {
                     $hours = is_array($lp['opening_hours'] ?? null) ? "{$lp['opening_hours']['open']}-{$lp['opening_hours']['close']}" : '24/7';
-                    $price = isset($lp['ticket_price_vnd']) && is_numeric($lp['ticket_price_vnd']) ? ($lp['ticket_price_vnd'] == 0 ? 'Miễn phí' : number_format($lp['ticket_price_vnd'], 0, ',', '.') . ' VNĐ') : 'chưa xác minh';
-                    $specialties = ! empty($lp['local_specialties']) ? ' (Đặc sản: ' . implode(', ', $lp['local_specialties']) . ')' : '';
+                    $price = isset($lp['ticket_price_vnd']) && is_numeric($lp['ticket_price_vnd']) ? ($lp['ticket_price_vnd'] == 0 ? 'Miễn phí' : number_format($lp['ticket_price_vnd'], 0, ',', '.').' VNĐ') : 'chưa xác minh';
+                    $specialties = ! empty($lp['local_specialties']) ? ' (Đặc sản: '.implode(', ', $lp['local_specialties']).')' : '';
                     $placeSummaries[] = "- {$lp['name_vi']}: {$lp['address']} [Vé: {$price}, Giờ: {$hours}]{$specialties}";
                 }
-                $localContext = "\n\nDỮ LIỆU ĐỊA ĐIỂM & ĐẶC SẢN THỰC TẾ ĐÃ KIỂM CHỨNG TẠI {$resolved['province']['name']} (HÃY DÙNG ĐỊA CHỈ VÀ GIÁ NÀY ĐỂ TRẢ LỜI CHÍNH XÁC):\n" . implode("\n", $placeSummaries);
+                $localContext = "\n\nDỮ LIỆU ĐỊA ĐIỂM & ĐẶC SẢN THỰC TẾ ĐÃ KIỂM CHỨNG TẠI {$resolved['province']['name']} (HÃY DÙNG ĐỊA CHỈ VÀ GIÁ NÀY ĐỂ TRẢ LỜI CHÍNH XÁC):\n".implode("\n", $placeSummaries);
             }
         }
 
@@ -253,7 +253,7 @@ Your goals:
 {
   "response": "Your helpful and detailed reply in Vietnamese...",
   "suggested_destinations": ["Da Lat", "Da Nang", "Phu Quoc"] (optional array of province/city names if relevant)
-}' . $localContext;
+}'.$localContext;
 
         $messages = [
             ['role' => 'system', 'content' => $systemPrompt],
@@ -388,7 +388,7 @@ Your goals:
             if ($matchedPlace) {
                 $pName = $matchedPlace['name_vi'];
                 $addr = $matchedPlace['address'] ?? 'Đang cập nhật';
-                $price = isset($matchedPlace['ticket_price_vnd']) && is_numeric($matchedPlace['ticket_price_vnd']) ? ($matchedPlace['ticket_price_vnd'] == 0 ? 'Miễn phí' : number_format($matchedPlace['ticket_price_vnd'], 0, ',', '.') . ' VNĐ') : 'chưa xác minh';
+                $price = isset($matchedPlace['ticket_price_vnd']) && is_numeric($matchedPlace['ticket_price_vnd']) ? ($matchedPlace['ticket_price_vnd'] == 0 ? 'Miễn phí' : number_format($matchedPlace['ticket_price_vnd'], 0, ',', '.').' VNĐ') : 'chưa xác minh';
                 $hours = is_array($matchedPlace['opening_hours'] ?? null) ? "{$matchedPlace['opening_hours']['open']} - {$matchedPlace['opening_hours']['close']}" : 'Mở cửa cả ngày';
                 $note = ! empty($matchedPlace['notes']) ? "\n💡 **Lưu ý:** {$matchedPlace['notes']}" : '';
 
@@ -402,7 +402,7 @@ Your goals:
                         }
                     }
                 }
-                $foodsList = ! empty($foods) ? implode("\n", array_slice(array_unique($foods), 0, 5)) : "• Mì Quảng, Bún chả cá, Bánh tráng cuốn thịt heo...";
+                $foodsList = ! empty($foods) ? implode("\n", array_slice(array_unique($foods), 0, 5)) : '• Mì Quảng, Bún chả cá, Bánh tráng cuốn thịt heo...';
                 $content = "🍜 **Đặc sản ẩm thực nhất định phải thử tại {$provName}:**\n\n{$foodsList}\n\nBạn có thể nhắn *'Lịch trình {$provName} 2 ngày'* để mình tạo ngay tour khám phá ẩm thực chuẩn nhất nhé!";
             } else {
                 $content = "Chào bạn! Mình là Trợ lý Du lịch Wanderly 🌟\n\nTại **{$provName}**, mình có đầy đủ dữ liệu địa điểm, ẩm thực và giá vé đã xác thực. Bạn có thể hỏi thông tin bất kỳ địa điểm nào, hoặc nhắn ví dụ: *'Lịch trình {$provName} 2 ngày ngân sách 3 triệu'* để mình lên lịch trình tối ưu ngay nhé!";
@@ -501,7 +501,7 @@ Your goals:
         ];
 
         foreach ($wordMap as $word => $num) {
-            if (preg_match('/\b' . preg_quote($word, '/') . '\s*(?:ngày|ngay|hôm|hom)\b/iu', $normalized)) {
+            if (preg_match('/\b'.preg_quote($word, '/').'\s*(?:ngày|ngay|hôm|hom)\b/iu', $normalized)) {
                 return $num;
             }
         }
@@ -532,18 +532,21 @@ Your goals:
             if (preg_match('/(\d+)\s*(?:tr|củ|cu)\s*(\d+)\b/iu', $normalized, $matches)) {
                 $main = (int) $matches[1];
                 $fraction = (int) $matches[2];
+
                 return (float) (($main * 1000000) + ($fraction * 100000));
             }
 
             // 2. Patterns like "5.5 triệu", "4,5 triệu", "5 triệu", "5tr", "5 củ", "5m"
             if (preg_match('/(\d+(?:[.,]\d+)?)\s*(?:triệu|trieu|tr\b|củ\b|cu\b|m\b)/iu', $normalized, $matches)) {
                 $val = (float) str_replace(',', '.', $matches[1]);
+
                 return $val * 1000000;
             }
 
             // 3. Patterns like "500k", "800k", "500 nghìn", "800 ngàn"
             if (preg_match('/(\d+(?:[.,]\d+)?)\s*(?:k\b|nghìn|nghin|ngàn|ngan)/iu', $normalized, $matches)) {
                 $val = (float) str_replace(',', '.', $matches[1]);
+
                 return $val * 1000;
             }
 
@@ -592,6 +595,7 @@ Your goals:
         if (preg_match('/(khám phá nhiều|dày đặc|nhiều điểm|tối đa|năng động|chạy show|check-in nhiều|dày)/iu', $normalized)) {
             return 'fast';
         }
+
         return 'balanced';
     }
 

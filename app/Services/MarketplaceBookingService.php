@@ -93,6 +93,7 @@ class MarketplaceBookingService
                         if ($existingBooking) {
                             $createdBookings[] = $existingBooking;
                         }
+
                         continue;
                     }
 

@@ -443,7 +443,7 @@ class ChatSocialTest extends TestCase
                 'comments_count' => 0,
             ]);
 
-        $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
+        $this->assertSoftDeleted('comments', ['id' => $comment->id]);
     }
 
     public function test_post_author_can_delete_other_user_comment(): void
@@ -466,7 +466,7 @@ class ChatSocialTest extends TestCase
                 'comments_count' => 0,
             ]);
 
-        $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
+        $this->assertSoftDeleted('comments', ['id' => $comment->id]);
     }
 
     public function test_unauthorized_user_cannot_delete_other_comment(): void
