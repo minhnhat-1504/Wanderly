@@ -148,6 +148,8 @@ Route::middleware('auth')->group(function () {
         ->name('ai-copilot.global-messages');
     Route::post('/ai-copilot/chat', [\App\Http\Controllers\Trip\AiCopilotController::class, 'sendGlobalMessage'])
         ->name('ai-copilot.global-chat');
+    Route::post('/ai-copilot/create-trip', [\App\Http\Controllers\Trip\AiCopilotController::class, 'createTripFromItinerary'])
+        ->name('ai-copilot.create-trip');
 
     Route::get('/trips/{trip}/ai-copilot/messages', [\App\Http\Controllers\Trip\AiCopilotController::class, 'getMessages'])
         ->name('trips.ai-copilot.messages');

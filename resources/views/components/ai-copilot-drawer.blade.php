@@ -186,8 +186,141 @@
                                 <p class="whitespace-pre-line leading-relaxed" x-text="msg.content"></p>
                             </div>
 
-                            <!-- Suggested Action Card (If Present) -->
-                            <template x-if="msg.suggested_action && msg.suggested_action.params">
+                            <!-- Verified Trip Itinerary Card (Sprint 4 Step 7) -->
+                            <template x-if="msg.suggested_action && (msg.suggested_action.action === 'create_trip_itinerary' || msg.suggested_action.type === 'create_trip_itinerary') && msg.suggested_action.params">
+                                <div class="p-3.5 bg-gradient-to-br from-teal-50/90 via-emerald-50/50 to-white dark:from-slate-800 dark:via-slate-850 dark:to-teal-950/40 border border-teal-200 dark:border-teal-700/60 rounded-2xl shadow-md space-y-3">
+                                    
+                                    <!-- Header Badge & Meta -->
+                                    <div class="flex items-center justify-between border-b border-teal-100 dark:border-teal-900/50 pb-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="p-1.5 bg-teal-600 text-white rounded-lg shadow-sm">
+                                                <x-icon name="map-pin" class="w-4 h-4" />
+                                            </span>
+                                            <div>
+                                                <h4 class="font-extrabold text-slate-900 dark:text-white text-sm" x-text="msg.suggested_action.params.province ? msg.suggested_action.params.province.name : 'Lịch trình du lịch'"></h4>
+                                                <div class="flex items-center gap-1.5 text-[11px] text-teal-700 dark:text-teal-300 font-semibold">
+                                                    <span x-text="(msg.suggested_action.params.summary ? msg.suggested_action.params.summary.total_days : '3') + ' ngày'"></span>
+                                                    <span>•</span>
+                                                    <span x-text="(msg.suggested_action.params.summary ? msg.suggested_action.params.summary.total_places : '0') + ' điểm đến đã xác minh'"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300/40">
+                                            <span>✓</span>
+                                            <span>Đã kiểm chứng</span>
+                                        </span>
+                                    </div>
+
+                                    <!-- Weather summary callout -->
+                                    <template x-if="msg.suggested_action.params.weather_summary && msg.suggested_action.params.weather_summary.general_advice">
+                                        <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2">
+                                            <span class="text-base leading-none">🌤️</span>
+                                            <span class="leading-relaxed" x-text="msg.suggested_action.params.weather_summary.general_advice"></span>
+                                        </div>
+                                    </template>
+
+                                    <!-- Day by Day Accordion / List -->
+                                    <div class="space-y-3 max-h-[380px] overflow-y-auto pr-1">
+                                        <template x-for="day in (msg.suggested_action.params.days || [])" :key="day.day">
+                                            <div class="bg-white/95 dark:bg-slate-900/90 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-3 space-y-2.5">
+                                                
+                                                <!-- Day Header -->
+                                                <div class="flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-1.5">
+                                                    <div class="flex items-center gap-1.5">
+                                                        <span class="px-2 py-0.5 bg-teal-100 dark:bg-teal-900/60 text-teal-800 dark:text-teal-200 rounded font-extrabold text-[11px]" x-text="'Ngày ' + day.day"></span>
+                                                        <template x-if="day.weather">
+                                                            <span class="text-slate-500 dark:text-slate-400 font-medium" x-text="'• ' + day.weather.condition + ' (' + day.weather.temp_min + '°C - ' + day.weather.temp_max + '°C)'"></span>
+                                                        </template>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Items in Day -->
+                                                <div class="space-y-2">
+                                                    <template x-for="(item, idx) in (day.items || [])" :key="idx">
+                                                        <div class="space-y-1.5">
+                                                            <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-xs flex items-start justify-between gap-2">
+                                                                <div class="space-y-1 flex-1">
+                                                                    <div class="flex items-center gap-1.5">
+                                                                        <span class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded font-mono text-[10px] font-bold" x-text="item.time"></span>
+                                                                        <span class="font-bold text-slate-900 dark:text-slate-100" x-text="item.place ? item.place.name_vi : item.activity"></span>
+                                                                    </div>
+                                                                    
+                                                                    <!-- Meta Badges: hours, price, indoor -->
+                                                                    <div class="flex flex-wrap items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400">
+                                                                        <template x-if="item.place && item.place.opening_hours && typeof item.place.opening_hours === 'object'">
+                                                                            <span class="inline-flex items-center gap-0.5 text-slate-600 dark:text-slate-300">
+                                                                                <span>🕒</span>
+                                                                                <span x-text="item.place.opening_hours.open + ' - ' + item.place.opening_hours.close"></span>
+                                                                            </span>
+                                                                        </template>
+                                                                        <template x-if="item.place && item.place.opening_hours === 'chưa xác minh'">
+                                                                            <span class="text-slate-400 italic">Giờ: chưa xác minh</span>
+                                                                        </template>
+                                                                        <span>•</span>
+                                                                        <span class="font-semibold text-emerald-700 dark:text-emerald-400" x-text="item.place ? item.place.ticket_price_vnd : ''"></span>
+                                                                    </div>
+
+                                                                    <template x-if="item.note">
+                                                                        <p class="text-[11px] text-slate-600 dark:text-slate-400 italic leading-snug" x-text="item.note"></p>
+                                                                    </template>
+                                                                </div>
+
+                                                                <!-- Google Maps Link Button -->
+                                                                <template x-if="item.place && item.place.google_maps_url">
+                                                                    <a :href="item.place.google_maps_url"
+                                                                       target="_blank"
+                                                                       rel="noopener noreferrer"
+                                                                       class="flex-shrink-0 p-1.5 bg-white dark:bg-slate-700 hover:bg-teal-50 dark:hover:bg-teal-900/40 text-teal-600 dark:text-teal-400 border border-slate-200 dark:border-slate-600 rounded-lg transition-colors shadow-2xs"
+                                                                       title="Mở Google Maps chỉ đường">
+                                                                        <x-icon name="map" class="w-3.5 h-3.5" />
+                                                                    </a>
+                                                                </template>
+                                                            </div>
+
+                                                            <!-- Travel indicator to next place -->
+                                                            <template x-if="item.travel_to_next">
+                                                                <div class="flex items-center gap-1 pl-4 text-[10px] text-slate-400 dark:text-slate-500 font-medium">
+                                                                    <span>↓ Di chuyển:</span>
+                                                                    <span class="text-teal-600 dark:text-teal-400 font-semibold" x-text="item.travel_to_next.travel_minutes + ' phút (' + item.travel_to_next.distance_km + ' km)'"></span>
+                                                                </div>
+                                                            </template>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+
+                                    <!-- Legal Attributions & Disclaimer -->
+                                    <div class="pt-2 border-t border-slate-200/60 dark:border-slate-800 text-[10px] text-slate-400 dark:text-slate-500 space-y-1">
+                                        <p class="italic" x-text="msg.suggested_action.params.disclaimer || 'Giờ mở cửa và giá vé có thể thay đổi tùy thời điểm, vui lòng kiểm tra lại trước chuyến đi.'"></p>
+                                        <p class="text-[9px] text-slate-400">
+                                            Dữ liệu: © OpenStreetMap (ODbL) • Thời tiết: Open-Meteo.com • Wikivoyage (CC BY-SA 4.0)
+                                        </p>
+                                    </div>
+
+                                    <!-- Create Trip CTA Button -->
+                                    <button @click="createTripFromItinerary(msg.suggested_action.params)"
+                                            :disabled="isCreatingTrip"
+                                            class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-teal-900/20 hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 disabled:opacity-50 cursor-pointer">
+                                        <template x-if="!isCreatingTrip">
+                                            <div class="flex items-center gap-1.5">
+                                                <span>🚀</span>
+                                                <span>Tạo chuyến đi từ lịch trình này</span>
+                                            </div>
+                                        </template>
+                                        <template x-if="isCreatingTrip">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                                                <span>Đang tạo chuyến đi...</span>
+                                            </div>
+                                        </template>
+                                    </button>
+                                </div>
+                            </template>
+
+                            <!-- Suggested Action Card (If Present for single activity) -->
+                            <template x-if="msg.suggested_action && msg.suggested_action.params && msg.suggested_action.action !== 'create_trip_itinerary' && msg.suggested_action.type !== 'create_trip_itinerary'">
                                 <div class="p-3.5 bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-slate-800 dark:to-teal-950/40 border border-teal-200 dark:border-teal-700/50 rounded-xl shadow-sm space-y-2.5">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center gap-1.5 text-xs font-bold text-teal-800 dark:text-teal-300">

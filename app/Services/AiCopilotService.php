@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Trip;
 use App\Models\User;
+use App\Services\Itinerary\ItineraryPlannerService;
+use App\Services\Itinerary\ProvinceResolver;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -11,7 +13,9 @@ class AiCopilotService
 {
     public function __construct(
         protected CollaborationService $collaborationService,
-        protected BudgetService $budgetService
+        protected BudgetService $budgetService,
+        protected ProvinceResolver $provinceResolver,
+        protected ItineraryPlannerService $itineraryPlanner
     ) {}
 
     /**
@@ -138,12 +142,51 @@ params: { title, day, time_slot, cost, poi_id, location, description }";
      */
     public function chatGeneralTravel(string $userPrompt, array $history = []): array
     {
-        $systemPrompt = "You are Wanderly AI Travel Assistant, a friendly and highly knowledgeable travel concierge specialized in tourism across the 34 provinces/cities of Vietnam.
+        // 1. Detect if the user wants an itinerary or mentions a province
+        $resolved = $this->provinceResolver->resolve($userPrompt);
+
+        // Check for itinerary / travel planning intent keywords
+        $isItineraryIntent = preg_match('/(lịch trình|kế hoạch|chuyến đi|trip|gợi ý|đi chơi|du lịch|ở đâu|mấy ngày|\d+\s*(?:ngày|ngay|n)|tham quan|khám phá|tour)/iu', $userPrompt);
+
+        if ($resolved['resolved'] && ! empty($resolved['province']) && $isItineraryIntent) {
+            $days = 3;
+            if (preg_match('/(\d+)\s*(?:ngày|ngay|n)/iu', $userPrompt, $matches)) {
+                $days = max(1, min(5, (int) $matches[1]));
+            }
+
+            $province = $resolved['province'];
+            $plan = $this->itineraryPlanner->plan($province['name'], $days);
+
+            if ($plan['status'] === 'success') {
+                $content = "Dưới đây là lịch trình {$days} ngày tại **{$province['name']}** được lập tự động từ tập dữ liệu chính xác đã kiểm chứng của Wanderly:\n\n";
+                $content .= "🌤️ **Thời tiết & Lời khuyên:** {$plan['weather_summary']['general_advice']}\n";
+                $content .= "📍 **Quy mô:** {$plan['summary']['total_places']} địa điểm đã xác thực, tổng thời gian di chuyển dự kiến ~{$plan['summary']['total_travel_minutes']} phút.\n\n";
+                $content .= "Mời bạn xem chi tiết các điểm đến bên dưới (có kèm link Google Maps và giờ mở cửa) hoặc nhấn **'Tạo chuyến đi từ lịch trình này'** để lưu thành chuyến đi thực tế!";
+
+                return [
+                    'content' => $content,
+                    'suggested_action' => [
+                        'type' => 'create_trip_itinerary',
+                        'action' => 'create_trip_itinerary',
+                        'params' => $plan,
+                    ],
+                ];
+            }
+        } elseif (! empty($resolved['clarification']) && $isItineraryIntent && ! $resolved['resolved']) {
+            return [
+                'content' => $resolved['clarification'],
+                'suggested_action' => null,
+            ];
+        }
+
+        // 2. Fallback to general conversational assistant
+        $systemPrompt = "You are Wanderly AI Travel Assistant, a friendly and highly knowledgeable travel concierge specialized in tourism across the 34 provinces/cities of Vietnam according to Resolution 202/2025/QH15.
 Your goals:
 1. Provide personalized travel advice, destination recommendations, seasonal best times to visit, local cuisine specialties, and transportation tips.
-2. Inspire users to explore Vietnam and plan trips with friends.
-3. Keep answers concise, inspiring, well-structured, and written in natural Vietnamese with helpful emojis.
-4. Output your response in JSON format with:
+2. NEVER invent non-existent tourist places. If the user wants a day-by-day itinerary, recommend they provide the province name and number of days (e.g., 'Lịch trình Đà Nẵng 3 ngày').
+3. NEVER use administrative unit words 'quận/huyện/thị xã'.
+4. Keep answers concise, inspiring, well-structured, and written in natural Vietnamese with helpful emojis.
+5. Output your response in JSON format with:
 {
   \"response\": \"Your helpful and detailed reply in Vietnamese...\",
   \"suggested_destinations\": [\"Da Lat\", \"Da Nang\", \"Phu Quoc\"] (optional array of province/city names if relevant)

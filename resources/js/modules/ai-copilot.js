@@ -6,6 +6,7 @@ document.addEventListener('alpine:init', () => {
         isApplying: false,
         isReviewModalOpen: false,
         isIngesting: false,
+        isCreatingTrip: false,
         inputMessage: '',
         reviewRawText: '',
         messages: [],
@@ -198,6 +199,40 @@ document.addEventListener('alpine:init', () => {
                 alert('Lỗi phân tích bài review.');
             } finally {
                 this.isIngesting = false;
+            }
+        },
+
+        async createTripFromItinerary(plan) {
+            if (this.isCreatingTrip || !plan) return;
+            this.isCreatingTrip = true;
+
+            try {
+                const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                const res = await fetch('/ajax/ai-copilot/create-trip', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({
+                        province: plan.province,
+                        days: plan.days,
+                        start_date: plan.start_date
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success && data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert(data.message || 'Không thể tạo chuyến đi lúc này.');
+                    this.isCreatingTrip = false;
+                }
+            } catch (err) {
+                console.error('Create trip error:', err);
+                alert('Có lỗi xảy ra khi tạo chuyến đi từ lịch trình.');
+                this.isCreatingTrip = false;
             }
         },
 
