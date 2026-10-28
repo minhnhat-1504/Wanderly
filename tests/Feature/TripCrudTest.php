@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Activity;
+use App\Models\ActivityParticipant;
 use App\Models\Trip;
 use App\Models\TripMember;
 use App\Models\User;
@@ -258,7 +259,7 @@ class TripCrudTest extends TestCase
         ]);
 
         // Create activities totaling 6,200,000 (62% of 10,000,000)
-        Activity::factory()->create([
+        $act1 = Activity::factory()->create([
             'trip_id' => $trip->id,
             'day' => 1,
             'time_slot' => 'morning',
@@ -266,13 +267,22 @@ class TripCrudTest extends TestCase
             'start_time' => '07:00',
             'end_time' => '09:00',
         ]);
-        Activity::factory()->create([
+        ActivityParticipant::create([
+            'activity_id' => $act1->id,
+            'user_id' => $owner->id,
+        ]);
+
+        $act2 = Activity::factory()->create([
             'trip_id' => $trip->id,
             'day' => 1,
             'time_slot' => 'afternoon',
             'cost' => 3200000,
             'start_time' => '14:00',
             'end_time' => '16:00',
+        ]);
+        ActivityParticipant::create([
+            'activity_id' => $act2->id,
+            'user_id' => $owner->id,
         ]);
 
         $this->assertEquals(6200000, $trip->spent);

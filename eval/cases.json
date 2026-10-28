@@ -1,0 +1,146 @@
+[
+  {
+    "id": "case_01",
+    "title": "Đà Nẵng 3 ngày mùa xuân",
+    "input": "Đà Nẵng",
+    "days": 3,
+    "month": 4,
+    "expected_province": "danang",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_02",
+    "title": "Đà Nẵng 1 ngày nhanh",
+    "input": "Đà Nẵng",
+    "days": 1,
+    "month": 5,
+    "expected_province": "danang",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_03",
+    "title": "Đà Lạt 2 ngày (alias của Lâm Đồng)",
+    "input": "Đà Lạt",
+    "days": 2,
+    "month": 12,
+    "expected_province": "lamdong",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_04",
+    "title": "Lâm Đồng 3 ngày chính vụ",
+    "input": "Lâm Đồng",
+    "days": 3,
+    "month": 1,
+    "expected_province": "lamdong",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_05",
+    "title": "Quảng Ninh 2 ngày mùa hè",
+    "input": "Quảng Ninh",
+    "days": 2,
+    "month": 6,
+    "expected_province": "quangninh",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_06",
+    "title": "Hạ Long 3 ngày (alias của Quảng Ninh)",
+    "input": "Hạ Long",
+    "days": 3,
+    "month": 7,
+    "expected_province": "quangninh",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_07",
+    "title": "Hà Nội 3 ngày mùa thu",
+    "input": "Hà Nội",
+    "days": 3,
+    "month": 10,
+    "expected_province": "hanoi",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_08",
+    "title": "Hà Tây cũ sáp nhập Hà Nội",
+    "input": "Hà Tây",
+    "days": 2,
+    "month": 11,
+    "expected_province": "hanoi",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_09",
+    "title": "Nha Trang (alias của Khánh Hòa) 3 ngày",
+    "input": "Nha Trang",
+    "days": 3,
+    "month": 8,
+    "expected_province": "khanhhoa",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_10",
+    "title": "Khánh Hòa 2 ngày mùa khô",
+    "input": "Khánh Hòa",
+    "days": 2,
+    "month": 3,
+    "expected_province": "khanhhoa",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_11",
+    "title": "Quảng Nam (alias hợp nhất Đà Nẵng) 3 ngày",
+    "input": "Quảng Nam",
+    "days": 3,
+    "month": 5,
+    "expected_province": "danang",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_12",
+    "title": "Đà Nẵng mùa mưa bão tháng 10 (kiểm tra avoid_months)",
+    "input": "Đà Nẵng",
+    "days": 2,
+    "month": 10,
+    "expected_province": "danang",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_13",
+    "title": "Lâm Đồng mùa mưa tháng 8",
+    "input": "Lâm Đồng",
+    "days": 2,
+    "month": 8,
+    "expected_province": "lamdong",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_14",
+    "title": "Tên không dấu viết thường typo nhẹ 'da nang'",
+    "input": "da nang",
+    "days": 2,
+    "month": 4,
+    "expected_province": "danang",
+    "expected_status": "success"
+  },
+  {
+    "id": "case_15",
+    "title": "Địa danh giả tưởng không có thực",
+    "input": "Atlantis Huyền Thoại",
+    "days": 3,
+    "month": 6,
+    "expected_province": null,
+    "expected_status": "clarification_needed"
+  },
+  {
+    "id": "case_16",
+    "title": "Địa danh ngoài lãnh thổ Việt Nam",
+    "input": "Tokyo Nhật Bản",
+    "days": 4,
+    "month": 5,
+    "expected_province": null,
+    "expected_status": "clarification_needed"
+  }
+]

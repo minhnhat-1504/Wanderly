@@ -336,4 +336,55 @@ class MarketplaceTest extends TestCase
             'cost' => 700000.00,
         ]);
     }
+
+    public function test_accept_single_item_then_accept_full_bundle_does_not_duplicate_or_double_count(): void
+    {
+        $owner = User::factory()->create();
+        $trip = Trip::factory()->create([
+            'owner_id' => $owner->id,
+            'destination' => 'Da Lat',
+            'budget' => 5000000.00,
+        ]);
+
+        $destination = Destination::factory()->create(['name' => 'Da Lat']);
+        $provider = Provider::factory()->create(['destination_id' => $destination->id]);
+
+        $travelRequest = TravelRequest::factory()->create(['trip_id' => $trip->id, 'status' => 'bidding']);
+        $proposal = $this->proposalService->submitProposal($provider, $travelRequest, [
+            'message' => 'Combined offer',
+            'valid_until' => now()->addDays(5)->toDateTimeString(),
+            'items' => [
+                ['name' => 'Item A - Private Car', 'price' => 1200000.00],
+                ['name' => 'Item B - Tour Guide', 'price' => 800000.00],
+            ],
+        ]);
+
+        // 1. User accepts Item A first
+        $itemA = $proposal->items()->where('name', 'Item A - Private Car')->first();
+        $bookingA = $this->bookingService->acceptSingleItem($itemA, $owner);
+
+        $this->assertTrue($itemA->fresh()->is_accepted);
+        $this->assertCount(1, Booking::where('trip_id', $trip->id)->get());
+        $this->assertCount(1, Activity::where('trip_id', $trip->id)->where('type', 'booking')->get());
+
+        // 2. User subsequently accepts the full bundle
+        $bundleBookings = $this->bookingService->acceptFullBundle($proposal, $owner);
+
+        // 3. Verify total bookings for this trip is exactly 2 (NOT 3!)
+        $allBookings = Booking::where('trip_id', $trip->id)->get();
+        $this->assertCount(2, $allBookings);
+
+        // Verify total activities is exactly 2 (NOT 3!)
+        $activities = Activity::where('trip_id', $trip->id)->where('type', 'booking')->get();
+        $this->assertCount(2, $activities);
+
+        // Verify total spent is exactly 2,000,000 (1.2M + 0.8M), NOT 3,200,000!
+        $this->assertEquals(2000000.00, (float) $activities->sum('cost'));
+
+        $budgetStatus = $this->budgetService->calculateBudgetStatus($trip);
+        $this->assertEquals(2000000.00, $budgetStatus['total_spent']);
+        $this->assertEquals(3000000.00, $budgetStatus['remaining_budget']);
+        $this->assertEquals('accepted', $proposal->fresh()->status);
+        $this->assertEquals('fulfilled', $travelRequest->fresh()->status);
+    }
 }

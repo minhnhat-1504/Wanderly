@@ -111,18 +111,19 @@ class Trip extends Model
     }
 
     /**
-     * Get the total amount spent on activities for this trip.
+     * Get the total amount spent on activities for this trip based on selected participants.
      */
     public function getSpentAttribute(): float
     {
-        if (array_key_exists('activities_sum_cost', $this->attributes)) {
-            return (float) ($this->attributes['activities_sum_cost'] ?? 0);
+        $activities = $this->relationLoaded('activities')
+            ? $this->activities
+            : $this->activities()->with('participants')->get();
+
+        $total = 0.00;
+        foreach ($activities as $act) {
+            $total += $act->calculateTotalSpent();
         }
 
-        if ($this->relationLoaded('activities')) {
-            return (float) $this->activities->sum('cost');
-        }
-
-        return (float) $this->activities()->sum('cost');
+        return round($total, 2);
     }
 }

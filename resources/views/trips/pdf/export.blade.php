@@ -415,7 +415,7 @@
         </div>
         <div class="budget-row">
             <span class="budget-label">{{ __('Activities Cost') }}</span>
-            <span class="budget-value">{{ number_format($trip->activities->sum('cost'), 0, ',', '.') }} VND</span>
+            <span class="budget-value">{{ number_format($activitiesCost ?? 0, 0, ',', '.') }} VND</span>
         </div>
         <div class="budget-row">
             <span class="budget-label">{{ __('Accommodation') }}</span>

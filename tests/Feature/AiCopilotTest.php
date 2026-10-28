@@ -219,4 +219,24 @@ class AiCopilotTest extends TestCase
             'role' => 'assistant',
         ]);
     }
+
+    public function test_ai_copilot_button_is_at_bottom_outside_of_trip(): void
+    {
+        $response = $this->actingAs($this->leader)->get(route('trips.index'));
+
+        $response->assertOk()
+            ->assertSee('bottom-6 sm:bottom-8')
+            ->assertDontSee('bottom-[148px] sm:bottom-[164px]')
+            ->assertSee('aiCopilotDrawer({ tripId: null })', false);
+    }
+
+    public function test_ai_copilot_button_is_elevated_on_trip_show_page(): void
+    {
+        $response = $this->actingAs($this->leader)->get(route('trips.show', $this->trip));
+
+        $response->assertOk()
+            ->assertSee('bottom-[148px] sm:bottom-[164px]')
+            ->assertSee('aiCopilotDrawer({ tripId: ' . $this->trip->id . ' })', false);
+    }
 }
+

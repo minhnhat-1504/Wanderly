@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Broadcast;
 use App\Models\Notification;
+use App\Models\Report;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -23,6 +25,18 @@ class NotificationService
 
     const TYPE_POST_LIKE = 'post_like';
 
+    const TYPE_ACCOUNT_SUSPENDED = 'account_suspended';
+
+    const TYPE_ACCOUNT_UNSUSPENDED = 'account_unsuspended';
+
+    const TYPE_ROLE_CHANGED = 'role_changed';
+
+    const TYPE_REPORT_RESOLVED = 'report_resolved';
+
+    const TYPE_CONTENT_MODERATED = 'content_moderated';
+
+    const TYPE_BROADCAST = 'broadcast';
+
     const TYPE_GENERAL = 'general';
 
     /**
@@ -33,10 +47,12 @@ class NotificationService
         string $type,
         string $title,
         string $message,
-        ?string $actionUrl = null
+        ?string $actionUrl = null,
+        ?int $broadcastId = null
     ): Notification {
         return Notification::create([
             'user_id' => $user->id,
+            'broadcast_id' => $broadcastId,
             'type' => $type,
             'title' => $title,
             'message' => $message,
@@ -112,6 +128,106 @@ class NotificationService
             __(':name liked your post', ['name' => $likerName]),
             __('":title" is getting popular!', ['title' => $postTitle]),
             $postUrl,
+        );
+    }
+
+    /**
+     * Notify user that their account was suspended.
+     */
+    public function notifyAccountSuspended(User $user, string $reason): Notification
+    {
+        return $this->notify(
+            $user,
+            self::TYPE_ACCOUNT_SUSPENDED,
+            __('Account Suspended'),
+            __('Your account has been suspended. Reason: :reason', ['reason' => $reason]),
+            null,
+        );
+    }
+
+    /**
+     * Notify user that their account was unsuspended.
+     */
+    public function notifyAccountUnsuspended(User $user): Notification
+    {
+        return $this->notify(
+            $user,
+            self::TYPE_ACCOUNT_UNSUSPENDED,
+            __('Account Restored'),
+            __('Your account suspension has been lifted. Welcome back to Wanderly!'),
+            null,
+        );
+    }
+
+    /**
+     * Notify user that their account role has changed.
+     */
+    public function notifyRoleChanged(User $user, string $newRole): Notification
+    {
+        return $this->notify(
+            $user,
+            self::TYPE_ROLE_CHANGED,
+            __('Role Updated'),
+            __('Your account role has been updated to :role.', ['role' => ucfirst($newRole)]),
+            null,
+        );
+    }
+
+    /**
+     * Notify reporter that their submitted report was reviewed and resolved.
+     */
+    public function notifyReportResolved(User $reporter, Report $report): Notification
+    {
+        $actionSummary = match ($report->action_taken) {
+            'delete' => __('The reported content was removed.'),
+            'hide' => __('The reported content was hidden from public view.'),
+            'suspend_user' => __('Disciplinary action was taken against the author.'),
+            'dismiss' => __('The report was reviewed and dismissed (no violation found).'),
+            default => __('Your report has been processed by our moderation team.'),
+        };
+
+        return $this->notify(
+            $reporter,
+            self::TYPE_REPORT_RESOLVED,
+            __('Report Reviewed & Resolved'),
+            __('Your report regarding :reason has been reviewed: :action Click to inspect full resolution details.', [
+                'reason' => $report->reason,
+                'action' => $actionSummary,
+            ]),
+            '/social/reports/'.$report->id,
+        );
+    }
+
+    /**
+     * Notify author that their content was moderated.
+     */
+    public function notifyContentModerated(User $author, string $contentType, string $action, string $reason): Notification
+    {
+        return $this->notify(
+            $author,
+            self::TYPE_CONTENT_MODERATED,
+            __('Community Guidelines Notice'),
+            __('Your :type has been :action due to a violation of community standards (:reason).', [
+                'type' => strtolower($contentType),
+                'action' => $action === 'delete' ? __('deleted') : __('hidden from public view'),
+                'reason' => $reason,
+            ]),
+            null,
+        );
+    }
+
+    /**
+     * Send a broadcast announcement notification to a user.
+     */
+    public function sendBroadcastToUser(User $user, Broadcast $broadcast): Notification
+    {
+        return $this->notify(
+            $user,
+            self::TYPE_BROADCAST,
+            $broadcast->title,
+            $broadcast->message,
+            $broadcast->action_url,
+            $broadcast->id,
         );
     }
 

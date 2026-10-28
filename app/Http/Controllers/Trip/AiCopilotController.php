@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Trip;
 
 use App\Http\Controllers\Controller;
+use App\Models\Activity;
 use App\Models\AiChatMessage;
 use App\Models\Trip;
+use App\Models\TripMember;
 use App\Services\ActionEngineService;
 use App\Services\AiCopilotService;
+use App\Services\TripService;
 use App\Services\WeatherAdaptiveService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -16,7 +20,8 @@ class AiCopilotController extends Controller
     public function __construct(
         protected AiCopilotService $aiCopilotService,
         protected ActionEngineService $actionEngineService,
-        protected WeatherAdaptiveService $weatherService
+        protected WeatherAdaptiveService $weatherService,
+        protected TripService $tripService
     ) {}
 
     /**
@@ -34,6 +39,21 @@ class AiCopilotController extends Controller
         return response()->json([
             'success' => true,
             'messages' => $messages,
+        ]);
+    }
+
+    /**
+     * Clear global chat messages history for user.
+     */
+    public function clearGlobalMessages(Request $request): JsonResponse
+    {
+        AiChatMessage::whereNull('trip_id')
+            ->where('user_id', $request->user()->id)
+            ->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Chat history cleared successfully.'),
         ]);
     }
 
@@ -99,6 +119,25 @@ class AiCopilotController extends Controller
         return response()->json([
             'success' => true,
             'messages' => $messages,
+        ]);
+    }
+
+    /**
+     * Clear chat messages history for a trip.
+     */
+    public function clearTripMessages(Request $request, Trip $trip): JsonResponse
+    {
+        $userId = $request->user()->id;
+        $isMember = $trip->members()->where('user_id', $userId)->exists() || $trip->owner_id === $userId;
+        if (! $isMember) {
+            return response()->json(['error' => 'Unauthorized.'], 403);
+        }
+
+        $trip->aiChatMessages()->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Trip chat history cleared successfully.'),
         ]);
     }
 
@@ -215,6 +254,172 @@ class AiCopilotController extends Controller
             'success' => true,
             'forecast' => $forecast,
             'conflicts' => $conflicts,
+        ]);
+    }
+
+    /**
+     * Create a concrete Trip with activities from a verified itinerary plan.
+     */
+    public function createTripFromItinerary(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        if (! $user) {
+            return response()->json(['error' => 'Unauthenticated.'], 401);
+        }
+
+        $validated = $request->validate([
+            'province' => 'required|array',
+            'days' => 'required|array|min:1',
+            'start_date' => 'nullable|date',
+            'budget' => 'nullable|numeric|min:0',
+            'summary' => 'nullable|array',
+        ]);
+
+        $province = $validated['province'];
+        $days = $validated['days'];
+        $dayCount = count($days);
+
+        $startDate = ! empty($validated['start_date']) ? Carbon::parse($validated['start_date']) : Carbon::tomorrow();
+        $endDate = $startDate->copy()->addDays($dayCount - 1);
+
+        $tripBudget = (float) ($validated['budget'] ?? ($validated['summary']['budget'] ?? 0));
+        if ($tripBudget <= 0) {
+            $tripBudget = 2000000 * $dayCount;
+        }
+
+        // 1. Create Trip using TripService (automatically sets leader role)
+        $trip = $this->tripService->createTrip([
+            'name' => 'Chuyến đi ' . ($province['name'] ?? 'Việt Nam') . " ({$dayCount} ngày)",
+            'destination' => $province['name'] ?? 'Việt Nam',
+            'start_date' => $startDate->toDateString(),
+            'end_date' => $endDate->toDateString(),
+            'budget' => $tripBudget,
+            'privacy' => 'private',
+            'status' => 'planning',
+        ], $user);
+
+        // 2. Create activities for each day with strict enum mappings and slot bounds
+        foreach ($days as $dayData) {
+            $dayNum = (int) ($dayData['day'] ?? 1);
+            $items = $dayData['items'] ?? [];
+            $prevEndMinutes = 0;
+
+            foreach ($items as $pos => $item) {
+                $place = $item['place'] ?? [];
+                $duration = max(30, (int) ($item['duration_min'] ?? 60));
+                $startTimeStr = $item['time'] ?? '08:00';
+
+                // Parse requested start time
+                $parts = explode(':', $startTimeStr);
+                $rawStartH = (int) ($parts[0] ?? 8);
+                $rawStartM = (int) ($parts[1] ?? 0);
+                $startTotalMinutes = ($rawStartH * 60) + $rawStartM;
+
+                // Prevent overlap with previous activity on the same day
+                if ($startTotalMinutes < $prevEndMinutes) {
+                    $startTotalMinutes = $prevEndMinutes;
+                }
+
+                // Map time slot enum according to ItineraryService::SLOT_BOUNDS
+                // morning: 06:00 - 11:00 (360 - 660 mins)
+                // midday: 11:00 - 14:00 (660 - 840 mins)
+                // afternoon: 14:00 - 18:00 (840 - 1080 mins)
+                // evening: 18:00 - 23:59 (1080 - 1439 mins)
+                if ($startTotalMinutes >= 1080) {
+                    $timeSlot = 'evening';
+                    $slotMaxEndMinutes = 1439; // 23:59
+                } elseif ($startTotalMinutes >= 840) {
+                    $timeSlot = 'afternoon';
+                    $slotMaxEndMinutes = 1080; // 18:00
+                } elseif ($startTotalMinutes >= 660) {
+                    $timeSlot = 'midday';
+                    $slotMaxEndMinutes = 840;  // 14:00
+                } else {
+                    $timeSlot = 'morning';
+                    $slotMaxEndMinutes = 660;  // 11:00
+                }
+
+                // Calculate end time and clamp strictly to slot bounds so it does NOT exceed timeslot!
+                $endTotalMinutes = $startTotalMinutes + $duration;
+                if ($endTotalMinutes > $slotMaxEndMinutes) {
+                    $endTotalMinutes = $slotMaxEndMinutes;
+                }
+
+                // Ensure at least 15 mins duration if space exists
+                if ($endTotalMinutes <= $startTotalMinutes) {
+                    $endTotalMinutes = min($slotMaxEndMinutes, $startTotalMinutes + 15);
+                }
+
+                $curStartH = floor($startTotalMinutes / 60) % 24;
+                $curStartM = $startTotalMinutes % 60;
+                $curEndH = floor($endTotalMinutes / 60) % 24;
+                $curEndM = $endTotalMinutes % 60;
+
+                $formattedStartTime = sprintf('%02d:%02d', $curStartH, $curStartM);
+                $endTimeStr = sprintf('%02d:%02d', $curEndH, $curEndM);
+                $prevEndMinutes = $endTotalMinutes;
+
+                // Map category enum: ['sightseeing', 'dining', 'cafe', 'shopping', 'entertainment', 'other']
+                $rawCategory = $place['category'] ?? '';
+                $category = match ($rawCategory) {
+                    'food' => 'dining',
+                    'cafe' => 'cafe',
+                    'market' => 'shopping',
+                    'entertainment', 'experience' => 'entertainment',
+                    default => 'sightseeing',
+                };
+
+                $ticketPrice = 0.0;
+                if (isset($place['price_vnd']) && is_numeric($place['price_vnd'])) {
+                    $ticketPrice = (float) $place['price_vnd'];
+                } elseif (! empty($place['ticket_price_vnd'])) {
+                    $rawPrice = $place['ticket_price_vnd'];
+                    if (is_numeric($rawPrice)) {
+                        $ticketPrice = (float) $rawPrice;
+                    } elseif (is_string($rawPrice)) {
+                        $clean = preg_replace('/[^\d]/', '', $rawPrice);
+                        if ($clean !== '') {
+                            $ticketPrice = (float) $clean;
+                        }
+                    }
+                }
+
+                // If still 0 and place has an ID, look up directly in verified places dataset
+                if ($ticketPrice === 0.0 && ! empty($place['id'])) {
+                    $origPlace = app(\App\Services\Itinerary\PlaceRepository::class)->getById($place['id'], $province['code'] ?? null);
+                    if ($origPlace && isset($origPlace['ticket_price_vnd']) && is_numeric($origPlace['ticket_price_vnd'])) {
+                        $ticketPrice = (float) $origPlace['ticket_price_vnd'];
+                    }
+                }
+
+                $hoursNote = '';
+                if (! empty($place['opening_hours']) && is_array($place['opening_hours'])) {
+                    $hoursNote = " (Mở cửa: {$place['opening_hours']['open']}-{$place['opening_hours']['close']})";
+                }
+
+                Activity::create([
+                    'trip_id' => $trip->id,
+                    'day' => $dayNum,
+                    'time_slot' => $timeSlot,
+                    'start_time' => $formattedStartTime,
+                    'end_time' => $endTimeStr,
+                    'title' => $place['name_vi'] ?? $item['activity'] ?? 'Điểm tham quan',
+                    'cost' => $ticketPrice,
+                    'category' => $category,
+                    'location' => $place['name_vi'] ?? ($province['name'] ?? ''),
+                    'address' => $place['address'] ?? ($place['name_vi'] ?? ''),
+                    'notes' => trim(($item['note'] ?? '') . $hoursNote),
+                    'position' => $pos,
+                    'payer_id' => $user->id,
+                ]);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tạo chuyến đi thành công!',
+            'trip_id' => $trip->id,
+            'redirect_url' => route('trips.show', $trip),
         ]);
     }
 }

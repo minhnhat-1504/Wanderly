@@ -1,3 +1,11 @@
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
+
+marked.setOptions({
+    breaks: true,
+    gfm: true
+});
+
 document.addEventListener('alpine:init', () => {
     Alpine.data('aiCopilotDrawer', (config) => ({
         tripId: config?.tripId || null,
@@ -6,6 +14,9 @@ document.addEventListener('alpine:init', () => {
         isApplying: false,
         isReviewModalOpen: false,
         isIngesting: false,
+        isCreatingTrip: false,
+        isClearing: false,
+        showClearConfirmModal: false,
         inputMessage: '',
         reviewRawText: '',
         messages: [],
@@ -15,6 +26,25 @@ document.addEventListener('alpine:init', () => {
         init() {
             if (this.tripId) {
                 this.fetchWeather();
+            }
+        },
+
+        renderMarkdown(content) {
+            if (!content) return '';
+            try {
+                const rawHtml = marked.parse(content);
+                return DOMPurify.sanitize(rawHtml, {
+                    ALLOWED_TAGS: [
+                        'p', 'br', 'strong', 'b', 'em', 'i', 'u', 's',
+                        'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                        'ul', 'ol', 'li', 'blockquote',
+                        'code', 'pre', 'hr', 'a', 'span'
+                    ],
+                    ALLOWED_ATTR: ['href', 'target', 'rel', 'class']
+                });
+            } catch (err) {
+                console.error('Markdown rendering error:', err);
+                return content;
             }
         },
 
@@ -37,10 +67,51 @@ document.addEventListener('alpine:init', () => {
                 const data = await res.json();
                 if (data.success) {
                     this.messages = data.messages || [];
-                    this.scrollToBottom();
+                    this.scrollToBottom(true);
                 }
             } catch (err) {
                 console.error('Failed to load AI messages:', err);
+            }
+        },
+
+        confirmClearHistory() {
+            if (this.isClearing || this.messages.length === 0) return;
+            this.showClearConfirmModal = true;
+        },
+
+        cancelClearHistory() {
+            this.showClearConfirmModal = false;
+        },
+
+        async clearHistory() {
+            if (this.isClearing) return;
+            this.isClearing = true;
+            try {
+                const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                const endpoint = this.tripId 
+                    ? `/ajax/trips/${this.tripId}/ai-copilot/messages`
+                    : `/ajax/ai-copilot/messages`;
+
+                const res = await fetch(endpoint, {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    }
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    this.messages = [];
+                    this.showClearConfirmModal = false;
+                } else {
+                    alert(data.message || 'Không thể xóa lịch sử trò chuyện.');
+                }
+            } catch (err) {
+                console.error('Failed to clear chat history:', err);
+                alert('Có lỗi xảy ra khi xóa lịch sử trò chuyện.');
+            } finally {
+                this.isClearing = false;
             }
         },
 
@@ -57,6 +128,13 @@ document.addEventListener('alpine:init', () => {
                 }
             } catch (err) {
                 console.error('Failed to fetch weather alerts:', err);
+            }
+        },
+
+        handleKeydown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.sendMessage();
             }
         },
 
@@ -81,7 +159,7 @@ document.addEventListener('alpine:init', () => {
                 is_applied: false
             };
             this.messages.push(tempUserMsg);
-            this.scrollToBottom();
+            this.scrollToBottom(true);
 
             try {
                 const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
@@ -201,11 +279,53 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
-        scrollToBottom() {
+        async createTripFromItinerary(plan) {
+            if (this.isCreatingTrip || !plan) return;
+            this.isCreatingTrip = true;
+
+            try {
+                const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                const res = await fetch('/ajax/ai-copilot/create-trip', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({
+                        province: plan.province,
+                        days: plan.days,
+                        start_date: plan.start_date,
+                        budget: plan.summary?.budget || plan.budget || null,
+                        summary: plan.summary || null
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success && data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert(data.message || 'Không thể tạo chuyến đi lúc này.');
+                    this.isCreatingTrip = false;
+                }
+            } catch (err) {
+                console.error('Create trip error:', err);
+                alert('Có lỗi xảy ra khi tạo chuyến đi từ lịch trình.');
+                this.isCreatingTrip = false;
+            }
+        },
+
+        scrollToBottom(force = false) {
             this.$nextTick(() => {
                 const el = this.$refs.messagesContainer;
                 if (el) {
-                    el.scrollTop = el.scrollHeight;
+                    const isNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+                    if (force || isNearBottom) {
+                        el.scrollTo({
+                            top: el.scrollHeight,
+                            behavior: 'smooth'
+                        });
+                    }
                 }
             });
         },

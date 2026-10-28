@@ -18,8 +18,9 @@ class SocialFeedService
      */
     public function getFeed(int $perPage = 15): LengthAwarePaginator
     {
-        return Post::with(['author', 'trip', 'comments.author'])
-            ->withCount(['comments', 'likedByUsers'])
+        return Post::visible()
+            ->with(['author', 'trip', 'comments.author'])
+            ->withCount(['comments' => fn ($q) => $q->where('is_hidden', false), 'likedByUsers'])
             ->latest()
             ->paginate($perPage);
     }
@@ -63,7 +64,7 @@ class SocialFeedService
             abort(403, __('You are not authorized to delete this post.'));
         }
 
-        return (bool) $post->delete();
+        return (bool) $post->forceDelete();
     }
 
     /**

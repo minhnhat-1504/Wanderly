@@ -1,0 +1,1416 @@
+[
+    {
+        "id": "dn_001",
+        "province_code": "danang",
+        "name_vi": "Sun World Bà Nà Hills & Cầu Vàng",
+        "name_en": "Sun World Ba Na Hills & Golden Bridge",
+        "category": "sight",
+        "lat": 15.995535338293923,
+        "lng": 107.99774579808263,
+        "description_vi": "Khu du lịch trên đỉnh núi Chúa ở độ cao 1.487m với cáp treo đạt kỷ lục thế giới, làng Pháp cổ kính và Cầu Vàng nổi tiếng toàn cầu.",
+        "suggested_duration_min": 240,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "21:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 1000000,
+        "best_months": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "sightseeing",
+            "mountains",
+            "photography",
+            "iconic"
+        ],
+        "local_specialties": [
+            "Buffet ẩm thực quốc tế"
+        ],
+        "source": "curated",
+        "source_url": "https://banahills.sunworld.vn/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Giá vé cáp treo khứ hồi người lớn khoảng 1.000.000đ, trẻ em và khách địa phương có giá thấp hơn. Nên đi sáng sớm để tránh sương mù và đông đúc.",
+        "address": "Thôn An Sơn, Xã Hòa Ninh, Đà Nẵng"
+    },
+    {
+        "id": "dn_002",
+        "province_code": "danang",
+        "name_vi": "Cầu Rồng Đà Nẵng",
+        "name_en": "Dragon Bridge",
+        "category": "sight",
+        "lat": 16.064267581751892,
+        "lng": 108.2274218274316,
+        "description_vi": "Biểu tượng kiến trúc độc đáo bắc qua sông Hàn, mô phỏng rồng thời Lý vươn ra biển lớn; phun lửa và nước vào 21:00 thứ Bảy, Chủ Nhật.",
+        "suggested_duration_min": 60,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "architecture",
+            "nightlife",
+            "photography",
+            "iconic"
+        ],
+        "local_specialties": [
+            "Trà sữa vỉa hè",
+            "Hải sản ven sông"
+        ],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Phun lửa và phun nước lúc 21:00 cuối tuần.",
+        "address": "Đường Nguyễn Văn Linh, Phước Ninh, Đà Nẵng"
+    },
+    {
+        "id": "dn_003",
+        "province_code": "danang",
+        "name_vi": "Bãi biển Mỹ Khê",
+        "name_en": "My Khe Beach",
+        "category": "beach",
+        "lat": 16.062168858685013,
+        "lng": 108.24779620475775,
+        "description_vi": "Một trong những bãi biển quyến rũ nhất hành tinh với bãi cát trắng mịn, nước trong xanh và sóng biển êm đềm.",
+        "suggested_duration_min": 120,
+        "opening_hours": {
+            "open": "05:00",
+            "close": "19:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "beach",
+            "swimming",
+            "sunset",
+            "relaxation"
+        ],
+        "local_specialties": [
+            "Nước dừa tươi",
+            "Hải sản nướng"
+        ],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/bien-da-nang/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Tắm biển an toàn nhất từ 05:00-08:00 và 16:00-18:30.",
+        "address": "Đường Võ Nguyên Giáp, Phước Mỹ, Đà Nẵng"
+    },
+    {
+        "id": "dn_004",
+        "province_code": "danang",
+        "name_vi": "Chùa Linh Ứng Bán Đảo Sơn Trà",
+        "name_en": "Linh Ung Pagoda Son Tra",
+        "category": "culture",
+        "lat": 16.10044397617874,
+        "lng": 108.27833901189862,
+        "description_vi": "Ngôi chùa tựa lưng vào đỉnh Sơn Trà với tượng Phật Bà Quan Âm cao 67m nhìn ra biển Đông, bao quát toàn cảnh vịnh Đà Nẵng.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "19:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "culture",
+            "religion",
+            "scenic",
+            "viewpoint"
+        ],
+        "local_specialties": [
+            "Trà sen chùa"
+        ],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Yêu cầu trang phục lịch sự, kín đáo khi vào lễ bái.",
+        "address": "Bãi Bụt, Bán đảo Sơn Trà, Đà Nẵng"
+    },
+    {
+        "id": "dn_005",
+        "province_code": "danang",
+        "name_vi": "Danh thắng Ngũ Hành Sơn",
+        "name_en": "Marble Mountains",
+        "category": "nature",
+        "lat": 16.00388570605551,
+        "lng": 108.26354673360677,
+        "description_vi": "Quần thể 5 ngọn núi đá vôi kỳ vĩ (Kim, Mộc, Thủy, Hỏa, Thổ) với nhiều hang động huyền bí như động Huyền Không, động Âm Phủ và chùa Tam Thai.",
+        "suggested_duration_min": 120,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "17:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 40000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "nature",
+            "caves",
+            "hiking",
+            "history"
+        ],
+        "local_specialties": [
+            "Đá mỹ nghệ Non Nước"
+        ],
+        "source": "curated",
+        "source_url": "http://nguhanhson.org.vn/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Vé vào Thủy Sơn khoảng 40.000đ. Thang máy 15.000đ/chiều. Động Âm Phủ mua vé riêng khoảng 20.000đ.",
+        "address": "Núi Thủy Sơn, phường Ngũ Hành Sơn, Đà Nẵng"
+    },
+    {
+        "id": "dn_006",
+        "province_code": "danang",
+        "name_vi": "Bảo tàng Điêu khắc Chăm Đà Nẵng",
+        "name_en": "Museum of Cham Sculpture",
+        "category": "culture",
+        "lat": 16.060465646163486,
+        "lng": 108.22371830662192,
+        "description_vi": "Nơi lưu giữ bộ sưu tập hiện vật điêu khắc tôn giáo nghệ thuật Chăm Pa lớn và đặc sắc nhất thế giới từ thế kỷ VII đến XV.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "17:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 60000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "culture",
+            "museum",
+            "history",
+            "art"
+        ],
+        "local_specialties": [
+            "Sách và quà lưu niệm nghệ thuật Chăm"
+        ],
+        "source": "curated",
+        "source_url": "http://chammuseum.vn/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Điểm tham quan trong nhà lý tưởng kể cả khi thời tiết mưa. Miễn phí vé vào một số ngày lễ lớn.",
+        "address": "02 Đường 2 Tháng 9, phường Hải Châu, Đà Nẵng"
+    },
+    {
+        "id": "dn_007",
+        "province_code": "danang",
+        "name_vi": "Chợ Cồn - Thiên đường ẩm thực Đà Nẵng",
+        "name_en": "Con Market",
+        "category": "market",
+        "lat": 16.0678854873924,
+        "lng": 108.21446194223881,
+        "description_vi": "Khu chợ sầm uất bậc nhất với khu ẩm thực đường phố đa dạng món ăn miền Trung nóng hổi và đặc sản làm quà giá hợp lý.",
+        "suggested_duration_min": 75,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "19:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "market",
+            "streetfood",
+            "shopping",
+            "local"
+        ],
+        "local_specialties": [
+            "Bánh bèo chén",
+            "Bánh xèo nem lụi",
+            "Chè xoa xoa hạt lựu",
+            "Tré Bà Đệ"
+        ],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Khu ẩm thực ngon nhất vào khoảng 15:00-18:00 chiều.",
+        "address": "290 Hùng Vương, Hải Châu, Đà Nẵng"
+    },
+    {
+        "id": "dn_008",
+        "province_code": "danang",
+        "name_vi": "Chợ Hàn Đà Nẵng",
+        "name_en": "Han Market",
+        "category": "market",
+        "lat": 16.068168306968236,
+        "lng": 108.22421397436034,
+        "description_vi": "Khu chợ truyền thống nằm ven bờ sông Hàn chuyên bán quà lưu niệm, hải sản khô, mắm miền Trung và áo dài may đo lấy liền.",
+        "suggested_duration_min": 60,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "19:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "market",
+            "souvenirs",
+            "shopping"
+        ],
+        "local_specialties": [
+            "Mực rim me",
+            "Chả bò Đà Nẵng",
+            "Mắm nêm"
+        ],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Có thể trả giá nhẹ khi mua quà lưu niệm.",
+        "address": "119 Trần Phú, Hải Châu, Đà Nẵng"
+    },
+    {
+        "id": "dn_009",
+        "province_code": "danang",
+        "name_vi": "Phố cổ Hội An",
+        "name_en": "Hoi An Ancient Town",
+        "category": "culture",
+        "lat": 15.878659782073658,
+        "lng": 108.3330679047685,
+        "description_vi": "Di sản Văn hóa Thế giới UNESCO với những ngôi nhà cổ sơn vàng mái ngói rêu phong, đèn lồng lung linh bên bờ sông Hoài.",
+        "suggested_duration_min": 240,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "21:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 120000,
+        "best_months": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "culture",
+            "heritage",
+            "photography",
+            "unesco",
+            "walking"
+        ],
+        "local_specialties": [
+            "Cao lầu",
+            "Cơm gà Hội An",
+            "Nước Mót thảo mộc",
+            "Bánh mì Phượng"
+        ],
+        "source": "curated",
+        "source_url": "http://hoianworldheritage.org.vn/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Vé tham quan phố cổ khoảng 120.000đ (khách quốc tế) hoặc 80.000đ (khách trong nước). Vào rằm hàng tháng có lễ hội hoa đăng phố cổ lung linh không dùng điện.",
+        "address": "Khu phố cổ Hội An, Đà Nẵng"
+    },
+    {
+        "id": "dn_010",
+        "province_code": "danang",
+        "name_vi": "Rừng dừa Bảy Mẫu Cẩm Thanh",
+        "name_en": "Cam Thanh Coconut Village",
+        "category": "experience",
+        "lat": 15.878538364375592,
+        "lng": 108.37354819788892,
+        "description_vi": "Trải nghiệm đi thuyền thúng giữa rừng dừa nước bạt ngàn, xem nghệ nhân múa thúng xoay vòng và quăng chài bắt cá truyền thống.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "17:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 150000,
+        "best_months": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "experience",
+            "boating",
+            "nature",
+            "fun"
+        ],
+        "local_specialties": [
+            "Nước dừa nước",
+            "Chè dừa nước"
+        ],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Vào cổng khoảng 30.000đ, thuê thuyền thúng khoảng 130.000-200.000đ/lượt. Mỗi thúng chở 2 người lớn, nên mặc áo phao.",
+        "address": "Thôn Vạn Lăng, Cẩm Thanh, Hội An, Đà Nẵng"
+    },
+    {
+        "id": "dn_011",
+        "province_code": "danang",
+        "name_vi": "Thánh địa Mỹ Sơn",
+        "name_en": "My Son Sanctuary",
+        "category": "culture",
+        "lat": 15.768967936025575,
+        "lng": 108.11957288757384,
+        "description_vi": "Khu di tích tháp cổ Chăm Pa nằm lọt giữa thung lũng núi linh thiêng, Di sản Văn hóa Thế giới với nghệ thuật kiến trúc gạch nung bí ẩn.",
+        "suggested_duration_min": 180,
+        "opening_hours": {
+            "open": "06:30",
+            "close": "17:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 150000,
+        "best_months": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "unesco",
+            "history",
+            "culture",
+            "archaeology"
+        ],
+        "local_specialties": [
+            "Múa Chăm truyền thống"
+        ],
+        "source": "curated",
+        "source_url": "http://mysonsanctuary.com.vn/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Vé gồm xe điện trung chuyển và chương trình biểu diễn nghệ thuật Chăm. Giá vé có thể đã điều chỉnh (khoảng 150.000-250.000đ), giờ biểu diễn thay đổi, nên hỏi tại quầy vé.",
+        "address": "Xã Thu Bồn, Đà Nẵng"
+    },
+    {
+        "id": "dn_012",
+        "province_code": "danang",
+        "name_vi": "Đỉnh Bàn Cờ Bán Đảo Sơn Trà",
+        "name_en": "Ban Co Peak",
+        "category": "nature",
+        "lat": 16.12081021162392,
+        "lng": 108.27787701996361,
+        "description_vi": "Đỉnh cao nhất của bán đảo Sơn Trà (gần 700m) gắn liền truyền thuyết Tiên đánh cờ, điểm săn mây và ngắm hoàng hôn toàn cảnh Đà Nẵng.",
+        "suggested_duration_min": 75,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "18:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "scenic",
+            "viewpoint",
+            "nature",
+            "photography"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Đường đèo dốc quanh co cấm xe tay ga, nên đi xe số hoặc thuê xe ô tô trung chuyển.",
+        "address": "Đỉnh Bàn Cờ, Bán đảo Sơn Trà, Đà Nẵng"
+    },
+    {
+        "id": "dn_013",
+        "province_code": "danang",
+        "name_vi": "Đèo Hải Vân",
+        "name_en": "Hai Van Pass",
+        "category": "nature",
+        "lat": 16.200535248581456,
+        "lng": 108.13474913588068,
+        "description_vi": "Cung đường đèo ven biển hùng vĩ bậc nhất Việt Nam ('Thiên hạ đệ nhất hùng quan') nối liền Đà Nẵng và Huế với khúc cua tay áo ngoạn mục.",
+        "suggested_duration_min": 120,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+        ],
+        "avoid_months": [
+            10,
+            11,
+            12
+        ],
+        "indoor": false,
+        "tags": [
+            "scenic",
+            "nature",
+            "roadtrip",
+            "history"
+        ],
+        "local_specialties": [
+            "Cafe ngắm đèo",
+            "Hải Vân Quan"
+        ],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Dừng chân tại di tích Hải Vân Quan trên đỉnh đèo để check-in.",
+        "address": "Đèo Hải Vân, ranh giới Đà Nẵng - Huế"
+    },
+    {
+        "id": "dn_014",
+        "province_code": "danang",
+        "name_vi": "Cửa ngõ Công viên APEC & Cầu Tình Yêu",
+        "name_en": "APEC Park & Love Bridge",
+        "category": "sight",
+        "lat": 16.05823953274445,
+        "lng": 108.22357609372555,
+        "description_vi": "Khu công viên hiện đại với mái vòm cánh diều bay cao độc đáo cùng cầu khóa tình yêu lãng mạn bên tượng Cá Chép Hóa Rồng.",
+        "suggested_duration_min": 60,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "sightseeing",
+            "architecture",
+            "couples",
+            "nightlife"
+        ],
+        "local_specialties": [
+            "Khoá tình yêu kỷ niệm"
+        ],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Buổi tối lên đèn lung linh thích hợp đi dạo gió sông Hàn.",
+        "address": "Đường Trần Hưng Đạo, Đà Nẵng"
+    },
+    {
+        "id": "dn_015",
+        "province_code": "danang",
+        "name_vi": "Công viên Suối khoáng nóng Núi Thần Tài",
+        "name_en": "Nui Than Tai Hot Springs Park",
+        "category": "experience",
+        "lat": 15.967995592918147,
+        "lng": 108.0203417373053,
+        "description_vi": "Khu nghỉ dưỡng sinh thái tắm khoáng nóng tự nhiên giữa rừng xanh với công viên nước, tắm bùn khoáng và luộc trứng trường thọ.",
+        "suggested_duration_min": 180,
+        "opening_hours": {
+            "open": "08:30",
+            "close": "17:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 480000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "experience",
+            "wellness",
+            "hotsprings",
+            "family"
+        ],
+        "local_specialties": [
+            "Trứng khoáng nóng Trường Thọ"
+        ],
+        "source": "curated",
+        "source_url": "https://nuithantai.vn/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Vé phổ thông người lớn khoảng 480.000-490.000đ, trẻ em khoảng một nửa. Rất thích hợp cho gia đình có người lớn tuổi và trẻ nhỏ.",
+        "address": "Thôn Phú Túc, xã Hòa Phú, Đà Nẵng"
+    },
+    {
+        "id": "dn_016",
+        "province_code": "danang",
+        "name_vi": "Mì Quảng Thuận",
+        "name_en": "Thuan Quang Noodles",
+        "category": "food",
+        "lat": 16.06924534011909,
+        "lng": 108.21355807590274,
+        "description_vi": "Quán mì Quảng bình dân gần Chợ Cồn với nước dùng đậm đà, sợi mì vàng dai ăn kèm bánh tráng nướng giòn và rau sống tươi xanh.",
+        "suggested_duration_min": 45,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 45000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "breakfast",
+            "lunch",
+            "local"
+        ],
+        "local_specialties": [
+            "Mì Quảng"
+        ],
+        "source": "curated",
+        "source_url": "https://www.google.com/maps?q=16.06924534,108.21355808",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Giá tham khảo cho một tô mì. Giờ mở cửa chưa xác minh, nên kiểm tra trên bản đồ trước khi đi.",
+        "address": "Khu vực Chợ Cồn, Hải Châu, Đà Nẵng"
+    },
+    {
+        "id": "dn_017",
+        "province_code": "danang",
+        "name_vi": "Mì Quảng Bà Mua",
+        "name_en": "Ba Mua Quang Noodles",
+        "category": "food",
+        "lat": 16.066523315755465,
+        "lng": 108.21914772755612,
+        "description_vi": "Thương hiệu mì Quảng trứ danh với nước dùng xâm xấp ngọt thanh, sợi mì dẻo dai ăn kèm bánh tráng mè nướng giòn rụm và rau sống tươi xanh.",
+        "suggested_duration_min": 45,
+        "opening_hours": {
+            "open": "06:30",
+            "close": "21:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 45000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "breakfast",
+            "lunch",
+            "dinner",
+            "local"
+        ],
+        "local_specialties": [
+            "Mì Quảng tôm thịt",
+            "Mì Quảng ếch",
+            "Mì Quảng sườn"
+        ],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Món ăn sáng và ăn trưa chuẩn phong vị Quảng.",
+        "address": "19 Trần Bình Trọng, Hải Châu, Đà Nẵng"
+    },
+    {
+        "id": "dn_018",
+        "province_code": "danang",
+        "name_vi": "Bún cá Hờn",
+        "name_en": "Hon Fish Noodles",
+        "category": "food",
+        "lat": 16.0748409762373,
+        "lng": 108.21872325933396,
+        "description_vi": "Quán bún cá bình dân với nước dùng ngọt thanh tự nhiên, chả cá và cá chiên dai giòn ăn kèm rau sống và ớt ngâm.",
+        "suggested_duration_min": 45,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "22:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 35000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "breakfast",
+            "cheap",
+            "local"
+        ],
+        "local_specialties": [
+            "Bún cá",
+            "Bún chả cá"
+        ],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Giá tham khảo cho một tô bún. Giờ mở cửa chưa xác minh.",
+        "address": "Hải Châu, Đà Nẵng"
+    },
+    {
+        "id": "dn_019",
+        "province_code": "danang",
+        "name_vi": "Cà phê Út Tịch",
+        "name_en": "Ut Tich Cafe",
+        "category": "cafe",
+        "lat": 16.069141473823265,
+        "lng": 108.2249100575528,
+        "description_vi": "Quán cà phê mang phong cách hoài niệm thời bao cấp ven sông Bạch Đằng, không gian bình yên với view ngắm du thuyền sông Hàn.",
+        "suggested_duration_min": 60,
+        "opening_hours": {
+            "open": "06:30",
+            "close": "22:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 40000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "cafe",
+            "relaxation",
+            "riverview",
+            "vintage"
+        ],
+        "local_specialties": [
+            "Cà phê muối",
+            "Cà phê cốt dừa"
+        ],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Chỗ ngồi vỉa hè buổi tối rất mát mẻ.",
+        "address": "Đường Bạch Đằng, Hải Châu, Đà Nẵng"
+    },
+    {
+        "id": "dn_020",
+        "province_code": "danang",
+        "name_vi": "Hải sản Bé Mặn",
+        "name_en": "Be Man Seafood",
+        "category": "food",
+        "lat": 16.082213810170458,
+        "lng": 108.24777273323659,
+        "description_vi": "Quán hải sản bình dân nổi tiếng bậc nhất đường biển Võ Nguyên Giáp, hải sản tươi sống bơi trong hồ chọn món cân ký chế biến tại chỗ.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "10:00",
+            "close": "23:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 250000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "food",
+            "dinner",
+            "seafood",
+            "beachview"
+        ],
+        "local_specialties": [
+            "Tôm sú nướng muối ớt",
+            "Mực cơm hấp gừng",
+            "Chíp chíp hấp sả"
+        ],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Giá tham khảo mỗi người, tùy hải sản chọn. Nên đặt bàn trước vào buổi tối các ngày cuối tuần.",
+        "address": "Đường Võ Nguyên Giáp, Sơn Trà, Đà Nẵng"
+    },
+    {
+        "id": "dn_021",
+        "province_code": "danang",
+        "name_vi": "Bãi biển An Bàng Hội An",
+        "name_en": "An Bang Beach",
+        "category": "beach",
+        "lat": 15.913751632029483,
+        "lng": 108.34067035282159,
+        "description_vi": "Bãi biển yên bình giữ nét hoang sơ mộc mạc với hàng phi lao chắn gió và các quán bar, nhà hàng sát biển phong cách nhiệt đới.",
+        "suggested_duration_min": 150,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "beach",
+            "relaxation",
+            "chill",
+            "cocktails"
+        ],
+        "local_specialties": [
+            "Cocktail dừa",
+            "Pizza củi nướng"
+        ],
+        "source": "curated",
+        "source_url": "http://hoianworldheritage.org.vn/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Có thể thuê xe đạp từ phố cổ Hội An ra bãi biển khoảng 4km.",
+        "address": "Bãi biển An Bàng, Hội An, Đà Nẵng"
+    },
+    {
+        "id": "dn_022",
+        "province_code": "danang",
+        "name_vi": "Làng rau Trà Quế (nhà hàng)",
+        "name_en": "Tra Que Vegetable Village Restaurant",
+        "category": "experience",
+        "lat": 15.90085653532794,
+        "lng": 108.33848196206873,
+        "description_vi": "Làng nông nghiệp hữu cơ hơn 300 năm tuổi nổi danh với phương pháp bón rong sông Cổ Cò, nơi du khách hóa thân thành nông dân cuốc đất tưới rau và thưởng thức món ăn từ rau tại vườn.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "17:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 35000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "experience",
+            "farming",
+            "organic",
+            "family"
+        ],
+        "local_specialties": [
+            "Món Tam Hữu",
+            "Trà hạt é Trà Quế"
+        ],
+        "source": "curated",
+        "source_url": "http://hoianworldheritage.org.vn/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Phí tham quan làng khoảng 35.000đ, bữa ăn tại nhà hàng tính riêng. Có lớp dạy nấu ăn và ngâm chân thảo dược trị liệu.",
+        "address": "Làng rau Trà Quế, Hội An, Đà Nẵng"
+    },
+    {
+        "id": "dn_023",
+        "province_code": "danang",
+        "name_vi": "Làng gốm & Công viên Đất nung Thanh Hà",
+        "name_en": "Thanh Ha Pottery Village & Terracotta Park",
+        "category": "culture",
+        "lat": 15.878099916145235,
+        "lng": 108.30089385412366,
+        "description_vi": "Làng nghề gốm đất nung truyền thống hơn 500 năm tuổi bên bờ sông Thu Bồn và Công viên Đất nung độc đáo tái hiện các kỳ quan thế giới thu nhỏ.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "08:00",
+            "close": "17:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 50000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "culture",
+            "crafts",
+            "pottery",
+            "history"
+        ],
+        "local_specialties": [
+            "Tò he gốm thổi phát tiếng"
+        ],
+        "source": "curated",
+        "source_url": "http://hoianworldheritage.org.vn/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Vé vào Công viên Đất nung khoảng 50.000đ người lớn, 30.000đ trẻ em. Đi dạo làng gốm không mất phí.",
+        "address": "Đường Phạm Phán, phường Hội An Tây, Đà Nẵng"
+    },
+    {
+        "id": "dn_024",
+        "province_code": "danang",
+        "name_vi": "Chùa Hải Tạng - Cù Lao Chàm",
+        "name_en": "Hai Tang Pagoda - Cham Islands",
+        "category": "nature",
+        "lat": 15.963499477197592,
+        "lng": 108.50540079478759,
+        "description_vi": "Ngôi chùa cổ thế kỷ 18 trong thung lũng nhỏ trên đảo Hòn Lao, điểm dừng chân trong chuyến tham quan Khu dự trữ sinh quyển Cù Lao Chàm với rạn san hô trong vắt và làng chài Bãi Làng mộc mạc.",
+        "suggested_duration_min": 360,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "16:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 450000,
+        "best_months": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            9,
+            10,
+            11,
+            12,
+            1
+        ],
+        "indoor": false,
+        "tags": [
+            "island",
+            "snorkeling",
+            "nature",
+            "unesco"
+        ],
+        "local_specialties": [
+            "Ốc vú nàng",
+            "Cua đá Cù Lao Chàm",
+            "Mực một nắng"
+        ],
+        "source": "curated",
+        "source_url": "http://hoianworldheritage.org.vn/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Giá gồm canô khứ hồi từ bến Cửa Đại (khoảng 250.000-400.000đ) và phí tham quan đảo 70.000đ. Đi canô khoảng 30-40 phút, tàu có thể ngừng chạy khi biển động.",
+        "address": "Bãi Làng, xã Tân Hiệp, Cù Lao Chàm, Đà Nẵng"
+    },
+    {
+        "id": "dn_025",
+        "province_code": "danang",
+        "name_vi": "Cơm gà Bà Buội Hội An",
+        "name_en": "Ba Buoi Chicken Rice",
+        "category": "food",
+        "lat": 15.878511099537693,
+        "lng": 108.33041966609521,
+        "description_vi": "Quán cơm gà gia truyền nổi tiếng trên đường Phan Chu Trinh, cơm nấu nước luộc gà vàng óng, thịt gà ta xé phay bóp rau răm hành tây giòn ngọt.",
+        "suggested_duration_min": 45,
+        "opening_hours": {
+            "open": "11:00",
+            "close": "20:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 60000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "lunch",
+            "dinner",
+            "specialty"
+        ],
+        "local_specialties": [
+            "Cơm gà xé",
+            "Gỏi lòng gà"
+        ],
+        "source": "curated",
+        "source_url": "http://hoianworldheritage.org.vn/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Quán đông vào giờ cao điểm trưa, nên đến trước 11:45.",
+        "address": "22 Phan Chu Trinh, Hội An, Đà Nẵng"
+    },
+    {
+        "id": "dn_026",
+        "province_code": "danang",
+        "name_vi": "Quán Nước Mót Hội An",
+        "name_en": "Mot Hoi An Herbal Tea",
+        "category": "cafe",
+        "lat": 15.877184929164002,
+        "lng": 108.32733553664768,
+        "description_vi": "Quán trà thảo mộc trứ danh trên phố Trần Phú với ly trà thơm mùi sả, chanh, quế và cánh sen hồng tươi tắn đậm chất thơ Hội An.",
+        "suggested_duration_min": 30,
+        "opening_hours": {
+            "open": "08:00",
+            "close": "22:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 15000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "cafe",
+            "drink",
+            "streetfood",
+            "iconic"
+        ],
+        "local_specialties": [
+            "Trà thảo mộc Mót"
+        ],
+        "source": "curated",
+        "source_url": "http://hoianworldheritage.org.vn/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Mua ly cầm tay vừa dạo bộ ngắm đèn lồng phố cổ.",
+        "address": "150 Trần Phú, Hội An, Đà Nẵng"
+    },
+    {
+        "id": "dn_027",
+        "province_code": "danang",
+        "name_vi": "Ghềnh Bàng & Bãi Rạng Sơn Trà",
+        "name_en": "Ghenh Bang - Bai Rang",
+        "category": "nature",
+        "lat": 16.112472120279424,
+        "lng": 108.3116321955484,
+        "description_vi": "Bãi đá tự nhiên hoang sơ với các khối đá hình thù kỳ vĩ nhô ra biển, điểm lặn ngắm san hô tự do và cắm trại ngắm bình minh.",
+        "suggested_duration_min": 120,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11,
+            12
+        ],
+        "indoor": false,
+        "tags": [
+            "nature",
+            "trekking",
+            "adventure",
+            "snorkeling"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Đoạn đường dốc cần đi giày thể thao bám đường tốt.",
+        "address": "Bán đảo Sơn Trà, Đà Nẵng"
+    },
+    {
+        "id": "dn_028",
+        "province_code": "danang",
+        "name_vi": "Hải đăng Tiên Sa",
+        "name_en": "Tien Sa Lighthouse",
+        "category": "sight",
+        "lat": 16.140165240668914,
+        "lng": 108.32210681783563,
+        "description_vi": "Ngọn hải đăng cổ kiểu Pháp xây dựng từ đầu thế kỷ XX sơn màu vàng cam nổi bật giữa mây trời biển biếc bán đảo Sơn Trà.",
+        "suggested_duration_min": 60,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "18:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 20000,
+        "best_months": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "photography",
+            "heritage",
+            "viewpoint"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Điểm chụp ảnh phong cách cổ điển lãng mạn.",
+        "address": "Bán đảo Sơn Trà, Đà Nẵng"
+    },
+    {
+        "id": "dn_029",
+        "province_code": "danang",
+        "name_vi": "Cầu sông Hàn quay",
+        "name_en": "Han River Swing Bridge",
+        "category": "sight",
+        "lat": 16.072278519108984,
+        "lng": 108.22678196472563,
+        "description_vi": "Cây cầu quay đầu tiên do kỹ sư và công nhân Việt Nam thiết kế và thi công; quay 90 độ cho tàu lớn qua vào 23:00 cuối tuần.",
+        "suggested_duration_min": 60,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "architecture",
+            "nightlife",
+            "iconic"
+        ],
+        "local_specialties": [
+            "Du thuyền ngắm cầu sông Hàn"
+        ],
+        "source": "curated",
+        "source_url": "https://danangfantasticity.com/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Cầu quay lúc 23:00 - 24:00 thứ Bảy và Chủ Nhật.",
+        "address": "Cầu sông Hàn, Đường Bạch Đằng, Đà Nẵng"
+    },
+    {
+        "id": "dn_030",
+        "province_code": "danang",
+        "name_vi": "Bánh mì Phượng Hội An",
+        "name_en": "Banh Mi Phuong Hoi An",
+        "category": "food",
+        "lat": 15.878560181094205,
+        "lng": 108.33203796992713,
+        "description_vi": "Tiệm bánh mì vang danh thế giới được cố đầu bếp Anthony Bourdain ca ngợi, vỏ bánh nóng giòn cùng hơn 10 loại nhân và nước sốt bí truyền.",
+        "suggested_duration_min": 30,
+        "opening_hours": {
+            "open": "06:30",
+            "close": "21:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 35000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "streetfood",
+            "breakfast",
+            "iconic"
+        ],
+        "local_specialties": [
+            "Bánh mì thập cẩm",
+            "Bánh mì pate thịt nướng"
+        ],
+        "source": "curated",
+        "source_url": "http://hoianworldheritage.org.vn/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Xếp hàng nhanh, thích hợp mua mang đi khi tham quan phố cổ.",
+        "address": "2B Phan Chu Trinh, Hội An, Đà Nẵng"
+    }
+]
