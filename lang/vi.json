@@ -117,6 +117,9 @@
     "Extract into Itinerary": "Bóc tách vào Lịch trình",
     "You selected to join this activity.": "Bạn đã chọn tham gia hoạt động này.",
     "You unselected this activity.": "Bạn đã hủy tham gia hoạt động này.",
-    "The start date must be today or a future date.": "Ngày bắt đầu phải là hôm nay hoặc một ngày trong tương lai."
+    "The start date must be today or a future date.": "Ngày bắt đầu phải là hôm nay hoặc một ngày trong tương lai.",
+    "Accept Remaining Items": "Chấp nhận các mục còn lại",
+    "Confirm Remaining Bundle Items": "Xác nhận các mục còn lại trong gói"
 }
+
 

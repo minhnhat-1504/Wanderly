@@ -54,10 +54,21 @@ class TripDemoSeeder extends Seeder
             ]
         );
 
-        // 2. Assign leader membership
+        // 2. Assign leader and member
         TripMember::updateOrCreate(
             ['trip_id' => $trip->id, 'user_id' => $demoUser->id],
             ['role' => 'leader']
+        );
+
+        $memberUser = User::where('email', 'member@wanderly.test')->first() ?? User::factory()->create([
+            'name' => 'Member Traveler',
+            'email' => 'member@wanderly.test',
+            'role' => 'traveler',
+        ]);
+
+        TripMember::updateOrCreate(
+            ['trip_id' => $trip->id, 'user_id' => $memberUser->id],
+            ['role' => 'editor']
         );
 
         // 3. Clear existing sub-items to prevent duplicate on re-run
@@ -230,6 +241,7 @@ class TripDemoSeeder extends Seeder
                     'username' => 'dalat_explorer',
                     'password' => bcrypt('password'),
                     'role' => 'provider',
+                    'email_verified_at' => now(),
                 ]
             );
 
@@ -256,7 +268,7 @@ class TripDemoSeeder extends Seeder
                         [
                             'price' => 1800000.00,
                             'tags' => ['transport', 'car', 'private'],
-                            'specs' => ['seats' => 7, 'ac' => true, 'driver' => 'English-speaking'],
+                            'specs' => ['seats' => 7, 'ac' => true, 'driver' => 'English-speaking', 'weekday_price' => 1500000.00],
                         ]
                     );
 

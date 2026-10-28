@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Social;
 
 use App\Http\Controllers\Controller;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Services\NotificationService;
 use App\Services\SocialFeedService;
@@ -113,11 +114,54 @@ class SocialFeedController extends Controller
                 'id' => $comment->id,
                 'content' => $comment->content,
                 'author' => $comment->author->name,
+                'author_username' => $comment->author->username ?? null,
                 'avatar_initial' => strtoupper(substr($comment->author->name, 0, 1)),
                 'created_at' => $comment->created_at->diffForHumans(),
+                'is_author' => true,
+                'can_delete' => true,
             ],
             'comments_count' => $post->fresh()->comments_count,
         ]);
+    }
+
+    /**
+     * Update a comment (AJAX).
+     */
+    public function updateComment(Request $request, Comment $comment): JsonResponse
+    {
+        $validated = $request->validate([
+            'content' => ['required', 'string', 'max:1000'],
+        ]);
+
+        $this->feedService->updateComment($comment, auth()->user(), $validated['content']);
+
+        return response()->json([
+            'success' => true,
+            'comment' => [
+                'id' => $comment->id,
+                'content' => $comment->content,
+            ],
+            'message' => __('Comment updated successfully.'),
+        ]);
+    }
+
+    /**
+     * Delete a comment (AJAX / web).
+     */
+    public function deleteComment(Request $request, Comment $comment): JsonResponse|RedirectResponse
+    {
+        $post = $comment->post;
+        $this->feedService->deleteComment($comment, auth()->user());
+
+        if ($request->expectsJson() || $request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'comments_count' => $post->fresh()->comments_count,
+                'message' => __('Comment deleted successfully.'),
+            ]);
+        }
+
+        return back()->with('success', __('Comment deleted successfully.'));
     }
 
     /**

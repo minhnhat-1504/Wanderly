@@ -12,7 +12,7 @@ class ProvinceResolverTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->resolver = new ProvinceResolver();
+        $this->resolver = new ProvinceResolver;
     }
 
     public function test_loads_all_34_official_provinces(): void

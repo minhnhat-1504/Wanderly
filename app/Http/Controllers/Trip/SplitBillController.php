@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Trip;
 
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
+use App\Models\ActivityParticipant;
 use App\Models\Trip;
+use App\Services\BudgetService;
 use App\Services\MinCashFlowService;
 use App\Services\SplitBillService;
 use App\Services\VietQrService;
@@ -108,7 +110,7 @@ class SplitBillController extends Controller
         $freshActivity = $activity->fresh(['participants']);
         $updatedDetails = $this->splitBillService->getActivitySplitDetails($freshActivity);
         $totalSpent = $freshActivity->calculateTotalSpent();
-        $budgetStatus = app(\App\Services\BudgetService::class)->calculateBudgetStatus($trip->fresh());
+        $budgetStatus = app(BudgetService::class)->calculateBudgetStatus($trip->fresh());
 
         return response()->json([
             'success' => true,
@@ -132,7 +134,7 @@ class SplitBillController extends Controller
 
         $userId = $request->user()->id;
 
-        $existing = \App\Models\ActivityParticipant::where('activity_id', $activity->id)
+        $existing = ActivityParticipant::where('activity_id', $activity->id)
             ->where('user_id', $userId)
             ->first();
 
@@ -140,7 +142,7 @@ class SplitBillController extends Controller
             $existing->delete();
             $joined = false;
         } else {
-            \App\Models\ActivityParticipant::create([
+            ActivityParticipant::create([
                 'activity_id' => $activity->id,
                 'user_id' => $userId,
                 'custom_amount' => null,
@@ -151,7 +153,7 @@ class SplitBillController extends Controller
         $freshActivity = $activity->fresh(['participants.user']);
         $participantsCount = $freshActivity->participants->count();
         $totalSpent = $freshActivity->calculateTotalSpent();
-        $budgetStatus = app(\App\Services\BudgetService::class)->calculateBudgetStatus($trip->fresh());
+        $budgetStatus = app(BudgetService::class)->calculateBudgetStatus($trip->fresh());
 
         return response()->json([
             'success' => true,
@@ -159,7 +161,7 @@ class SplitBillController extends Controller
             'participants_count' => $participantsCount,
             'unit_cost' => (float) $freshActivity->cost,
             'total_spent' => $totalSpent,
-            'total_spent_formatted' => number_format($totalSpent, 0, ',', '.') . ' ₫',
+            'total_spent_formatted' => number_format($totalSpent, 0, ',', '.').' ₫',
             'budget_status' => $budgetStatus,
             'message' => $joined ? __('You selected to join this activity.') : __('You unselected this activity.'),
         ]);

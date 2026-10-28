@@ -13,13 +13,14 @@ use Tests\TestCase;
 class ItineraryPlannerTest extends TestCase
 {
     protected ItineraryPlannerService $planner;
+
     protected ItineraryValidator $validator;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $resolver = new ProvinceResolver();
-        $placeRepo = new PlaceRepository();
+        $resolver = new ProvinceResolver;
+        $placeRepo = new PlaceRepository;
         $travelTime = new TravelTimeService($placeRepo, $resolver);
         $weatherService = new OpenMeteoWeatherService($resolver);
         $this->validator = new ItineraryValidator($placeRepo, $travelTime);

@@ -45,7 +45,8 @@ class ProviderPortalSeeder extends Seeder
 
         // 2. Seed Trip Group Chat Messages
         $leader = $trip->owner;
-        $editorUser = User::where('email', 'admin@wanderly.test')->first() ?? $leader;
+        $editorUser = User::where('email', 'member@wanderly.test')->first() ?? $leader;
+
 
         Message::firstOrCreate(
             [

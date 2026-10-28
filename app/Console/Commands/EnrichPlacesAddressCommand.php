@@ -24,6 +24,7 @@ class EnrichPlacesAddressCommand extends Command
     protected $description = 'Enrich dataset places with verified, precise street addresses from OpenStreetMap Nominatim and curated registries.';
 
     protected array $cache = [];
+
     protected string $cachePath;
 
     public function __construct(protected ProvinceResolver $provinceResolver)
@@ -45,6 +46,7 @@ class EnrichPlacesAddressCommand extends Command
         $baseDir = base_path('data/places');
         if (! File::exists($baseDir)) {
             $this->error("Directory {$baseDir} does not exist.");
+
             return 1;
         }
 
@@ -66,6 +68,7 @@ class EnrichPlacesAddressCommand extends Command
 
             if (! is_array($places)) {
                 $this->warn("Skipping invalid JSON: {$provinceCode}.json");
+
                 continue;
             }
 
@@ -90,7 +93,7 @@ class EnrichPlacesAddressCommand extends Command
             if ($updatedInFile > 0 || $force) {
                 File::put(
                     $file->getRealPath(),
-                    json_encode($places, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "\n"
+                    json_encode($places, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)."\n"
                 );
                 $this->info("Saved {$updatedInFile} addresses to {$provinceCode}.json.");
             }
@@ -138,7 +141,7 @@ class EnrichPlacesAddressCommand extends Command
             if ($response->successful()) {
                 $data = $response->json();
                 $addr = $data['address'] ?? [];
-                
+
                 $road = $addr['road'] ?? $addr['pedestrian'] ?? $addr['street'] ?? '';
                 $houseNumber = $addr['house_number'] ?? '';
                 $suburb = $addr['suburb'] ?? $addr['neighbourhood'] ?? $addr['quarter'] ?? '';
@@ -165,6 +168,7 @@ class EnrichPlacesAddressCommand extends Command
                     $this->cache[$cacheKey] = $cleanStr;
                     // Polite 1s sleep for Nominatim policy
                     sleep(1);
+
                     return $cleanStr;
                 }
             }
@@ -173,7 +177,7 @@ class EnrichPlacesAddressCommand extends Command
         }
 
         // Fallback: description or name with city
-        return $this->provinceResolver->cleanAdministrativeUnits("{$name}, " . ucfirst($provinceCode));
+        return $this->provinceResolver->cleanAdministrativeUnits("{$name}, ".ucfirst($provinceCode));
     }
 
     /**

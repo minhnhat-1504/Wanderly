@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class OpenMeteoWeatherService
 {
     public const ATTRIBUTION_TEXT = 'Weather data by Open-Meteo.com';
+
     public const ATTRIBUTION_URL = 'https://open-meteo.com/';
 
     protected array $regionRules = [];
@@ -68,6 +69,7 @@ class OpenMeteoWeatherService
             if ($forecastResult !== null) {
                 $forecastResult['season_hazards'] = $seasonHazards;
                 $forecastResult['general_advice'] = $this->generateGeneralAdvice($forecastResult['daily'], $seasonHazards, $province);
+
                 return $forecastResult;
             }
         }
@@ -126,7 +128,7 @@ class OpenMeteoWeatherService
 
         try {
             $response = Http::withHeaders([
-                'User-Agent' => 'WanderlyApp/1.0 (Travel Itinerary Planner; contact@wanderly.vn)'
+                'User-Agent' => 'WanderlyApp/1.0 (Travel Itinerary Planner; contact@wanderly.vn)',
             ])->timeout(12)->get('https://api.open-meteo.com/v1/forecast', [
                 'latitude' => $lat,
                 'longitude' => $lng,
@@ -140,12 +142,13 @@ class OpenMeteoWeatherService
                 $parsed = $this->parseOpenMeteoResponse($data, $start, $durationDays, $code);
 
                 File::put($cacheFile, json_encode($parsed, JSON_PRETTY_PRINT));
+
                 return $parsed;
             }
 
-            Log::warning("Open-Meteo API returned status " . $response->status() . " for {$code}");
+            Log::warning('Open-Meteo API returned status '.$response->status()." for {$code}");
         } catch (\Throwable $e) {
-            Log::warning("Open-Meteo network failed for {$code}: " . $e->getMessage());
+            Log::warning("Open-Meteo network failed for {$code}: ".$e->getMessage());
         }
 
         return null;
@@ -315,7 +318,7 @@ class OpenMeteoWeatherService
         }
 
         foreach ($hazards as $h) {
-            $parts[] = "Lưu ý mùa: " . $h['warning'];
+            $parts[] = 'Lưu ý mùa: '.$h['warning'];
         }
 
         $seasonNote = $province['season_notes']['note'] ?? null;

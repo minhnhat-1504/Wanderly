@@ -209,6 +209,34 @@ class ChatSocialTest extends TestCase
             ->assertJson(['saved' => false]);
 
         $this->assertDatabaseMissing('post_saves', ['post_id' => $post->id, 'user_id' => $user->id]);
+
+        // Also test direct web route /social/posts/{post}/save
+        $this->actingAs($user)
+            ->postJson(route('social.posts.save', $post))
+            ->assertOk()
+            ->assertJson(['saved' => true]);
+
+        $this->assertDatabaseHas('post_saves', ['post_id' => $post->id, 'user_id' => $user->id]);
+    }
+
+    public function test_user_can_comment_via_web_route(): void
+    {
+        $user = User::factory()->create();
+        $post = Post::factory()->create(['user_id' => User::factory()->create()->id]);
+
+        $response = $this->actingAs($user)
+            ->postJson(route('social.posts.comments.store', $post), [
+                'content' => 'Commenting via direct web route!',
+            ]);
+
+        $response->assertOk()
+            ->assertJsonPath('comment.author', $user->name);
+
+        $this->assertDatabaseHas('comments', [
+            'post_id' => $post->id,
+            'user_id' => $user->id,
+            'content' => 'Commenting via direct web route!',
+        ]);
     }
 
     public function test_saved_tab_shows_only_saved_posts(): void
@@ -341,5 +369,122 @@ class ChatSocialTest extends TestCase
             ->assertJson(['success' => true]);
 
         $this->assertEquals(0, $this->notificationService->countUnread($user));
+    }
+
+    public function test_user_can_edit_own_comment(): void
+    {
+        $user = User::factory()->create();
+        $post = Post::factory()->create();
+        $comment = Comment::factory()->create([
+            'post_id' => $post->id,
+            'user_id' => $user->id,
+            'content' => 'Original text',
+        ]);
+
+        $response = $this->actingAs($user)
+            ->patchJson(route('social.comments.update', $comment), [
+                'content' => 'Updated text',
+            ]);
+
+        $response->assertOk()
+            ->assertJson([
+                'success' => true,
+                'comment' => [
+                    'id' => $comment->id,
+                    'content' => 'Updated text',
+                ],
+            ]);
+
+        $this->assertDatabaseHas('comments', [
+            'id' => $comment->id,
+            'content' => 'Updated text',
+        ]);
+    }
+
+    public function test_user_cannot_edit_other_user_comment(): void
+    {
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+        $post = Post::factory()->create();
+        $comment = Comment::factory()->create([
+            'post_id' => $post->id,
+            'user_id' => $user1->id,
+            'content' => 'User1 text',
+        ]);
+
+        $this->actingAs($user2)
+            ->patchJson(route('social.comments.update', $comment), [
+                'content' => 'Hacked text',
+            ])
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('comments', [
+            'id' => $comment->id,
+            'content' => 'User1 text',
+        ]);
+    }
+
+    public function test_user_can_delete_own_comment(): void
+    {
+        $user = User::factory()->create();
+        $post = Post::factory()->create(['comments_count' => 1]);
+        $comment = Comment::factory()->create([
+            'post_id' => $post->id,
+            'user_id' => $user->id,
+            'content' => 'To be deleted',
+        ]);
+
+        $response = $this->actingAs($user)
+            ->deleteJson(route('social.comments.destroy', $comment));
+
+        $response->assertOk()
+            ->assertJson([
+                'success' => true,
+                'comments_count' => 0,
+            ]);
+
+        $this->assertSoftDeleted('comments', ['id' => $comment->id]);
+    }
+
+    public function test_post_author_can_delete_other_user_comment(): void
+    {
+        $postAuthor = User::factory()->create();
+        $commenter = User::factory()->create();
+        $post = Post::factory()->create(['user_id' => $postAuthor->id, 'comments_count' => 1]);
+        $comment = Comment::factory()->create([
+            'post_id' => $post->id,
+            'user_id' => $commenter->id,
+            'content' => 'Spam comment',
+        ]);
+
+        $response = $this->actingAs($postAuthor)
+            ->deleteJson(route('social.comments.destroy', $comment));
+
+        $response->assertOk()
+            ->assertJson([
+                'success' => true,
+                'comments_count' => 0,
+            ]);
+
+        $this->assertSoftDeleted('comments', ['id' => $comment->id]);
+    }
+
+    public function test_unauthorized_user_cannot_delete_other_comment(): void
+    {
+        $postAuthor = User::factory()->create();
+        $commenter = User::factory()->create();
+        $stranger = User::factory()->create();
+        $post = Post::factory()->create(['user_id' => $postAuthor->id, 'comments_count' => 1]);
+        $comment = Comment::factory()->create([
+            'post_id' => $post->id,
+            'user_id' => $commenter->id,
+            'content' => 'Legit comment',
+        ]);
+
+        $this->actingAs($stranger)
+            ->deleteJson(route('social.comments.destroy', $comment))
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('comments', ['id' => $comment->id]);
     }
 }

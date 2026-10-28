@@ -223,14 +223,31 @@ class ProposalOptimizerTest extends TestCase
 
     public function test_dynamic_budget_advisor_suggests_optimal_booking_dates(): void
     {
+        $this->provider1->services()->create([
+            'name' => 'Airport Shuttle Service',
+            'price' => 1000000.00,
+            'specs' => [
+                'weekday_price' => 850000.00,
+            ],
+        ]);
+
         $advisor = app(DynamicBudgetAdvisorService::class);
         $advice = $advisor->suggestOptimalBookingDates($this->trip, $this->provider1);
 
         $this->assertIsArray($advice);
         $this->assertTrue($advice['has_suggestion']);
-        $this->assertGreaterThan(0, $advice['estimated_savings_vnd']);
+        $this->assertEquals(150000.00, $advice['estimated_savings_vnd']);
         $this->assertNotEmpty($advice['recommended_period']);
         $this->assertNotEmpty($advice['message']);
+    }
+
+    public function test_dynamic_budget_advisor_does_not_suggest_mock_discounts_when_no_weekday_rates_exist(): void
+    {
+        $advisor = app(DynamicBudgetAdvisorService::class);
+        $advice = $advisor->suggestOptimalBookingDates($this->trip, $this->provider1);
+
+        $this->assertIsArray($advice);
+        $this->assertFalse($advice['has_suggestion']);
     }
 
     public function test_dynamic_budget_advisor_generates_cross_bundle_suggestions(): void
@@ -301,7 +318,7 @@ class ProposalOptimizerTest extends TestCase
             'proposal_id' => $proposal->id,
             'name' => 'Airport Transfer Car',
             'price' => 1100000.00,
-            'specs' => ['ac' => true],
+            'specs' => ['ac' => true, 'weekday_price' => 900000.00],
         ]);
 
         ProposalItem::create([
