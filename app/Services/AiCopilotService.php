@@ -136,7 +136,7 @@ params: { title, day, time_slot, cost, poi_id, location, description }";
     protected function callGeminiApi(array $messages, array $tools): ?array
     {
         $apiKey = config('ai.gemini.api_key');
-        $model = config('ai.gemini.model', 'gemini-1.5-flash');
+        $model = config('ai.gemini.model', 'gemini-3.5-flash');
         $endpoint = config('ai.gemini.endpoint') . "/{$model}:generateContent?key={$apiKey}";
 
         $systemInstruction = '';

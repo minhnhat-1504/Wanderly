@@ -38,12 +38,9 @@ class TripController extends Controller
      */
     public function create(): View
     {
-        $destinations = collect();
-        if (class_exists(Destination::class) && Schema::hasTable('destinations')) {
-            $destinations = Destination::all();
-        }
+        $provinces = \App\Support\VietnamProvinces::groupedByRegion();
 
-        return view('trips.create', compact('destinations'));
+        return view('trips.create', compact('provinces'));
     }
 
     /**
@@ -83,12 +80,9 @@ class TripController extends Controller
     {
         $this->authorize('update', $trip);
 
-        $destinations = collect();
-        if (class_exists(Destination::class) && Schema::hasTable('destinations')) {
-            $destinations = Destination::all();
-        }
+        $provinces = \App\Support\VietnamProvinces::groupedByRegion();
 
-        return view('trips.edit', compact('trip', 'destinations'));
+        return view('trips.edit', compact('trip', 'provinces'));
     }
 
     /**

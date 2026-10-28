@@ -43,29 +43,36 @@
 
             {{-- Destination --}}
             <div>
-                <x-input
-                    name="destination"
-                    label="{{ __('Destination (City or Region)') }}"
-                    placeholder="{{ __('e.g., Da Lat, Lam Dong') }}"
-                    :value="old('destination')"
-                    list="destination-list"
-                    required
-                />
-                <datalist id="destination-list">
-                    @if(isset($destinations) && $destinations->isNotEmpty())
-                        @foreach($destinations as $dest)
-                            <option value="{{ $dest->name }}">
+                <label for="destination" class="block text-sm font-medium text-gray-700 mb-1.5">
+                    {{ __('Destination (34 Provinces / Cities)') }} <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <select
+                        name="destination"
+                        id="destination"
+                        required
+                        class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-primary focus:ring-primary text-sm py-2.5 px-3 bg-white"
+                    >
+                        <option value="" disabled {{ old('destination') ? '' : 'selected' }}>
+                            -- {{ __('Select a Province or City') }} --
+                        </option>
+                        @foreach($provinces as $region => $items)
+                            <optgroup label="📍 {{ $region }}">
+                                @foreach($items as $prov)
+                                    <option value="{{ $prov['name'] }}" {{ old('destination') === $prov['name'] ? 'selected' : '' }}>
+                                        {{ $prov['name'] }} @if(!empty($prov['note'])) ({{ $prov['note'] }}) @endif
+                                    </option>
+                                @endforeach
+                            </optgroup>
                         @endforeach
-                    @else
-                        <option value="Da Lat">
-                        <option value="Da Nang">
-                        <option value="Phu Quoc">
-                        <option value="Hoi An">
-                        <option value="Nha Trang">
-                        <option value="Sa Pa">
-                    @endif
-                </datalist>
-                <p class="mt-1 text-xs text-gray-400">{{ __('Choose or type any destination city name.') }}</p>
+                    </select>
+                </div>
+                @error('destination')
+                    <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+                <p class="mt-1 text-xs text-gray-400">
+                    {{ __('Standardized list of 34 official administrative provinces/cities of Vietnam to optimize AI recommendations.') }}
+                </p>
             </div>
 
             {{-- Dates: Start & End --}}

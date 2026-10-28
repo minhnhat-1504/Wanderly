@@ -238,5 +238,15 @@ class DestinationSeeder extends Seeder
                 }
             }
         }
+
+        // Seed all 34 official administrative provinces of Vietnam
+        foreach (\App\Support\VietnamProvinces::PROVINCES as $province) {
+            Destination::updateOrCreate(
+                ['name' => $province['name']],
+                [
+                    'description' => $province['note'] . ' (' . $province['region'] . ')',
+                ]
+            );
+        }
     }
 }
