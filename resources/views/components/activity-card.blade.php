@@ -20,12 +20,12 @@
 
     // Format times
     $formattedTime = '';
-    if ($startTime && $endTime) {
-        $startStr = is_string($startTime) ? substr($startTime, 0, 5) : $startTime->format('H:i');
-        $endStr = is_string($endTime) ? substr($endTime, 0, 5) : $endTime->format('H:i');
-        $formattedTime = "$startStr – $endStr";
-    } elseif ($startTime) {
-        $formattedTime = is_string($startTime) ? substr($startTime, 0, 5) : $startTime->format('H:i');
+    $formattedStartTime = $startTime ? substr((string) $startTime, 0, 5) : '';
+    $formattedEndTime = $endTime ? substr((string) $endTime, 0, 5) : '';
+    if ($formattedStartTime && $formattedEndTime) {
+        $formattedTime = "$formattedStartTime – $formattedEndTime";
+    } elseif ($formattedStartTime) {
+        $formattedTime = $formattedStartTime;
     }
 
     // Category styling & labels
@@ -69,7 +69,9 @@
 @endphp
 
 <div
-    class="timeline-activity-card group relative w-full bg-white rounded-xl border border-gray-200/90 p-3.5 sm:p-4 transition-all duration-200 shadow-sm hover:shadow-md hover:border-teal-300 select-none {{ $isRoom ? 'bg-indigo-50/30 border-indigo-200' : ($isBooking ? 'bg-emerald-50/30 border-emerald-200' : '') }}"
+    {{ $attributes->merge([
+        'class' => 'timeline-activity-card group relative w-full bg-white rounded-xl border border-gray-200/90 p-3.5 sm:p-4 transition-all duration-200 shadow-sm hover:shadow-md hover:border-teal-300 select-none ' . ($isRoom ? 'bg-indigo-50/30 border-indigo-200' : ($isBooking ? 'bg-emerald-50/30 border-emerald-200' : ''))
+    ]) }}
     data-id="{{ $id }}"
     data-day="{{ $day }}"
     data-slot="{{ $slot }}"
@@ -180,8 +182,8 @@
                                     title: @js($title),
                                     day: {{ $day }},
                                     time_slot: @js($slot),
-                                    start_time: @js($startTime),
-                                    end_time: @js($endTime),
+                                    start_time: @js($formattedStartTime),
+                                    end_time: @js($formattedEndTime),
                                     cost: {{ $cost }},
                                     category: @js($category),
                                     location: @js($location),

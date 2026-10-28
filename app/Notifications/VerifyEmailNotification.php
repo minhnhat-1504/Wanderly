@@ -33,7 +33,7 @@ class VerifyEmailNotification extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->subject('Verify Your Email Address — Wanderly')
-            ->greeting('Hello ' . ($notifiable->name ?? 'there') . '!')
+            ->greeting('Hello '.($notifiable->name ?? 'there').'!')
             ->line('Welcome to Wanderly — your smart travel planning companion.')
             ->line('Please click the button below to verify your email address and start exploring or planning memorable journeys with friends:')
             ->action('Verify Email Address', $verificationUrl)

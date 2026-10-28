@@ -60,6 +60,33 @@ export function initTimeline() {
                 const oldIndex = evt.oldIndex;
                 const newDay = parseInt(toContainer.dataset.day, 10);
                 const newSlot = toContainer.dataset.slot;
+                const oldDay = parseInt(fromContainer.dataset.day, 10);
+                const oldSlot = fromContainer.dataset.slot;
+
+                // When moving activity to a different timeslot or day, require user to specify new valid start & end times
+                if (fromContainer !== toContainer && (newDay !== oldDay || newSlot !== oldSlot)) {
+                    fromContainer.insertBefore(itemEl, fromContainer.children[oldIndex] || null);
+                    updateSlotEmptyState(fromContainer);
+                    updateSlotEmptyState(toContainer);
+
+                    const activityId = itemEl.dataset.id;
+                    window.dispatchEvent(new CustomEvent('open-activity-modal', {
+                        detail: {
+                            mode: 'edit',
+                            slotChanged: true,
+                            targetDay: newDay,
+                            targetSlot: newSlot,
+                            originalDay: oldDay,
+                            originalSlot: oldSlot,
+                            activity: {
+                                id: activityId,
+                                day: newDay,
+                                time_slot: newSlot,
+                            }
+                        }
+                    }));
+                    return;
+                }
 
                 // Optimistically update attributes on the dragged item
                 itemEl.dataset.day = newDay;

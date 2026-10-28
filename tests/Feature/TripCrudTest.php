@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Activity;
 use App\Models\Trip;
 use App\Models\TripMember;
 use App\Models\User;
@@ -240,5 +241,47 @@ class TripCrudTest extends TestCase
         $days = $tripService->calculateTripDays($trip);
 
         $this->assertEquals(5, $days);
+    }
+
+    public function test_dashboard_displays_correct_trip_spent_and_budget_percentage(): void
+    {
+        $owner = User::factory()->create();
+        $trip = Trip::factory()->create([
+            'owner_id' => $owner->id,
+            'budget' => 10000000,
+            'privacy' => 'public',
+        ]);
+        TripMember::factory()->create([
+            'trip_id' => $trip->id,
+            'user_id' => $owner->id,
+            'role' => 'leader',
+        ]);
+
+        // Create activities totaling 6,200,000 (62% of 10,000,000)
+        Activity::factory()->create([
+            'trip_id' => $trip->id,
+            'day' => 1,
+            'time_slot' => 'morning',
+            'cost' => 3000000,
+            'start_time' => '07:00',
+            'end_time' => '09:00',
+        ]);
+        Activity::factory()->create([
+            'trip_id' => $trip->id,
+            'day' => 1,
+            'time_slot' => 'afternoon',
+            'cost' => 3200000,
+            'start_time' => '14:00',
+            'end_time' => '16:00',
+        ]);
+
+        $this->assertEquals(6200000, $trip->spent);
+
+        $response = $this->actingAs($owner)->get(route('trips.index'));
+        $response->assertStatus(200);
+
+        // Assert 62% used and spent value rendered on dashboard card
+        $response->assertSee('Used: 62%', false);
+        $response->assertSee('6.200.000 VND', false);
     }
 }

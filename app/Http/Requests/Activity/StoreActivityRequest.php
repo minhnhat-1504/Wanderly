@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Activity;
 
 use App\Models\Trip;
+use App\Services\ItineraryService;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -78,5 +79,66 @@ class StoreActivityRequest extends FormRequest
             'position.integer' => __('The position must be an integer.'),
             'position.min' => __('The position must be at least 0.'),
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     */
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $startTime = $this->input('start_time');
+            $endTime = $this->input('end_time');
+            $timeSlot = $this->input('time_slot');
+            $day = (int) $this->input('day');
+
+            if ($startTime && ! $endTime) {
+                $validator->errors()->add('end_time', __('The end time is required when start time is provided.'));
+
+                return;
+            }
+
+            if (! $startTime && $endTime) {
+                $validator->errors()->add('start_time', __('The start time is required when end time is provided.'));
+
+                return;
+            }
+
+            if ($startTime && $endTime) {
+                $startNorm = substr($startTime, 0, 5);
+                $endNorm = substr($endTime, 0, 5);
+
+                if ($startNorm >= $endNorm) {
+                    $validator->errors()->add('end_time', __('The end time must be after the start time.'));
+
+                    return;
+                }
+
+                if (isset(ItineraryService::SLOT_BOUNDS[$timeSlot])) {
+                    $bounds = ItineraryService::SLOT_BOUNDS[$timeSlot];
+                    if ($startNorm < $bounds['start'] || $endNorm > $bounds['end']) {
+                        $validator->errors()->add('start_time', __('Times must be within the :slot slot (:start – :end).', [
+                            'slot' => __($timeSlot),
+                            'start' => $bounds['start'],
+                            'end' => $bounds['end'],
+                        ]));
+
+                        return;
+                    }
+                }
+
+                $trip = $this->route('trip');
+                if (! $trip instanceof Trip) {
+                    $trip = Trip::find($trip);
+                }
+
+                if ($trip) {
+                    $itineraryService = app(ItineraryService::class);
+                    if ($itineraryService->detectTimeConflict($trip, $day, $startNorm, $endNorm)) {
+                        $validator->errors()->add('start_time', __('The activity time conflicts with an existing activity on this day.'));
+                    }
+                }
+            }
+        });
     }
 }
