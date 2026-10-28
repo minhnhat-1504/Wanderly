@@ -13,6 +13,7 @@ window.initTimeline = initTimeline;
 window.initChatDrawer = initChatDrawer;
 
 import './modules/ai-copilot';
+import './modules/vietnam-map-3d';
 
 Alpine.start();
 

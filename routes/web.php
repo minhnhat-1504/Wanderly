@@ -174,6 +174,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/social/posts', [SocialFeedController::class, 'store'])->name('social.posts.store');
     Route::delete('/social/posts/{post}', [SocialFeedController::class, 'destroy'])->name('social.posts.destroy');
     Route::post('/social/posts/{post}/clone-trip', [SocialFeedController::class, 'cloneTrip'])->name('social.posts.clone-trip');
+    Route::post('/social/posts/{post}/like', [SocialFeedController::class, 'toggleLike'])->name('social.posts.like');
+    Route::post('/social/posts/{post}/save', [SocialFeedController::class, 'toggleSave'])->name('social.posts.save');
+    Route::post('/social/posts/{post}/comments', [SocialFeedController::class, 'addComment'])->name('social.posts.comments.store');
+    Route::patch('/social/comments/{comment}', [SocialFeedController::class, 'updateComment'])->name('social.comments.update');
+    Route::delete('/social/comments/{comment}', [SocialFeedController::class, 'deleteComment'])->name('social.comments.destroy');
 
     // ─── Admin Destination Management (D4-05 M16) ─────────────────────────────
     Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {

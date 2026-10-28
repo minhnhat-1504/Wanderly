@@ -18,7 +18,7 @@ class SocialFeedService
      */
     public function getFeed(int $perPage = 15): LengthAwarePaginator
     {
-        return Post::with(['author', 'trip'])
+        return Post::with(['author', 'trip', 'comments.author'])
             ->withCount(['comments', 'likedByUsers'])
             ->latest()
             ->paginate($perPage);
@@ -31,7 +31,7 @@ class SocialFeedService
      */
     public function getSavedPosts(User $user, int $perPage = 15): LengthAwarePaginator
     {
-        return Post::with(['author', 'trip'])
+        return Post::with(['author', 'trip', 'comments.author'])
             ->withCount(['comments', 'likedByUsers'])
             ->whereHas('savedByUsers', fn ($q) => $q->where('user_id', $user->id))
             ->latest()
@@ -102,6 +102,20 @@ class SocialFeedService
 
             return $comment->load('author');
         });
+    }
+
+    /**
+     * Update a comment (only by its author).
+     */
+    public function updateComment(Comment $comment, User $actor, string $content): Comment
+    {
+        if ($comment->user_id !== $actor->id) {
+            abort(403, __('You are not authorized to edit this comment.'));
+        }
+
+        $comment->update(['content' => $content]);
+
+        return $comment;
     }
 
     /**
