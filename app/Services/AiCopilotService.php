@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Poi;
 use App\Models\Trip;
 use App\Models\User;
 use App\Services\Itinerary\ItineraryPlannerService;
@@ -40,7 +41,7 @@ class AiCopilotService
                     return $response;
                 }
             } catch (\Throwable $e) {
-                Log::warning('Gemini API call failed, using smart fallback: ' . $e->getMessage());
+                Log::warning('Gemini API call failed, using smart fallback: '.$e->getMessage());
             }
         } elseif ($provider === 'openai' && ! empty($openAiKey)) {
             try {
@@ -49,7 +50,7 @@ class AiCopilotService
                     return $response;
                 }
             } catch (\Throwable $e) {
-                Log::warning('OpenAI API call failed, using smart fallback: ' . $e->getMessage());
+                Log::warning('OpenAI API call failed, using smart fallback: '.$e->getMessage());
             }
         }
 
@@ -76,7 +77,7 @@ class AiCopilotService
         $pois = [];
         $destName = $trip->destination;
         if (! empty($destName)) {
-            $pois = \App\Models\Poi::whereHas('zone.destination', function ($q) use ($destName) {
+            $pois = Poi::whereHas('zone.destination', function ($q) use ($destName) {
                 $q->where('name', 'like', "%{$destName}%");
             })->orWhereHas('zone', function ($q) use ($destName) {
                 $q->where('name', 'like', "%{$destName}%");
@@ -117,9 +118,9 @@ class AiCopilotService
 Trip Context:
 - Destination: {$context['destination']}
 - Budget Remaining: {$context['budget_remaining']} VND
-- Top Group Interests: " . implode(', ', $context['top_interests']) . "
+- Top Group Interests: ".implode(', ', $context['top_interests'])."
 - Group Pace: {$context['group_pace']}
-Available Local POIs: " . json_encode($context['available_pois'], JSON_UNESCAPED_UNICODE) . "
+Available Local POIs: ".json_encode($context['available_pois'], JSON_UNESCAPED_UNICODE)."
 
 Analyze the group conflict or request. Always return a solution that balances different member preferences.
 If a suitable activity or POI matches, include a suggested action in JSON with:
@@ -187,17 +188,17 @@ params: { title, day, time_slot, cost, poi_id, location, description }";
         }
 
         // 2. Fallback to general conversational assistant
-        $systemPrompt = "You are Wanderly AI Travel Assistant, a friendly and highly knowledgeable travel concierge specialized in tourism across the 34 provinces/cities of Vietnam according to Resolution 202/2025/QH15.
+        $systemPrompt = 'You are Wanderly AI Travel Assistant, a friendly and highly knowledgeable travel concierge specialized in tourism across the 34 provinces/cities of Vietnam according to Resolution 202/2025/QH15.
 Your goals:
 1. Provide personalized travel advice, destination recommendations, seasonal best times to visit, local cuisine specialties, and transportation tips.
-2. NEVER invent non-existent tourist places. If the user wants a day-by-day itinerary, recommend they provide the province name and number of days (e.g., 'Lịch trình Đà Nẵng 3 ngày').
-3. NEVER use administrative unit words 'quận/huyện/thị xã'.
+2. NEVER invent non-existent tourist places. If the user wants a day-by-day itinerary, recommend they provide the province name and number of days (e.g., \'Lịch trình Đà Nẵng 3 ngày\').
+3. NEVER use administrative unit words \'quận/huyện/thị xã\'.
 4. Keep answers concise, inspiring, well-structured, and written in natural Vietnamese with helpful emojis.
 5. Output your response in JSON format with:
 {
-  \"response\": \"Your helpful and detailed reply in Vietnamese...\",
-  \"suggested_destinations\": [\"Da Lat\", \"Da Nang\", \"Phu Quoc\"] (optional array of province/city names if relevant)
-}";
+  "response": "Your helpful and detailed reply in Vietnamese...",
+  "suggested_destinations": ["Da Lat", "Da Nang", "Phu Quoc"] (optional array of province/city names if relevant)
+}';
 
         $messages = [
             ['role' => 'system', 'content' => $systemPrompt],
@@ -222,7 +223,7 @@ Your goals:
     {
         $apiKey = config('ai.gemini.api_key');
         $model = config('ai.gemini.model', 'gemini-3.5-flash');
-        $endpoint = config('ai.gemini.endpoint') . "/{$model}:generateContent?key={$apiKey}";
+        $endpoint = config('ai.gemini.endpoint')."/{$model}:generateContent?key={$apiKey}";
 
         $systemInstruction = '';
         $contents = [];
@@ -258,10 +259,12 @@ Your goals:
         if ($response->successful()) {
             $data = $response->json();
             $rawText = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+
             return $this->parseJsonResponse($rawText);
         }
 
-        Log::warning('Gemini API call returned non-200: ' . $response->status() . ' - ' . $response->body());
+        Log::warning('Gemini API call returned non-200: '.$response->status().' - '.$response->body());
+
         return null;
     }
 
@@ -283,6 +286,7 @@ Your goals:
         if ($response->successful()) {
             $data = $response->json();
             $rawText = $data['choices'][0]['message']['content'] ?? '';
+
             return $this->parseJsonResponse($rawText);
         }
 
@@ -314,10 +318,10 @@ Your goals:
         // Custom synthesis based on keywords
         if (str_contains(mb_strtolower($lastUserMsg), 'trekking') && str_contains(mb_strtolower($lastUserMsg), 'cafe')) {
             $title = 'Hòa giải: Cafe View Hẻm Tu Sản & Trekking nhẹ';
-            $content = "Dựa trên sở thích của các thành viên, AI đề xuất phương án dung hòa: Ghé quán cafe ngắm cảnh đèo/hẻm núi. Nhóm thích cafe có thể thong thả chụp ảnh, trong khi nhóm thích vận động có thể dạo bộ khám phá cung đường vách đá 30 phút xung quanh.";
+            $content = 'Dựa trên sở thích của các thành viên, AI đề xuất phương án dung hòa: Ghé quán cafe ngắm cảnh đèo/hẻm núi. Nhóm thích cafe có thể thong thả chụp ảnh, trong khi nhóm thích vận động có thể dạo bộ khám phá cung đường vách đá 30 phút xung quanh.';
         } elseif (str_contains(mb_strtolower($lastUserMsg), 'mưa') || str_contains(mb_strtolower($lastUserMsg), 'weather') || str_contains(mb_strtolower($lastUserMsg), 'thời tiết')) {
             $title = 'Bảo tàng & Trải nghiệm Ẩm thực trong nhà';
-            $content = "AI nhận thấy dự báo thời tiết có thể có mưa rào. Đề xuất chuyển các hoạt động ngoài trời sang địa điểm trong nhà có trải nghiệm văn hóa và ẩm thực ấm cúng.";
+            $content = 'AI nhận thấy dự báo thời tiết có thể có mưa rào. Đề xuất chuyển các hoạt động ngoài trời sang địa điểm trong nhà có trải nghiệm văn hóa và ẩm thực ấm cúng.';
         } else {
             $content = "AI đã phân tích ngữ cảnh chuyến đi và gợi ý hoạt động phù hợp với sở thích tập thể ({$title}), vừa vặn ngân sách còn lại.";
         }
@@ -353,7 +357,7 @@ Your goals:
         $decoded = json_decode($trimmed, true);
         if (is_array($decoded)) {
             $content = $decoded['content'] ?? $decoded['response'] ?? $decoded['mediation_solution'] ?? $decoded['recommendation'] ?? $decoded['solution'] ?? $decoded['message'] ?? $text;
-            
+
             $suggestedAction = $decoded['suggested_action'] ?? null;
             if (! $suggestedAction && isset($decoded['action'])) {
                 $suggestedAction = [

@@ -6,7 +6,6 @@ use App\Models\Activity;
 use App\Models\Poi;
 use App\Models\Trip;
 use App\Models\User;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -32,7 +31,7 @@ class ActionEngineService
         if ($actionType !== 'create_activity' && $actionType !== 'reorder_activities') {
             return [
                 'valid' => false,
-                'errors' => ['Unsupported action type: ' . $actionType],
+                'errors' => ['Unsupported action type: '.$actionType],
                 'validated_params' => [],
             ];
         }
@@ -153,6 +152,7 @@ class ActionEngineService
             // Check day indicator
             if (preg_match('/(?:ngày|day)\s*(\d+)/iu', $line, $matches)) {
                 $currentDay = max(1, (int) $matches[1]);
+
                 continue;
             }
 
