@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAuditLogController;
+use App\Http\Controllers\Admin\AdminBackupController;
 use App\Http\Controllers\Admin\AdminBroadcastController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDestinationController;
@@ -213,8 +214,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/broadcasts', [AdminBroadcastController::class, 'store'])->name('broadcasts.store');
         Route::get('/broadcasts/{id}', [AdminBroadcastController::class, 'show'])->name('broadcasts.show');
 
-        // Module route placeholders (to be expanded in subsequent steps)
-        Route::get('/backups', fn () => redirect()->route('admin.dashboard'))->name('backups.index');
+        // System Backups & Disaster Recovery (Module 4)
+        Route::get('/backups', [AdminBackupController::class, 'index'])->name('backups.index');
+        Route::post('/backups', [AdminBackupController::class, 'store'])->name('backups.store');
+        Route::get('/backups/{backup}/download', [AdminBackupController::class, 'download'])->name('backups.download');
+        Route::delete('/backups/{backup}', [AdminBackupController::class, 'destroy'])->name('backups.destroy');
+        Route::get('/backups/{backup}/instructions', [AdminBackupController::class, 'instructions'])->name('backups.instructions');
 
         // Destinations & POIs
         Route::get('/destinations', [AdminDestinationController::class, 'index'])->name('destinations.index');
