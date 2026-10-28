@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminAuditLogController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDestinationController;
+use App\Http\Controllers\Admin\AdminModerationController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Discovery\DiscoveryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Provider\ProviderDashboardController;
 use App\Http\Controllers\Provider\ProviderServiceController;
+use App\Http\Controllers\Social\ReportController;
 use App\Http\Controllers\Social\SocialFeedController;
 use App\Http\Controllers\Trip\ActivityController;
 use App\Http\Controllers\Trip\BookingController;
@@ -177,6 +179,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/social/posts', [SocialFeedController::class, 'store'])->name('social.posts.store');
     Route::delete('/social/posts/{post}', [SocialFeedController::class, 'destroy'])->name('social.posts.destroy');
     Route::post('/social/posts/{post}/clone-trip', [SocialFeedController::class, 'cloneTrip'])->name('social.posts.clone-trip');
+    Route::post('/social/posts/{post}/report', [ReportController::class, 'reportPost'])->name('social.posts.report')->middleware('throttle:10,1');
+    Route::post('/social/comments/{comment}/report', [ReportController::class, 'reportComment'])->name('social.comments.report')->middleware('throttle:10,1');
 
     // ─── Admin Platform & Operations (Admin Redesign) ────────────────────────
     Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
@@ -193,8 +197,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
         Route::post('/users/{id}/restore', [AdminUserController::class, 'restore'])->name('users.restore');
 
+        // Community Moderation (Module 2)
+        Route::get('/moderation', [AdminModerationController::class, 'index'])->name('moderation.index');
+        Route::get('/moderation/reports/{report}', [AdminModerationController::class, 'show'])->name('moderation.show');
+        Route::post('/moderation/reports/{report}/resolve', [AdminModerationController::class, 'resolve'])->name('moderation.resolve');
+        Route::post('/moderation/reports/{report}/dismiss', [AdminModerationController::class, 'dismiss'])->name('moderation.dismiss');
+        Route::get('/moderation/content', [AdminModerationController::class, 'content'])->name('moderation.content');
+        Route::post('/moderation/posts/{post}/toggle-hide', [AdminModerationController::class, 'toggleHidePost'])->name('moderation.posts.toggle-hide');
+        Route::post('/moderation/comments/{comment}/toggle-hide', [AdminModerationController::class, 'toggleHideComment'])->name('moderation.comments.toggle-hide');
+
         // Module route placeholders (to be expanded in subsequent steps)
-        Route::get('/moderation', fn () => redirect()->route('admin.dashboard'))->name('moderation.index');
         Route::get('/broadcasts', fn () => redirect()->route('admin.dashboard'))->name('broadcasts.index');
         Route::get('/backups', fn () => redirect()->route('admin.dashboard'))->name('backups.index');
 

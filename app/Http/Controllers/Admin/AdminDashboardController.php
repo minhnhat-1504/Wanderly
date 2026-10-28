@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Report;
 use App\Models\User;
 use App\Services\Admin\AuditLogService;
 use Illuminate\Support\Facades\DB;
@@ -22,11 +23,7 @@ class AdminDashboardController extends Controller
     {
         $totalUsers = User::count();
         $newUsers7d = User::where('created_at', '>=', now()->subDays(7))->count();
-
-        // Safely check if reports table exists for early stages
-        $pendingReports = Schema::hasTable('reports')
-            ? DB::table('reports')->where('status', 'pending')->count()
-            : 0;
+        $pendingReports = Report::where('status', 'pending')->count();
 
         // Safely check if backups table exists for early stages
         $latestBackup = Schema::hasTable('backups')

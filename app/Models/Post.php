@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -20,6 +23,13 @@ class Post extends Model
         'images',
         'likes_count',
         'comments_count',
+        'is_hidden',
+        'hidden_at',
+        'hidden_reason',
+    ];
+
+    protected $attributes = [
+        'is_hidden' => false,
     ];
 
     protected function casts(): array
@@ -28,6 +38,9 @@ class Post extends Model
             'images' => 'array',
             'likes_count' => 'integer',
             'comments_count' => 'integer',
+            'is_hidden' => 'boolean',
+            'hidden_at' => 'datetime',
+            'deleted_at' => 'datetime',
         ];
     }
 
@@ -70,5 +83,15 @@ class Post extends Model
     public function isSavedBy(User $user): bool
     {
         return $this->savedByUsers()->where('user_id', $user->id)->exists();
+    }
+
+    public function reports(): MorphMany
+    {
+        return $this->morphMany(Report::class, 'reportable');
+    }
+
+    public function scopeVisible(Builder $query): Builder
+    {
+        return $query->where('is_hidden', false);
     }
 }

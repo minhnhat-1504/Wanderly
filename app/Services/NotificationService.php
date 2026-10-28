@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Notification;
+use App\Models\Report;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -28,6 +29,10 @@ class NotificationService
     const TYPE_ACCOUNT_UNSUSPENDED = 'account_unsuspended';
 
     const TYPE_ROLE_CHANGED = 'role_changed';
+
+    const TYPE_REPORT_RESOLVED = 'report_resolved';
+
+    const TYPE_CONTENT_MODERATED = 'content_moderated';
 
     const TYPE_GENERAL = 'general';
 
@@ -159,6 +164,38 @@ class NotificationService
             self::TYPE_ROLE_CHANGED,
             __('Role Updated'),
             __('Your account role has been updated to :role.', ['role' => ucfirst($newRole)]),
+            null,
+        );
+    }
+
+    /**
+     * Notify reporter that their submitted report was reviewed and resolved.
+     */
+    public function notifyReportResolved(User $reporter, Report $report): Notification
+    {
+        return $this->notify(
+            $reporter,
+            self::TYPE_REPORT_RESOLVED,
+            __('Report Reviewed'),
+            __('Thank you for helping keep our community safe. Your report regarding :reason has been processed.', ['reason' => $report->reason]),
+            null,
+        );
+    }
+
+    /**
+     * Notify author that their content was moderated.
+     */
+    public function notifyContentModerated(User $author, string $contentType, string $action, string $reason): Notification
+    {
+        return $this->notify(
+            $author,
+            self::TYPE_CONTENT_MODERATED,
+            __('Community Guidelines Notice'),
+            __('Your :type has been :action due to a violation of community standards (:reason).', [
+                'type' => strtolower($contentType),
+                'action' => $action === 'delete' ? __('deleted') : __('hidden from public view'),
+                'reason' => $reason,
+            ]),
             null,
         );
     }
