@@ -168,7 +168,7 @@ params: { title, day, time_slot, cost, poi_id, location, description }";
             ];
         }
 
-        $response = Http::timeout(12)->post($endpoint, $payload);
+        $response = Http::timeout(30)->post($endpoint, $payload);
 
         if ($response->successful()) {
             $data = $response->json();
@@ -176,6 +176,7 @@ params: { title, day, time_slot, cost, poi_id, location, description }";
             return $this->parseJsonResponse($rawText);
         }
 
+        Log::warning('Gemini API call returned non-200: ' . $response->status() . ' - ' . $response->body());
         return null;
     }
 
@@ -265,10 +266,20 @@ params: { title, day, time_slot, cost, poi_id, location, description }";
         }
 
         $decoded = json_decode($trimmed, true);
-        if (is_array($decoded) && isset($decoded['content'])) {
+        if (is_array($decoded)) {
+            $content = $decoded['content'] ?? $decoded['response'] ?? $decoded['mediation_solution'] ?? $decoded['recommendation'] ?? $decoded['solution'] ?? $decoded['message'] ?? $text;
+            
+            $suggestedAction = $decoded['suggested_action'] ?? null;
+            if (! $suggestedAction && isset($decoded['action'])) {
+                $suggestedAction = [
+                    'type' => $decoded['action'],
+                    'params' => $decoded['params'] ?? [],
+                ];
+            }
+
             return [
-                'content' => (string) $decoded['content'],
-                'suggested_action' => $decoded['suggested_action'] ?? null,
+                'content' => (string) $content,
+                'suggested_action' => $suggestedAction,
             ];
         }
 
