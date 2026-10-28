@@ -85,6 +85,17 @@ class MarketplaceBookingService
                 event(new BookingConfirmed($booking, $proposal));
             } else {
                 foreach ($items as $item) {
+                    // If this item was already accepted individually, do NOT create duplicate booking or activity
+                    if ($item->is_accepted) {
+                        $existingBooking = Booking::where('proposal_id', $proposal->id)
+                            ->where('item_name', $item->name)
+                            ->first();
+                        if ($existingBooking) {
+                            $createdBookings[] = $existingBooking;
+                        }
+                        continue;
+                    }
+
                     $voucherCode = $this->generateVoucherCode($destinationCode);
 
                     $booking = Booking::create([
@@ -160,6 +171,12 @@ class MarketplaceBookingService
             ]);
 
             $item->update(['is_accepted' => true]);
+
+            // If all items of the proposal are now accepted, mark the proposal as accepted
+            $remainingUnaccepted = $proposal->items()->where('is_accepted', false)->count();
+            if ($remainingUnaccepted === 0) {
+                $proposal->update(['status' => 'accepted']);
+            }
 
             if ($trip) {
                 Activity::create([

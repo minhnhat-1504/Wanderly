@@ -230,6 +230,7 @@ class TripDemoSeeder extends Seeder
                     'username' => 'dalat_explorer',
                     'password' => bcrypt('password'),
                     'role' => 'provider',
+                    'email_verified_at' => now(),
                 ]
             );
 
@@ -256,7 +257,7 @@ class TripDemoSeeder extends Seeder
                         [
                             'price' => 1800000.00,
                             'tags' => ['transport', 'car', 'private'],
-                            'specs' => ['seats' => 7, 'ac' => true, 'driver' => 'English-speaking'],
+                            'specs' => ['seats' => 7, 'ac' => true, 'driver' => 'English-speaking', 'weekday_price' => 1500000.00],
                         ]
                     );
 

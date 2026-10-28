@@ -18,6 +18,18 @@
         this.selectedItem = item;
         this.modalAction = 'item';
         this.confirmModalOpen = true;
+    },
+    getRemainingBundlePrice(proposal) {
+        if (!proposal) return 0;
+        if (!proposal.items || proposal.items.length === 0) return proposal.total_price || 0;
+        const unbookedItems = proposal.items.filter(item => !item.is_accepted);
+        if (unbookedItems.length === 0) return 0;
+        return unbookedItems.reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0);
+    },
+    hasSomeBookedItems(proposal) {
+        if (!proposal || !proposal.items) return false;
+        const booked = proposal.items.filter(item => item.is_accepted).length;
+        return booked > 0 && booked < proposal.items.length;
     }
 }">
     {{-- Breadcrumb & Navigation --}}
@@ -392,9 +404,17 @@
                         </div>
                     </div>
 
+                    @php
+                        $itemsList = collect($proposal['items']);
+                        $totalItemsCount = $itemsList->count();
+                        $bookedItemsCount = $itemsList->where('is_accepted', true)->count();
+                        $allBooked = $totalItemsCount > 0 && $bookedItemsCount === $totalItemsCount;
+                        $hasSomeBooked = $bookedItemsCount > 0 && ! $allBooked;
+                    @endphp
+
                     {{-- Actions Footer --}}
                     <div class="p-5 bg-gray-50/50 border-t border-gray-100">
-                        @if ($proposal['status'] === 'accepted')
+                        @if ($proposal['status'] === 'accepted' || $allBooked)
                             <div class="w-full py-2.5 px-4 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold text-center flex items-center justify-center gap-1.5">
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -417,7 +437,11 @@
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    {{ __('Accept Full Bundle') }}
+                                    @if ($hasSomeBooked)
+                                        {{ __('Accept Remaining Items') }} ({{ $totalItemsCount - $bookedItemsCount }})
+                                    @else
+                                        {{ __('Accept Full Bundle') }}
+                                    @endif
                                 </button>
                             @else
                                 <div class="text-center text-xs text-gray-400 py-2">
@@ -467,7 +491,8 @@
                 </div>
 
                 <h3 class="text-lg font-bold text-gray-900" id="modal-title">
-                    <span x-show="modalAction === 'bundle'">{{ __('Confirm Full Bundle Booking') }}</span>
+                    <span x-show="modalAction === 'bundle' && !hasSomeBookedItems(selectedProposal)">{{ __('Confirm Full Bundle Booking') }}</span>
+                    <span x-show="modalAction === 'bundle' && hasSomeBookedItems(selectedProposal)">{{ __('Confirm Remaining Bundle Items') }}</span>
                     <span x-show="modalAction === 'item'">{{ __('Confirm Single Item Booking') }}</span>
                 </h3>
 
@@ -488,7 +513,7 @@
                     <div class="flex justify-between pt-2 border-t border-gray-200 text-sm">
                         <span class="font-semibold text-gray-700">{{ __('Total Amount to Deduct:') }}</span>
                         <span class="font-bold text-primary">
-                            <span x-text="modalAction === 'bundle' ? new Intl.NumberFormat().format(selectedProposal?.total_price || 0) : new Intl.NumberFormat().format(selectedItem?.price || 0)"></span> VND
+                            <span x-text="modalAction === 'bundle' ? new Intl.NumberFormat().format(getRemainingBundlePrice(selectedProposal)) : new Intl.NumberFormat().format(selectedItem?.price || 0)"></span> VND
                         </span>
                     </div>
                 </div>
