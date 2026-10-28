@@ -131,6 +131,41 @@ params: { title, day, time_slot, cost, poi_id, location, description }";
     }
 
     /**
+     * General travel assistant chat when user is not inside a specific trip.
+     *
+     * @param  array<int, array{role: string, content: string}>  $history
+     * @return array{content: string, suggested_action: ?array}
+     */
+    public function chatGeneralTravel(string $userPrompt, array $history = []): array
+    {
+        $systemPrompt = "You are Wanderly AI Travel Assistant, a friendly and highly knowledgeable travel concierge specialized in tourism across the 34 provinces/cities of Vietnam.
+Your goals:
+1. Provide personalized travel advice, destination recommendations, seasonal best times to visit, local cuisine specialties, and transportation tips.
+2. Inspire users to explore Vietnam and plan trips with friends.
+3. Keep answers concise, inspiring, well-structured, and written in natural Vietnamese with helpful emojis.
+4. Output your response in JSON format with:
+{
+  \"response\": \"Your helpful and detailed reply in Vietnamese...\",
+  \"suggested_destinations\": [\"Da Lat\", \"Da Nang\", \"Phu Quoc\"] (optional array of province/city names if relevant)
+}";
+
+        $messages = [
+            ['role' => 'system', 'content' => $systemPrompt],
+        ];
+
+        foreach ($history as $h) {
+            $messages[] = [
+                'role' => $h['role'] === 'assistant' ? 'assistant' : 'user',
+                'content' => $h['content'],
+            ];
+        }
+
+        $messages[] = ['role' => 'user', 'content' => $userPrompt];
+
+        return $this->callLlm($messages, ['task' => 'general_travel']);
+    }
+
+    /**
      * Call Google Gemini 1.5 Flash API.
      */
     protected function callGeminiApi(array $messages, array $tools): ?array

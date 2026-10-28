@@ -179,4 +179,45 @@ class AiCopilotTest extends TestCase
                 'conflicts',
             ]);
     }
+
+    public function test_can_fetch_global_ai_messages(): void
+    {
+        AiChatMessage::create([
+            'user_id' => $this->leader->id,
+            'trip_id' => null,
+            'role' => 'user',
+            'content' => 'Gợi ý du lịch Ninh Bình giúp tôi!',
+        ]);
+
+        // Trip-scoped message must NOT appear in global messages
+        $this->trip->aiChatMessages()->create([
+            'user_id' => $this->leader->id,
+            'role' => 'user',
+            'content' => 'Hà Giang có gì?',
+        ]);
+
+        $response = $this->actingAs($this->leader)->getJson(route('ajax.ai-copilot.global-messages'));
+
+        $response->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonCount(1, 'messages')
+            ->assertJsonPath('messages.0.content', 'Gợi ý du lịch Ninh Bình giúp tôi!');
+    }
+
+    public function test_can_send_global_ai_message(): void
+    {
+        $response = $this->actingAs($this->leader)->postJson(route('ajax.ai-copilot.global-chat'), [
+            'message' => 'Nên đi du lịch Đà Nẵng mùa nào đẹp nhất?',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('assistant_message.role', 'assistant');
+
+        $this->assertDatabaseHas('ai_chat_messages', [
+            'user_id' => $this->leader->id,
+            'trip_id' => null,
+            'role' => 'assistant',
+        ]);
+    }
 }

@@ -294,6 +294,11 @@
         {{-- Global Modal Container --}}
         @stack('modals')
 
+        {{-- Global AI Copilot / Travel Assistant (Trip-scoped on trip view, Global elsewhere) --}}
+        @auth
+            <x-ai-copilot-drawer :trip="$trip ?? null" />
+        @endauth
+
     </div>
 
     @stack('scripts')

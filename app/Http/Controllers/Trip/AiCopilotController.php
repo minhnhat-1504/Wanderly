@@ -21,6 +21,72 @@ class AiCopilotController extends Controller
     ) {}
 
     /**
+     * Get global chat messages for user (not associated with any trip).
+     */
+    public function getGlobalMessages(Request $request): JsonResponse
+    {
+        $messages = AiChatMessage::whereNull('trip_id')
+            ->where('user_id', $request->user()->id)
+            ->with('user:id,name,avatar')
+            ->orderBy('created_at', 'asc')
+            ->take(50)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'messages' => $messages,
+        ]);
+    }
+
+    /**
+     * Send global message to AI Travel Assistant.
+     */
+    public function sendGlobalMessage(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'message' => 'required|string|max:1500',
+        ]);
+
+        $user = $request->user();
+
+        // 1. Save user message
+        $userMsg = AiChatMessage::create([
+            'trip_id' => null,
+            'user_id' => $user->id,
+            'role' => 'user',
+            'content' => $validated['message'],
+        ]);
+
+        // 2. Fetch last 6 messages as conversation history
+        $recentHistory = AiChatMessage::whereNull('trip_id')
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->take(6)
+            ->get()
+            ->reverse()
+            ->map(fn ($m) => ['role' => $m->role, 'content' => $m->content])
+            ->toArray();
+
+        // 3. Call AI
+        $aiResult = $this->aiCopilotService->chatGeneralTravel($validated['message'], $recentHistory);
+
+        // 4. Save assistant message
+        $assistantMsg = AiChatMessage::create([
+            'trip_id' => null,
+            'user_id' => $user->id,
+            'role' => 'assistant',
+            'content' => $aiResult['content'],
+            'suggested_action' => $aiResult['suggested_action'] ?? null,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'user_message' => $userMsg,
+            'assistant_message' => $assistantMsg,
+        ]);
+    }
+
+    /**
      * Get chat messages history for a trip.
      */
     public function getMessages(Trip $trip): JsonResponse

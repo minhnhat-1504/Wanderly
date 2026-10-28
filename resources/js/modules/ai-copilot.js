@@ -1,6 +1,6 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('aiCopilotDrawer', (config) => ({
-        tripId: config.tripId,
+        tripId: config?.tripId || null,
         isOpen: false,
         isLoading: false,
         isApplying: false,
@@ -13,7 +13,9 @@ document.addEventListener('alpine:init', () => {
         weatherAlertsCount: 0,
 
         init() {
-            this.fetchWeather();
+            if (this.tripId) {
+                this.fetchWeather();
+            }
         },
 
         openDrawer() {
@@ -25,7 +27,11 @@ document.addEventListener('alpine:init', () => {
 
         async loadMessages() {
             try {
-                const res = await fetch(`/ajax/trips/${this.tripId}/ai-copilot/messages`, {
+                const endpoint = this.tripId 
+                    ? `/ajax/trips/${this.tripId}/ai-copilot/messages`
+                    : `/ajax/ai-copilot/messages`;
+
+                const res = await fetch(endpoint, {
                     headers: { 'Accept': 'application/json' }
                 });
                 const data = await res.json();
@@ -39,6 +45,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         async fetchWeather() {
+            if (!this.tripId) return;
             try {
                 const res = await fetch(`/ajax/trips/${this.tripId}/ai-copilot/weather-alerts`, {
                     headers: { 'Accept': 'application/json' }
@@ -78,7 +85,11 @@ document.addEventListener('alpine:init', () => {
 
             try {
                 const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-                const res = await fetch(`/ajax/trips/${this.tripId}/ai-copilot/chat`, {
+                const endpoint = this.tripId 
+                    ? `/ajax/trips/${this.tripId}/ai-copilot/chat`
+                    : `/ajax/ai-copilot/chat`;
+
+                const res = await fetch(endpoint, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

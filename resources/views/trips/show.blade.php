@@ -647,7 +647,6 @@
     @include('trips.partials.voting-drawer', ['trip' => $trip])
     @include('trips.partials.match-engine-modal', ['trip' => $trip])
     <x-chat-drawer :trip="$trip" />
-    <x-ai-copilot-drawer :trip="$trip" />
     @include('trips.partials.split-bill-modal', ['trip' => $trip])
     @include('trips.partials.settlement-drawer', ['trip' => $trip])
 
