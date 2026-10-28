@@ -1,0 +1,85 @@
+{
+  "regions": {
+    "north_mountain": {
+      "name": "Vùng Núi Phía Bắc",
+      "terrain_factor": 1.45,
+      "base_speed_kmh": 32,
+      "max_daily_travel_minutes": 180,
+      "max_consecutive_distance_km": 60,
+      "description": "Đường đèo dốc quanh co, khúc cua gấp (Hà Giang, Sa Pa, Lai Châu). Tốc độ di chuyển chậm hơn đồng bằng đáng kể."
+    },
+    "central_highlands": {
+      "name": "Tây Nguyên & Cao Nguyên",
+      "terrain_factor": 1.35,
+      "base_speed_kmh": 38,
+      "max_daily_travel_minutes": 180,
+      "max_consecutive_distance_km": 50,
+      "description": "Đường đồi dốc lượn sóng và đèo cao (Đà Lạt, Buôn Ma Thuột, Măng Đen). Giảm tốc độ khi trời mưa sương mù."
+    },
+    "red_river": {
+      "name": "Đồng Bằng Sông Hồng & Đô Thị",
+      "terrain_factor": 1.25,
+      "base_speed_kmh": 40,
+      "max_daily_travel_minutes": 180,
+      "max_consecutive_distance_km": 40,
+      "description": "Đồng bằng và đô thị mật độ cao (Hà Nội, Hải Phòng, Ninh Bình). Thời gian phụ thuộc ùn ứ giờ cao điểm."
+    },
+    "north_central": {
+      "name": "Bắc Trung Bộ",
+      "terrain_factor": 1.25,
+      "base_speed_kmh": 42,
+      "max_daily_travel_minutes": 180,
+      "max_consecutive_distance_km": 50,
+      "description": "Dải ven biển và đồi cát (Thanh Hóa, Nghệ An, Huế, Quảng Bình). Đường quốc lộ và ven biển chạy thông thoáng."
+    },
+    "central_coast": {
+      "name": "Duyên Hải Nam Trung Bộ",
+      "terrain_factor": 1.20,
+      "base_speed_kmh": 45,
+      "max_daily_travel_minutes": 180,
+      "max_consecutive_distance_km": 45,
+      "description": "Hành lang duyên hải ven biển (Đà Nẵng, Hội An, Quy Nhơn, Nha Trang). Giao thông thuận lợi, đường ven biển đẹp."
+    },
+    "southeast": {
+      "name": "Đông Nam Bộ",
+      "terrain_factor": 1.20,
+      "base_speed_kmh": 42,
+      "max_daily_travel_minutes": 180,
+      "max_consecutive_distance_km": 45,
+      "description": "Hệ thống cao tốc và đô thị phát triển (TP.HCM, Vũng Tàu, Đồng Nai, Tây Ninh)."
+    },
+    "mekong": {
+      "name": "Đồng Bằng Sông Cửu Long",
+      "terrain_factor": 1.25,
+      "base_speed_kmh": 36,
+      "max_daily_travel_minutes": 180,
+      "max_consecutive_distance_km": 45,
+      "description": "Vùng kênh rạch chằng chịt, cầu vượt sông (Cần Thơ, An Giang, Cà Mau, Vĩnh Long). Tốc độ vừa phải qua các phà/cầu."
+    }
+  },
+  "island_special_rules": {
+    "cu_lao_cham": {
+      "province_code": "danang",
+      "keywords": ["Cù Lao Chàm", "Cham Islands"],
+      "boat_departure_port": "Cảng Cửa Đại",
+      "boat_travel_minutes": 25,
+      "schedule_constraints": "Ca nô chạy từ 08:00 - 09:30 sáng, chuyến về 14:00 - 15:30 chiều. Biển động cấm chạy."
+    },
+    "co_to": {
+      "province_code": "quangninh",
+      "keywords": ["Cô Tô", "Co To"],
+      "boat_departure_port": "Cảng Quốc tế Ao Tiên",
+      "boat_travel_minutes": 60,
+      "schedule_constraints": "Tàu cao tốc chạy theo giờ cố định. Chuyến cuối về đất liền trước 16:30."
+    },
+    "phu_quoc": {
+      "province_code": "angiang",
+      "keywords": ["Phú Quốc", "Phu Quoc"],
+      "boat_departure_port": "Cảng Rạch Giá / Bãi Vòng",
+      "boat_travel_minutes": 135,
+      "schedule_constraints": "Khuyên dùng máy bay hoặc tàu cao tốc tuyến sáng."
+    }
+  },
+  "default_road_detour_factor": 1.38,
+  "boarding_overhead_minutes": 10
+}
