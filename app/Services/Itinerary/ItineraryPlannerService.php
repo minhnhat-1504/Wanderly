@@ -482,6 +482,7 @@ class ItineraryPlannerService
                         'category' => $place['category'],
                         'lat' => $lat,
                         'lng' => $lng,
+                        'address' => $place['address'] ?? null,
                         'google_maps_url' => "https://www.google.com/maps/search/?api=1&query={$lat},{$lng}",
                         'opening_hours' => $place['opening_hours'] ?? 'chưa xác minh',
                         'ticket_price_vnd' => $this->formatPrice($place['ticket_price_vnd'] ?? null),

@@ -244,6 +244,14 @@
                                                                         <span class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded font-mono text-[10px] font-bold" x-text="item.time"></span>
                                                                         <span class="font-bold text-slate-900 dark:text-slate-100" x-text="item.place ? item.place.name_vi : item.activity"></span>
                                                                     </div>
+
+                                                                    <!-- Exact Verified Street Address -->
+                                                                    <template x-if="item.place && item.place.address">
+                                                                        <div class="flex items-start gap-1 text-[11px] text-slate-600 dark:text-slate-300">
+                                                                            <span class="text-teal-600 dark:text-teal-400 font-bold">📍</span>
+                                                                            <span class="line-clamp-1" x-text="item.place.address"></span>
+                                                                        </div>
+                                                                    </template>
                                                                     
                                                                     <!-- Meta Badges: hours, price, indoor -->
                                                                     <div class="flex flex-wrap items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400">

@@ -1,6 +1,6 @@
 # BÁO CÁO ĐÁNH GIÁ NĂNG LỰC LẬP LỊCH TRÌNH (EVALUATION REPORT)
 
-**Thời gian chạy:** 2026-10-28 02:22:50
+**Thời gian chạy:** 2026-10-28 02:39:47
 **Bộ dữ liệu kiểm thử:** `eval/cases.json` (16 trường hợp)
 **Quy chuẩn hành chính:** Nghị quyết 202/2025/QH15 (34 tỉnh thành Việt Nam)
 

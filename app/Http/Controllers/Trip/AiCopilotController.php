@@ -319,7 +319,7 @@ class AiCopilotController extends Controller
                     'cost' => $ticketPrice,
                     'category' => $category,
                     'location' => $place['name_vi'] ?? ($province['name'] ?? ''),
-                    'address' => $place['google_maps_url'] ?? '',
+                    'address' => $place['address'] ?? ($place['name_vi'] ?? ''),
                     'notes' => trim(($item['note'] ?? '') . $hoursNote),
                     'position' => $pos,
                     'payer_id' => $user->id,
