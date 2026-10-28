@@ -264,5 +264,67 @@ class VerifiedItineraryAiCopilotTest extends TestCase
         // 3. Cầu Rồng: "Miễn phí" -> 0 VND
         $this->assertEquals(0.0, (float) $activities[2]->cost);
     }
+
+    public function test_create_trip_from_itinerary_clamps_morning_activities_before_11_am_and_prevents_overlap(): void
+    {
+        $user = User::factory()->create();
+
+        $payload = [
+            'province' => [
+                'code' => 'danang',
+                'name' => 'Đà Nẵng',
+            ],
+            'start_date' => '2026-11-01',
+            'days' => [
+                [
+                    'day' => 1,
+                    'items' => [
+                        [
+                            'time' => '08:30',
+                            'duration_min' => 180, // Would bleed to 11:30 without clamping
+                            'activity' => 'Công viên Suối khoáng nóng Núi Thần Tài',
+                            'place' => [
+                                'id' => 'dn_011',
+                                'name_vi' => 'Công viên Suối khoáng nóng Núi Thần Tài',
+                                'category' => 'entertainment',
+                            ],
+                        ],
+                        [
+                            'time' => '10:30', // Overlaps with 08:30 - 11:30 without shift
+                            'duration_min' => 60,
+                            'activity' => 'Chợ Cồn - Thiên đường ẩm thực Đà Nẵng',
+                            'place' => [
+                                'id' => 'dn_007',
+                                'name_vi' => 'Chợ Cồn - Thiên đường ẩm thực Đà Nẵng',
+                                'category' => 'food',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $response = $this->actingAs($user)->postJson(route('ajax.ai-copilot.create-trip'), $payload);
+        $response->assertStatus(200);
+
+        $tripId = $response->json('trip_id');
+        $trip = Trip::find($tripId);
+        $activities = $trip->activities()->orderBy('position')->get();
+
+        $this->assertCount(2, $activities);
+
+        $act1 = $activities[0];
+        $act2 = $activities[1];
+
+        // Act 1 must be in morning and end at or before 11:00
+        $this->assertEquals('morning', $act1->time_slot);
+        $this->assertStringStartsWith('08:30', (string) $act1->start_time);
+        $this->assertStringStartsWith('11:00', (string) $act1->end_time);
+
+        // Act 2 must NOT overlap; it shifts to 11:00 and goes into midday (11:00 - 14:00)
+        $this->assertEquals('midday', $act2->time_slot);
+        $this->assertStringStartsWith('11:00', (string) $act2->start_time);
+        $this->assertStringStartsWith('12:00', (string) $act2->end_time);
+    }
 }
 

@@ -291,35 +291,66 @@ class AiCopilotController extends Controller
             'status' => 'planning',
         ], $user);
 
-        // 2. Create activities for each day with strict enum mappings
+        // 2. Create activities for each day with strict enum mappings and slot bounds
         foreach ($days as $dayData) {
             $dayNum = (int) ($dayData['day'] ?? 1);
             $items = $dayData['items'] ?? [];
+            $prevEndMinutes = 0;
 
             foreach ($items as $pos => $item) {
                 $place = $item['place'] ?? [];
-                $duration = (int) ($item['duration_min'] ?? 60);
+                $duration = max(30, (int) ($item['duration_min'] ?? 60));
                 $startTimeStr = $item['time'] ?? '08:00';
 
-                // Calculate end time
+                // Parse requested start time
                 $parts = explode(':', $startTimeStr);
-                $startH = (int) ($parts[0] ?? 8);
-                $startM = (int) ($parts[1] ?? 0);
-                $endTotalMinutes = ($startH * 60) + $startM + $duration;
-                $endH = floor($endTotalMinutes / 60) % 24;
-                $endM = $endTotalMinutes % 60;
-                $endTimeStr = sprintf('%02d:%02d', $endH, $endM);
-                $formattedStartTime = sprintf('%02d:%02d', $startH, $startM);
+                $rawStartH = (int) ($parts[0] ?? 8);
+                $rawStartM = (int) ($parts[1] ?? 0);
+                $startTotalMinutes = ($rawStartH * 60) + $rawStartM;
 
-                // Map time slot enum: ['morning', 'midday', 'afternoon', 'evening']
-                $timeSlot = 'morning';
-                if ($startH >= 11 && $startH < 14) {
-                    $timeSlot = 'midday';
-                } elseif ($startH >= 14 && $startH < 18) {
-                    $timeSlot = 'afternoon';
-                } elseif ($startH >= 18) {
-                    $timeSlot = 'evening';
+                // Prevent overlap with previous activity on the same day
+                if ($startTotalMinutes < $prevEndMinutes) {
+                    $startTotalMinutes = $prevEndMinutes;
                 }
+
+                // Map time slot enum according to ItineraryService::SLOT_BOUNDS
+                // morning: 06:00 - 11:00 (360 - 660 mins)
+                // midday: 11:00 - 14:00 (660 - 840 mins)
+                // afternoon: 14:00 - 18:00 (840 - 1080 mins)
+                // evening: 18:00 - 23:59 (1080 - 1439 mins)
+                if ($startTotalMinutes >= 1080) {
+                    $timeSlot = 'evening';
+                    $slotMaxEndMinutes = 1439; // 23:59
+                } elseif ($startTotalMinutes >= 840) {
+                    $timeSlot = 'afternoon';
+                    $slotMaxEndMinutes = 1080; // 18:00
+                } elseif ($startTotalMinutes >= 660) {
+                    $timeSlot = 'midday';
+                    $slotMaxEndMinutes = 840;  // 14:00
+                } else {
+                    $timeSlot = 'morning';
+                    $slotMaxEndMinutes = 660;  // 11:00
+                }
+
+                // Calculate end time and clamp strictly to slot bounds so it does NOT exceed timeslot!
+                $endTotalMinutes = $startTotalMinutes + $duration;
+                if ($endTotalMinutes > $slotMaxEndMinutes) {
+                    $endTotalMinutes = $slotMaxEndMinutes;
+                }
+
+                // Ensure at least 15 mins duration if space exists
+                if ($endTotalMinutes <= $startTotalMinutes) {
+                    $endTotalMinutes = min($slotMaxEndMinutes, $startTotalMinutes + 15);
+                }
+
+                $curStartH = floor($startTotalMinutes / 60) % 24;
+                $curStartM = $startTotalMinutes % 60;
+                $curEndH = floor($endTotalMinutes / 60) % 24;
+                $curEndM = $endTotalMinutes % 60;
+
+                $formattedStartTime = sprintf('%02d:%02d', $curStartH, $curStartM);
+                $endTimeStr = sprintf('%02d:%02d', $curEndH, $curEndM);
+                $prevEndMinutes = $endTotalMinutes;
 
                 // Map category enum: ['sightseeing', 'dining', 'cafe', 'shopping', 'entertainment', 'other']
                 $rawCategory = $place['category'] ?? '';

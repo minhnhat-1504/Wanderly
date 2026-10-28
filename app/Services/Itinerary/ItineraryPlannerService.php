@@ -331,33 +331,46 @@ class ItineraryPlannerService
             // Assemble schedule items
             $dayItems = [];
 
-            // 08:30 - Morning Sight 1
+            // Morning sights (Strictly within Morning: 06:00 - 11:00)
             if (isset($orderedSights[0])) {
+                $hasSecondMorning = isset($orderedSights[1]);
+                $sight1Start = '08:00';
+                $sight1Dur = $hasSecondMorning
+                    ? min(90, (int) ($orderedSights[0]['suggested_duration_min'] ?? 90))
+                    : min(180, (int) ($orderedSights[0]['suggested_duration_min'] ?? 120));
+
                 $dayItems[] = [
-                    'time' => '08:30',
+                    'time' => $sight1Start,
                     'place_id' => $orderedSights[0]['id'],
                     'activity' => 'Tham quan và khám phá điểm đến buổi sáng',
-                    'duration_min' => (int) ($orderedSights[0]['suggested_duration_min'] ?? 90),
+                    'duration_min' => $sight1Dur,
                     'note' => $orderedSights[0]['notes'] ?? 'Khởi đầu ngày mới',
                 ];
+
+                if ($hasSecondMorning) {
+                    $startMins = (8 * 60) + $sight1Dur; // e.g. 08:00 + 90 min = 09:30
+                    $s2H = floor($startMins / 60);
+                    $s2M = $startMins % 60;
+                    $sight2Start = sprintf('%02d:%02d', $s2H, $s2M);
+                    // Remaining morning minutes before 11:00 (660 mins)
+                    $availMorningMins = max(45, 660 - $startMins);
+                    $sight2Dur = min($availMorningMins, (int) ($orderedSights[1]['suggested_duration_min'] ?? 60));
+
+                    $dayItems[] = [
+                        'time' => $sight2Start,
+                        'place_id' => $orderedSights[1]['id'],
+                        'activity' => 'Tham quan và chụp ảnh lưu niệm',
+                        'duration_min' => $sight2Dur,
+                        'note' => $orderedSights[1]['notes'] ?? '',
+                    ];
+                }
             }
 
-            // 10:30 - Morning Sight 2 (if available)
-            if (isset($orderedSights[1])) {
-                $dayItems[] = [
-                    'time' => '10:30',
-                    'place_id' => $orderedSights[1]['id'],
-                    'activity' => 'Tham quan và chụp ảnh lưu niệm',
-                    'duration_min' => min(60, (int) ($orderedSights[1]['suggested_duration_min'] ?? 60)),
-                    'note' => $orderedSights[1]['notes'] ?? '',
-                ];
-            }
-
-            // 12:00 - Lunch
+            // 11:45 - Lunch (Strictly within Midday: 11:00 - 14:00)
             if ($lunchPlace) {
                 $specialties = ! empty($lunchPlace['local_specialties']) ? implode(', ', $lunchPlace['local_specialties']) : 'ẩm thực địa phương';
                 $dayItems[] = [
-                    'time' => '12:00',
+                    'time' => '11:45',
                     'place_id' => $lunchPlace['id'],
                     'activity' => "Ăn trưa và thưởng thức {$specialties}",
                     'duration_min' => 75,
@@ -365,29 +378,42 @@ class ItineraryPlannerService
                 ];
             }
 
-            // 14:00 - Afternoon Sight 1
+            // Afternoon sights (Strictly within Afternoon: 14:00 - 18:00)
             if (isset($orderedSights[2])) {
+                $hasSecondAfternoon = isset($orderedSights[3]);
+                $afternoon1Start = '14:00';
+                $afternoon1Dur = $hasSecondAfternoon
+                    ? min(90, (int) ($orderedSights[2]['suggested_duration_min'] ?? 90))
+                    : min(210, (int) ($orderedSights[2]['suggested_duration_min'] ?? 120));
+
                 $dayItems[] = [
-                    'time' => '14:00',
+                    'time' => $afternoon1Start,
                     'place_id' => $orderedSights[2]['id'],
                     'activity' => 'Khám phá và trải nghiệm buổi chiều',
-                    'duration_min' => (int) ($orderedSights[2]['suggested_duration_min'] ?? 90),
+                    'duration_min' => $afternoon1Dur,
                     'note' => $orderedSights[2]['notes'] ?? '',
                 ];
+
+                if ($hasSecondAfternoon) {
+                    $startAft2Mins = (14 * 60) + $afternoon1Dur + 15; // e.g. 14:00 + 90 + 15 = 15:45
+                    $a2H = floor($startAft2Mins / 60);
+                    $a2M = $startAft2Mins % 60;
+                    $afternoon2Start = sprintf('%02d:%02d', $a2H, $a2M);
+                    // Remaining afternoon minutes before 18:00 (1080 mins)
+                    $availAftMins = max(45, 1080 - $startAft2Mins);
+                    $afternoon2Dur = min($availAftMins, (int) ($orderedSights[3]['suggested_duration_min'] ?? 60));
+
+                    $dayItems[] = [
+                        'time' => $afternoon2Start,
+                        'place_id' => $orderedSights[3]['id'],
+                        'activity' => 'Dạo mát và ngắm hoàng hôn',
+                        'duration_min' => $afternoon2Dur,
+                        'note' => $orderedSights[3]['notes'] ?? '',
+                    ];
+                }
             }
 
-            // 16:30 - Afternoon Sight 2 (if available)
-            if (isset($orderedSights[3])) {
-                $dayItems[] = [
-                    'time' => '16:30',
-                    'place_id' => $orderedSights[3]['id'],
-                    'activity' => 'Dạo mát và ngắm hoàng hôn',
-                    'duration_min' => (int) ($orderedSights[3]['suggested_duration_min'] ?? 60),
-                    'note' => $orderedSights[3]['notes'] ?? '',
-                ];
-            }
-
-            // 18:30 - Dinner
+            // 18:30 - Dinner (Strictly within Evening: 18:00 - 23:59)
             if ($dinnerPlace) {
                 $specialties = ! empty($dinnerPlace['local_specialties']) ? implode(', ', $dinnerPlace['local_specialties']) : 'đặc sản buổi tối';
                 $dayItems[] = [
