@@ -1,0 +1,1404 @@
+[
+    {
+        "id": "hn_001",
+        "province_code": "hanoi",
+        "name_vi": "Hồ Hoàn Kiếm & Đền Ngọc Sơn",
+        "name_en": "Hoan Kiem Lake & Ngoc Son Temple",
+        "category": "sight",
+        "lat": 21.0305,
+        "lng": 105.8524,
+        "description_vi": "Trái tim ngàn năm văn hiến của thủ đô với Tháp Rùa cổ kính giữa làn nước xanh lục thủy, cầu Thê Húc đỏ son dẫn vào Đền Ngọc Sơn linh thiêng.",
+        "suggested_duration_min": 75,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "18:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 30000,
+        "best_months": [
+            9,
+            10,
+            11,
+            2,
+            3,
+            4
+        ],
+        "avoid_months": [
+            6,
+            7
+        ],
+        "indoor": false,
+        "tags": [
+            "iconic",
+            "history",
+            "culture",
+            "lake",
+            "walking"
+        ],
+        "local_specialties": [
+            "Kem Tràng Tiền",
+            "Cà phê trứng Đinh"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Phố đi bộ mở cửa từ 19:00 tối thứ Sáu đến hết Chủ Nhật hàng tuần.",
+        "address": "Đinh Tiên Hoàng, Hàng Trống, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_002",
+        "province_code": "hanoi",
+        "name_vi": "Văn Miếu - Quốc Tử Giám",
+        "name_en": "Temple of Literature & First National University",
+        "category": "culture",
+        "lat": 21.0292,
+        "lng": 105.8361,
+        "description_vi": "Trường đại học đầu tiên của Việt Nam thành lập năm 1076 thời vua Lý Nhân Tông với 82 tấm Bia Tiến sĩ vinh danh hiền tài, Di sản Tư liệu Thế giới UNESCO.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "08:00",
+            "close": "17:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 70000,
+        "best_months": [
+            9,
+            10,
+            11,
+            12,
+            1,
+            2,
+            3,
+            4
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "unesco",
+            "history",
+            "education",
+            "culture",
+            "heritage"
+        ],
+        "local_specialties": [
+            "Bút lông xin chữ đầu xuân"
+        ],
+        "source": "curated",
+        "source_url": "http:\/\/vanmieu.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Có tour đêm công nghệ ánh sáng 3D mapping vào các tối cuối tuần.",
+        "address": "58 Quốc Tử Giám, Văn Miếu, Đống Đa, Hà Nội"
+    },
+    {
+        "id": "hn_003",
+        "province_code": "hanoi",
+        "name_vi": "Hoàng Thành Thăng Long",
+        "name_en": "Imperial Citadel of Thang Long",
+        "category": "culture",
+        "lat": 21.0345,
+        "lng": 105.8398,
+        "description_vi": "Di sản Văn hóa Thế giới UNESCO minh chứng cho lịch sử 13 thế kỷ liên tục của trung tâm quyền lực chính trị Đại Việt với Đoan Môn, Điện Kính Thiên và Hậu Lâu.",
+        "suggested_duration_min": 120,
+        "opening_hours": {
+            "open": "08:00",
+            "close": "17:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 70000,
+        "best_months": [
+            9,
+            10,
+            11,
+            12,
+            1,
+            2,
+            3,
+            4
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "unesco",
+            "history",
+            "citadel",
+            "archaeology"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "http:\/\/hoangthanhthanglong.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Có tour đêm 'Giải mã Hoàng thành Thăng Long' rất hấp dẫn.",
+        "address": "19C Hoàng Diệu, Điện Biên, Ba Đình, Hà Nội"
+    },
+    {
+        "id": "hn_004",
+        "province_code": "hanoi",
+        "name_vi": "Lăng Chủ tịch Hồ Chí Minh & Khu di tích Phủ Chủ tịch",
+        "name_en": "Ho Chi Minh Mausoleum & Presidential Palace",
+        "category": "culture",
+        "lat": 21.0368,
+        "lng": 105.8345,
+        "description_vi": "Nơi an nghỉ vĩnh hằng của vị lãnh tụ kính yêu của dân tộc Việt Nam cùng Nhà sàn đơn sơ, ao cá Bác Hồ và Chùa Một Cột nghìn năm tuổi.",
+        "suggested_duration_min": 120,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "10:30"
+        },
+        "closed_days": [
+            1,
+            5
+        ],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            9,
+            10,
+            11,
+            12,
+            1,
+            2,
+            3,
+            4
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "history",
+            "national",
+            "heritage",
+            "monument"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "https:\/\/bqllang.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Đóng cửa thứ Hai và thứ Sáu. Trang phục lịch sự, áo có tay, quần dài qua gối.",
+        "address": "02 Hùng Vương, Điện Biên, Ba Đình, Hà Nội"
+    },
+    {
+        "id": "hn_005",
+        "province_code": "hanoi",
+        "name_vi": "Di tích Lịch sử Nhà tù Hỏa Lò",
+        "name_en": "Hoa Lo Prison Memorial (Hanoi Hilton)",
+        "category": "culture",
+        "lat": 21.0252,
+        "lng": 105.8465,
+        "description_vi": "'Địa ngục trần gian' thời thực dân Pháp giam giữ các chiến sĩ cách mạng kiên trung, điểm tham quan lịch sử xúc động với trải nghiệm thuyết minh audio sinh động.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "08:00",
+            "close": "17:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 50000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "history",
+            "museum",
+            "patriotism",
+            "education"
+        ],
+        "local_specialties": [
+            "Bánh bàng Hỏa Lò",
+            "Trà bàng"
+        ],
+        "source": "curated",
+        "source_url": "http:\/\/hoalo.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Nên thuê tai nghe thuyết minh tự động (audio guide) 50.000 VNĐ.",
+        "address": "01 Tràng Tiền, Phan Chu Trinh, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_006",
+        "province_code": "hanoi",
+        "name_vi": "Phố cổ Hà Nội (36 Phố Phường)",
+        "name_en": "Hanoi Old Quarter",
+        "category": "sight",
+        "lat": 21.0348,
+        "lng": 105.8505,
+        "description_vi": "Mạng lưới phố nghề truyền thống lưu giữ nét đẹp kinh kỳ xưa với những ngôi nhà ống mái ngói thâm nâu, phố Hàng Ngang, Hàng Đào, Hàng Bạc, Tạ Hiện náo nhiệt.",
+        "suggested_duration_min": 150,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            9,
+            10,
+            11,
+            12,
+            1,
+            2,
+            3,
+            4
+        ],
+        "avoid_months": [
+            6,
+            7
+        ],
+        "indoor": false,
+        "tags": [
+            "heritage",
+            "walking",
+            "nightlife",
+            "streetfood",
+            "iconic"
+        ],
+        "local_specialties": [
+            "Bia hơi Tạ Hiện",
+            "Phở bò",
+            "Bún chả",
+            "Bánh cuốn Thanh Trì"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Trải nghiệm đi xích lô phố cổ khoảng 150.000 VNĐ\/giờ.",
+        "address": "Phố cổ Hà Nội, Hàng Bạc, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_007",
+        "province_code": "hanoi",
+        "name_vi": "Hồ Tây & Chùa Trấn Quốc",
+        "name_en": "West Lake & Tran Quoc Pagoda",
+        "category": "sight",
+        "lat": 21.0478,
+        "lng": 105.8368,
+        "description_vi": "Hồ nước ngọt tự nhiên lớn nhất thủ đô và ngôi chùa cổ nhất Hà Nội xây dựng từ thời Tiền Lý (thế kỷ VI) với bảo tháp lục độ đài sen 11 tầng soi bóng hoàng hôn.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "17:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            9,
+            10,
+            11,
+            12,
+            1,
+            2,
+            3,
+            4
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "sunset",
+            "lake",
+            "religion",
+            "buddhism",
+            "scenic"
+        ],
+        "local_specialties": [
+            "Bánh tôm Hồ Tây",
+            "Kem dừa hồ Tây",
+            "Ốc luộc lá chanh"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Điểm ngắm hoàng hôn lãng mạn bậc nhất thành phố.",
+        "address": "Đường Thanh Niên, Yên Phụ, Tây Hồ, Hà Nội"
+    },
+    {
+        "id": "hn_008",
+        "province_code": "hanoi",
+        "name_vi": "Bảo tàng Dân tộc học Việt Nam",
+        "name_en": "Vietnam Museum of Ethnology",
+        "category": "culture",
+        "lat": 21.0405,
+        "lng": 105.7985,
+        "description_vi": "Bảo tàng hàng đầu Đông Nam Á trưng bày văn hóa 54 dân tộc anh em với khu nhà rông, nhà sàn, nhà mồ Tây Nguyên và biểu diễn múa rối nước ngoài trời.",
+        "suggested_duration_min": 150,
+        "opening_hours": {
+            "open": "08:30",
+            "close": "17:30"
+        },
+        "closed_days": [
+            1
+        ],
+        "ticket_price_vnd": 40000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "museum",
+            "culture",
+            "ethnology",
+            "family",
+            "education"
+        ],
+        "local_specialties": [
+            "Múa rối nước truyền thống"
+        ],
+        "source": "curated",
+        "source_url": "http:\/\/www.vme.org.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Đóng cửa vào thứ Hai hàng tuần. Có biểu diễn múa rối nước thứ Bảy và Chủ Nhật.",
+        "address": "Chùa Trấn Quốc, Đường Thanh Niên, Yên Phụ, Tây Hồ, Hà Nội"
+    },
+    {
+        "id": "hn_009",
+        "province_code": "hanoi",
+        "name_vi": "Cầu Long Biên",
+        "name_en": "Long Bien Bridge",
+        "category": "sight",
+        "lat": 21.0435,
+        "lng": 105.8568,
+        "description_vi": "Cây cầu thép vắt qua ba thế kỷ do hãng Eiffel thiết kế ('con rồng thép sông Hồng'), chứng nhân lịch sử kiên cường và biểu tượng trường tồn của Hà Nội.",
+        "suggested_duration_min": 60,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            9,
+            10,
+            11,
+            12,
+            1,
+            2,
+            3,
+            4
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "heritage",
+            "bridge",
+            "vintage",
+            "sunrise",
+            "sunset"
+        ],
+        "local_specialties": [
+            "Ngô nướng than",
+            "Khoai nướng mùa đông"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Có thể đi bộ trên làn cầu dành cho người đi bộ ngắm bãi giữa sông Hồng.",
+        "address": "Đường Nguyễn Văn Huyên, Quan Hoa, Cầu Giấy, Hà Nội"
+    },
+    {
+        "id": "hn_010",
+        "province_code": "hanoi",
+        "name_vi": "Làng gốm Bát Tràng",
+        "name_en": "Bat Trang Ceramic Village",
+        "category": "experience",
+        "lat": 20.9785,
+        "lng": 105.9125,
+        "description_vi": "Làng nghề gốm sứ truyền thống hơn 700 năm tuổi ven sông Hồng với Trung tâm Tinh hoa Làng nghề Việt hình 7 bàn xoay gốm khổng lồ và trải nghiệm tự vuốt gốm.",
+        "suggested_duration_min": 180,
+        "opening_hours": {
+            "open": "08:00",
+            "close": "18:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 50000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "crafts",
+            "pottery",
+            "experience",
+            "heritage"
+        ],
+        "local_specialties": [
+            "Canh măng mực Bát Tràng",
+            "Chè củ mài"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Du khách có thể tự tay tạo hình và nung sản phẩm gốm mang về.",
+        "address": "01 Phố Hỏa Lò, Trần Hưng Đạo, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_011",
+        "province_code": "hanoi",
+        "name_vi": "Phở gia truyền Bát Đàn",
+        "name_en": "Bat Dan Traditional Beef Pho",
+        "category": "food",
+        "lat": 21.0332,
+        "lng": 105.8475,
+        "description_vi": "Quán phở bò xếp hàng gia truyền số 49 Bát Đàn, nước dùng hầm xương tủy nguyên chất trong veo thơm lừng mùi thảo quả quế hồi, thịt bò tái lăn mềm ngọt.",
+        "suggested_duration_min": 45,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "20:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 60000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "breakfast",
+            "iconic",
+            "pho",
+            "local"
+        ],
+        "local_specialties": [
+            "Phở bò tái nạm",
+            "Phở tái lăn",
+            "Quẩy giòn"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Văn hóa tự phục vụ và xếp hàng trả tiền trước lấy phở bưng về bàn.",
+        "address": "Cầu Long Biên, Phúc Xá, Ba Đình, Hà Nội"
+    },
+    {
+        "id": "hn_012",
+        "province_code": "hanoi",
+        "name_vi": "Bún chả Hương Liên (Bún chả Obama)",
+        "name_en": "Huong Lien Bun Cha (Obama Bun Cha)",
+        "category": "food",
+        "lat": 21.0182,
+        "lng": 105.8545,
+        "description_vi": "Địa điểm ẩm thực nổi tiếng thế giới nơi cựu Tổng thống Mỹ Barack Obama và đầu bếp Anthony Bourdain từng thưởng thức bữa tối năm 2016.",
+        "suggested_duration_min": 50,
+        "opening_hours": {
+            "open": "08:00",
+            "close": "20:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 60000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "lunch",
+            "dinner",
+            "iconic",
+            "specialty"
+        ],
+        "local_specialties": [
+            "Bún chả thịt nướng",
+            "Nem cua bể giòn",
+            "Bia Hà Nội"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Có combo Obama (1 bún chả + 1 nem hải sản + 1 chai bia Hà Nội).",
+        "address": "40 Nhà Chung, Hàng Trống, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_013",
+        "province_code": "hanoi",
+        "name_vi": "Cà phê Giảng - Khởi nguồn Cà phê Trứng",
+        "name_en": "Giang Cafe - Original Egg Coffee",
+        "category": "cafe",
+        "lat": 21.0342,
+        "lng": 105.8528,
+        "description_vi": "Cái nôi sinh ra món cà phê trứng trứ danh từ năm 1946 do cụ Nguyễn Văn Giảng sáng tạo, lớp kem trứng đánh bông mịn ngậy thơm hòa cùng cà phê robusta đắng nồng.",
+        "suggested_duration_min": 45,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "22:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 35000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "cafe",
+            "eggcoffee",
+            "heritage",
+            "iconic"
+        ],
+        "local_specialties": [
+            "Cà phê trứng nóng",
+            "Cacao trứng",
+            "Đậu xanh trứng"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/cafegiang.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Cốc cà phê trứng luôn được đặt trong bát nước nóng giữ nhiệt.",
+        "address": "Làng cổ Đường Lâm, Sơn Tây, Hà Nội"
+    },
+    {
+        "id": "hn_014",
+        "province_code": "hanoi",
+        "name_vi": "Chả cá Lã Vọng",
+        "name_en": "La Vong Grilled Fish",
+        "category": "food",
+        "lat": 21.0362,
+        "lng": 105.8495,
+        "description_vi": "Món ăn di sản hơn 150 năm tuổi số 14 Chả Cá, từng miếng cá lăng ướp riềng nghệ nướng than hoa rồi xào trên chảo nóng cùng hành hoa, thì là béo ngậy.",
+        "suggested_duration_min": 60,
+        "opening_hours": {
+            "open": "11:00",
+            "close": "21:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 180000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "lunch",
+            "dinner",
+            "heritage",
+            "specialty"
+        ],
+        "local_specialties": [
+            "Chả cá lăng",
+            "Bún mắm tôm chanh ớt"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Ăn kèm bánh đa nướng giòn rụm và mắm tôm đánh sủi bọt rưới chút rượu trắng.",
+        "address": "Làng gốm Bát Tràng, Gia Lâm, Hà Nội"
+    },
+    {
+        "id": "hn_015",
+        "province_code": "hanoi",
+        "name_vi": "Chợ Đồng Xuân Hà Nội",
+        "name_en": "Dong Xuan Market",
+        "category": "market",
+        "lat": 21.0378,
+        "lng": 105.8495,
+        "description_vi": "Chợ đầu mối lớn nhất phố cổ xây dựng từ thế kỷ XIX thời Pháp thuộc với 5 vòm cửa kiên cố, thiên đường quà bánh Bắc bộ và ngõ chợ ẩm thực hấp dẫn.",
+        "suggested_duration_min": 75,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "18:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "market",
+            "shopping",
+            "heritage",
+            "local"
+        ],
+        "local_specialties": [
+            "Bún ốc chuối đậu ngõ chợ",
+            "Bánh tôm giòn",
+            "Chè sắn nóng"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Ngõ chợ Đồng Xuân là tụ điểm ẩm thực đường phố cực rẻ và ngon.",
+        "address": "Vườn Quốc gia Ba Vì, Ba Vì, Hà Nội"
+    },
+    {
+        "id": "hn_016",
+        "province_code": "hanoi",
+        "name_vi": "Nhà hát Lớn Hà Nội",
+        "name_en": "Hanoi Opera House",
+        "category": "sight",
+        "lat": 21.0242,
+        "lng": 105.8575,
+        "description_vi": "Kiệt tác kiến trúc Tân Cổ Điển xây dựng năm 1911 mô phỏng nhà hát Palais Garnier tại Paris, trung tâm biểu diễn nghệ thuật hàn lâm đỉnh cao.",
+        "suggested_duration_min": 60,
+        "opening_hours": {
+            "open": "08:30",
+            "close": "17:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 120000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "architecture",
+            "french",
+            "music",
+            "art"
+        ],
+        "local_specialties": [
+            "Hòa nhạc giao hưởng"
+        ],
+        "source": "curated",
+        "source_url": "http:\/\/hanoioperahouse.org.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Quảng trường Cách mạng Tháng Tám trước nhà hát là điểm check-in biểu tượng.",
+        "address": "Xã Hương Sơn, Mỹ Đức, Hà Nội"
+    },
+    {
+        "id": "hn_017",
+        "province_code": "hanoi",
+        "name_vi": "Bảo tàng Mỹ thuật Việt Nam",
+        "name_en": "Vietnam National Fine Arts Museum",
+        "category": "culture",
+        "lat": 21.0315,
+        "lng": 105.8342,
+        "description_vi": "Nơi lưu giữ các Bảo vật Quốc gia và kho tàng mỹ thuật Việt Nam từ thời tiền sử đến hiện đại, đặc biệt là các bức tranh sơn mài, tranh lụa kiệt tác.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "08:30",
+            "close": "17:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 40000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "museum",
+            "art",
+            "painting",
+            "culture"
+        ],
+        "local_specialties": [
+            "Tranh sơn mài nghệ thuật"
+        ],
+        "source": "curated",
+        "source_url": "http:\/\/vnfam.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Kiến trúc Pháp cổ kính yên tĩnh ngay đối diện Văn Miếu.",
+        "address": "49 Bát Đàn, Cửa Đông, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_018",
+        "province_code": "hanoi",
+        "name_vi": "Nhà thờ Lớn Hà Nội (St. Joseph's Cathedral)",
+        "name_en": "St. Joseph's Cathedral",
+        "category": "sight",
+        "lat": 21.0288,
+        "lng": 105.8492,
+        "description_vi": "Công trình kiến trúc Gothic Trung Cổ khánh thành năm 1887 với tháp chuông đôi sừng sững, trung tâm tụ họp trà chanh chém gió của giới trẻ Hà Thành.",
+        "suggested_duration_min": 60,
+        "opening_hours": {
+            "open": "08:00",
+            "close": "17:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            9,
+            10,
+            11,
+            12,
+            1,
+            2,
+            3,
+            4
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "architecture",
+            "gothic",
+            "cathedral",
+            "streetlife"
+        ],
+        "local_specialties": [
+            "Trà chanh Nhà Thờ",
+            "Nem chua nướng số 10 Ấu Triệu"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Rực rỡ và đông vui nhất vào dịp Lễ Giáng Sinh tháng 12.",
+        "address": "01 Hàng Mành, Hàng Gai, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_019",
+        "province_code": "hanoi",
+        "name_vi": "Phố đi bộ Trịnh Công Sơn & Thung lũng hoa Hồ Tây",
+        "name_en": "Trinh Cong Son Pedestrian Street",
+        "category": "sight",
+        "lat": 21.0685,
+        "lng": 105.8175,
+        "description_vi": "Không gian văn hóa đi bộ ven hồ Tây rợp bóng cây xanh kết hợp thung lũng hoa ngập tràn sen bách diệp mùa hè và cúc họa mi mùa đông.",
+        "suggested_duration_min": 90,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            5,
+            6,
+            11,
+            12,
+            1,
+            2,
+            3
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "flowers",
+            "walking",
+            "lotus",
+            "culture"
+        ],
+        "local_specialties": [
+            "Trà sen Tây Hồ ướp bông tươi"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Mùa sen nở thơm ngát từ tháng 5 đến tháng 7.",
+        "address": "14 Chả Cá, Hàng Bồ, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_020",
+        "province_code": "hanoi",
+        "name_vi": "Bún thang Bà Đức Cầu Gỗ",
+        "name_en": "Ba Duc Bun Thang Cau Go",
+        "category": "food",
+        "lat": 21.0318,
+        "lng": 105.8525,
+        "description_vi": "Bát bún thang cầu kỳ tinh hoa đất Tràng An với gần 20 nguyên liệu thái sợi chỉ: gà xé, giò lụa, trứng tráng mỏng, củ cải dầm, nấm hương hòa quyện cùng chút tinh dầu cà cuống.",
+        "suggested_duration_min": 45,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "22:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 55000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "specialty",
+            "traditional",
+            "delicate"
+        ],
+        "local_specialties": [
+            "Bún thang cổ truyền",
+            "Tinh dầu cà cuống"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Món ăn thanh tao mang đậm cốt cách ẩm thực người Hà Nội xưa.",
+        "address": "39 Nguyễn Hữu Huân, Lý Thái Tổ, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_021",
+        "province_code": "hanoi",
+        "name_vi": "Kem Tràng Tiền",
+        "name_en": "Trang Tien Ice Cream",
+        "category": "cafe",
+        "lat": 21.0255,
+        "lng": 105.8552,
+        "description_vi": "Thương hiệu kem quốc dân từ năm 1958 gắn liền tuổi thơ bao thế hệ người Hà Nội với kem que cốm non, kem ốc quế đậu xanh béo bùi và kem sữa dừa mát lạnh.",
+        "suggested_duration_min": 30,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "23:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 15000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "dessert",
+            "icecream",
+            "iconic",
+            "cheap"
+        ],
+        "local_specialties": [
+            "Kem ốc quế cốm",
+            "Kem que đậu xanh"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/kemtrangtien.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Vừa ăn kem vừa tản bộ bờ hồ Hoàn Kiếm là trải nghiệm kinh điển.",
+        "address": "11 Hàng Gai, Hàng Gai, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_022",
+        "province_code": "hanoi",
+        "name_vi": "Bánh cuốn Gia An",
+        "name_en": "Gia An Steamed Rice Rolls",
+        "category": "food",
+        "lat": 21.0268,
+        "lng": 105.8421,
+        "description_vi": "Bánh cuốn tráng mỏng trắng ngần nguyên chất không hàn the, nhân thịt băm mộc nhĩ giòn thơm chấm nước mắm ninh xương quả cà cuống thanh ngọt.",
+        "suggested_duration_min": 40,
+        "opening_hours": {
+            "open": "06:30",
+            "close": "21:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 45000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "breakfast",
+            "lunch",
+            "local"
+        ],
+        "local_specialties": [
+            "Bánh cuốn nhân thịt",
+            "Chả quế nướng"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Bánh tráng nóng tại chỗ ăn kèm hành phi vàng ươm giòn tan.",
+        "address": "35 Tràng Tiền, Tràng Tiền, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_023",
+        "province_code": "hanoi",
+        "name_vi": "Việt Nam Quốc Tự Chùa Một Cột",
+        "name_en": "One Pillar Pagoda",
+        "category": "culture",
+        "lat": 21.0358,
+        "lng": 105.8335,
+        "description_vi": "Kiến trúc hoa sen độc nhất vô nhị dựng trên một cột đá độc trụ giữa hồ Linh Chiểu xây dựng từ năm 1049 thời vua Lý Thái Tông.",
+        "suggested_duration_min": 45,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "18:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "iconic",
+            "buddhism",
+            "heritage",
+            "history"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Nằm ngay cạnh quảng trường Ba Đình và Bảo tàng Hồ Chí Minh.",
+        "address": "Chợ Đồng Xuân, Đồng Xuân, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_024",
+        "province_code": "hanoi",
+        "name_vi": "Vườn Quốc gia Ba Vì",
+        "name_en": "Ba Vi National Park",
+        "category": "nature",
+        "lat": 21.0825,
+        "lng": 105.3625,
+        "description_vi": "Khu rừng nhiệt đới mát mẻ trên dãy núi Ba Vì linh thiêng với Đền thờ Bác Hồ trên đỉnh Vua, phế tích nhà thờ Pháp cổ rêu phong và đồi hoa dã quỳ tháng 11.",
+        "suggested_duration_min": 240,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "18:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 60000,
+        "best_months": [
+            10,
+            11,
+            12,
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "avoid_months": [
+            7,
+            8
+        ],
+        "indoor": false,
+        "tags": [
+            "nature",
+            "mountains",
+            "trekking",
+            "wildlife"
+        ],
+        "local_specialties": [
+            "Sữa chua Ba Vì",
+            "Bánh sữa Ba Vì",
+            "Gà đồi Ba Vì"
+        ],
+        "source": "curated",
+        "source_url": "http:\/\/vuonquocgiabavi.com.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Cách trung tâm Hà Nội 60km, điểm trốn nóng mùa hè và săn hoa dã quỳ mùa đông.",
+        "address": "Phố bia Tạ Hiện, Hàng Buồm, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_025",
+        "province_code": "hanoi",
+        "name_vi": "Làng cổ Đường Lâm",
+        "name_en": "Duong Lam Ancient Village",
+        "category": "culture",
+        "lat": 21.1445,
+        "lng": 105.4985,
+        "description_vi": "Làng cổ đá ong thuần nông tiêu biểu vùng châu thổ sông Hồng với cây đa, giếng nước, sân đình và là quê hương hai vị vua Phùng Hưng, Ngô Quyền.",
+        "suggested_duration_min": 180,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "17:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 20000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "village",
+            "heritage",
+            "history",
+            "rural"
+        ],
+        "local_specialties": [
+            "Thịt quay đòn Đường Lâm",
+            "Kẹo dồi",
+            "Kẹo lạc",
+            "Tương nếp"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Có thể thuê xe đạp dạo quanh các cổng làng và ngôi nhà cổ hơn 300 năm tuổi.",
+        "address": "Khu di tích Cổ Loa, Đông Anh, Hà Nội"
+    },
+    {
+        "id": "hn_026",
+        "province_code": "hanoi",
+        "name_vi": "Xôi xéo Bát Đàn cô Mây",
+        "name_en": "Co May Xoi Xeo Bat Dan",
+        "category": "food",
+        "lat": 21.0335,
+        "lng": 105.8482,
+        "description_vi": "Gánh xôi xéo truyền thống trứ danh góc phố cổ với hạt nếp cái hoa vàng đồ dẻo thơm óng ả màu nghệ, đậu xanh nắm thái mỏng mịn và hành phi mỡ gà giòn ngậy.",
+        "suggested_duration_min": 30,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "11:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 25000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "food",
+            "breakfast",
+            "streetfood",
+            "cheap"
+        ],
+        "local_specialties": [
+            "Xôi xéo ruốc hành",
+            "Xôi bắp",
+            "Ruốc thịt"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Gói xôi trong lá sen hoặc lá chuối giữ trọn vẹn hương vị truyền thống.",
+        "address": "Phố đi bộ Hồ Gươm, Hoàn Kiếm, Hà Nội"
+    },
+    {
+        "id": "hn_027",
+        "province_code": "hanoi",
+        "name_vi": "Phố Bích Họa Phùng Hưng",
+        "name_en": "Phung Hung Mural Street",
+        "category": "sight",
+        "lat": 21.0365,
+        "lng": 105.8458,
+        "description_vi": "Đoạn phố vòm cầu đường sắt đá thế kỷ XIX được các nghệ sĩ Việt - Hàn tái hiện sinh động đời sống sinh hoạt, gánh hàng rong và ký ức Hà Nội xưa.",
+        "suggested_duration_min": 60,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            9,
+            10,
+            11,
+            12,
+            1,
+            2,
+            3,
+            4
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "art",
+            "murals",
+            "photography",
+            "walking"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Địa điểm chụp ảnh áo dài kỷ niệm rất đẹp và miễn phí.",
+        "address": "Chùa Thầy, Xã Sài Sơn, Quốc Oai, Hà Nội"
+    },
+    {
+        "id": "hn_028",
+        "province_code": "hanoi",
+        "name_vi": "Chùa Hương (Quần thể thắng cảnh Hương Sơn)",
+        "name_en": "Perfume Pagoda Complex",
+        "category": "culture",
+        "lat": 20.6185,
+        "lng": 105.7525,
+        "description_vi": "Quần thể tâm linh danh thắng đệ nhất trời Nam với trải nghiệm chèo đò xuôi dòng suối Yến thơ mộng dẫn vào Động Hương Tích linh thiêng.",
+        "suggested_duration_min": 300,
+        "opening_hours": {
+            "open": "05:00",
+            "close": "18:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 130000,
+        "best_months": [
+            1,
+            2,
+            3,
+            10,
+            11
+        ],
+        "avoid_months": [
+            6,
+            7
+        ],
+        "indoor": false,
+        "tags": [
+            "pilgrimage",
+            "caves",
+            "boating",
+            "buddhism"
+        ],
+        "local_specialties": [
+            "Mơ Hương Tích",
+            "Rau sắng chùa Hương"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Mùa lễ hội nhộn nhịp nhất từ tháng 1 đến tháng 3 âm lịch; tháng 10 ngắm hoa súng suối Yến thanh bình.",
+        "address": "Chùa Tây Phương, Xã Thạch Xá, Thạch Thất, Hà Nội"
+    },
+    {
+        "id": "hn_029",
+        "province_code": "hanoi",
+        "name_vi": "Quán Cà phê Đinh",
+        "name_en": "Dinh Cafe",
+        "category": "cafe",
+        "lat": 21.0312,
+        "lng": 105.8535,
+        "description_vi": "Quán cà phê tầng 2 nhà cổ số 13 Đinh Tiên Hoàng do con gái cụ Giảng mở, ban công nhỏ nhìn thẳng ra Tháp Rùa hồ Gươm đượm màu hoài niệm.",
+        "suggested_duration_min": 50,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "22:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 30000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "cafe",
+            "lakeview",
+            "vintage",
+            "eggcoffee"
+        ],
+        "local_specialties": [
+            "Cà phê trứng Đinh",
+            "Cacao trứng đá"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Lối vào qua ngõ nhỏ hẹp đậm chất phố cổ Hà Nội.",
+        "address": "Hồ Tây, Tây Hồ, Hà Nội"
+    },
+    {
+        "id": "hn_030",
+        "province_code": "hanoi",
+        "name_vi": "Bún đậu mắm tôm ngõ Tràng Tiền",
+        "name_en": "Trang Tien Alley Tofu Vermicelli",
+        "category": "food",
+        "lat": 21.0258,
+        "lng": 105.8548,
+        "description_vi": "Mẹt bún đậu đầy đặn với đậu Mơ chiên vàng giòn rụm bên ngoài béo mềm bên trong, chả cốm dẻo thơm, dồi sụn rán và bát mắm tôm Thanh Hóa đánh bông chanh ớt.",
+        "suggested_duration_min": 45,
+        "opening_hours": {
+            "open": "10:00",
+            "close": "15:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 50000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "food",
+            "lunch",
+            "streetfood",
+            "specialty"
+        ],
+        "local_specialties": [
+            "Đậu phụ Mơ rán giòn",
+            "Chả cốm Hà Nội",
+            "Thịt chân giò luộc"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hanoi.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Bán chủ yếu vào bữa trưa, hết hàng sau 14:30.",
+        "address": "Làng lụa Vạn Phúc, Vạn Phúc, Hà Đông, Hà Nội"
+    }
+]
