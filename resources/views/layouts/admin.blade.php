@@ -29,7 +29,7 @@
              SIDEBAR
         ================================================================= --}}
         <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-               class="fixed lg:static inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-200 flex flex-col transition-transform duration-200 ease-in-out border-r border-slate-800 shadow-xl lg:shadow-none">
+               class="fixed inset-y-0 left-0 z-40 w-64 h-screen bg-slate-900 text-slate-200 flex flex-col transition-transform duration-200 ease-in-out border-r border-slate-800 shadow-xl lg:shadow-none">
 
             {{-- Sidebar Brand --}}
             <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800 bg-slate-950/40">
@@ -121,20 +121,6 @@
                     </svg>
                     <span>{{ __('Audit Logs') }}</span>
                 </a>
-
-                {{-- Secondary section: Destinations --}}
-                <div class="pt-4 px-3 pb-2 text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
-                    {{ __('Content & Geographic') }}
-                </div>
-
-                <a href="{{ route('admin.destinations.index') }}"
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all {{ request()->routeIs('admin.destinations.*') ? 'bg-teal-600 text-white shadow-md shadow-teal-900/30 font-semibold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <span>{{ __('Destinations & POIs') }}</span>
-                </a>
             </div>
 
             {{-- Sidebar Footer --}}
@@ -173,7 +159,7 @@
         {{-- ================================================================
              MAIN CONTENT WRAPPER
         ================================================================= --}}
-        <div class="flex-1 flex flex-col min-w-0">
+        <div class="lg:pl-64 flex-1 flex flex-col min-w-0 min-h-screen">
 
             {{-- Topbar --}}
             <header class="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-30 shadow-sm">

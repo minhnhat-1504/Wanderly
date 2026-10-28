@@ -26,6 +26,15 @@ class AuthController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
+        $user = $request->user();
+        if ($user && $user->role === 'admin') {
+            return redirect()->intended(route('admin.dashboard'));
+        }
+
+        if ($user && $user->role === 'provider') {
+            return redirect()->intended(route('provider.dashboard'));
+        }
+
         return redirect()->intended('/trips');
     }
 
