@@ -12,6 +12,13 @@
         </p>
     </div>
 
+    @if (session('status'))
+        <div class="mb-5 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800 flex items-center gap-2">
+            <x-icon name="check-circle" class="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>{{ session('status') }}</span>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
 
@@ -36,7 +43,7 @@
             :required="true"
         />
 
-        {{-- Remember Me --}}
+        {{-- Remember Me & Forgot Password --}}
         <div class="flex items-center justify-between text-sm">
             <label for="remember" class="inline-flex items-center gap-2 cursor-pointer select-none">
                 <input
@@ -48,6 +55,10 @@
                 >
                 <span class="text-gray-600 text-sm">{{ __('Remember me') }}</span>
             </label>
+
+            <a href="{{ route('password.request') }}" class="font-medium text-sm text-primary hover:text-teal-700 transition-colors">
+                {{ __('Forgot password?') }}
+            </a>
         </div>
 
         {{-- Submit Button --}}

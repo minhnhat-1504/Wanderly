@@ -15,7 +15,8 @@ class EnsureEmailIsVerified
      */
     public function handle(Request $request, Closure $next, ?string $redirectToRoute = null): Response
     {
-        if (app()->environment('local')) {
+        // Only bypass if running in local environment WITH log mailer (so teammates without SMTP can test)
+        if (app()->environment('local') && config('mail.default') === 'log') {
             return $next($request);
         }
 

@@ -378,7 +378,7 @@
                     <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                         <x-icon name="lock" class="w-5 h-5 text-primary" /> {{ __('Change Password') }}
                     </h2>
-                    <form method="POST" action="{{ route('password.update') }}" class="space-y-4 max-w-lg">
+                    <form method="POST" action="{{ route('profile.password.update') }}" class="space-y-4 max-w-lg">
                         @csrf
                         @method('PUT')
 
