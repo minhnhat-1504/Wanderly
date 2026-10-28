@@ -29,7 +29,7 @@
              SIDEBAR
         ================================================================= --}}
         <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-               class="fixed inset-y-0 left-0 z-40 w-64 h-screen bg-slate-900 text-slate-200 flex flex-col transition-transform duration-200 ease-in-out border-r border-slate-800 shadow-xl lg:shadow-none">
+               class="fixed lg:sticky top-0 inset-y-0 lg:inset-y-auto left-0 z-40 lg:z-10 w-64 h-screen bg-slate-900 text-slate-200 flex flex-col shrink-0 transition-transform duration-200 ease-in-out border-r border-slate-800 shadow-xl lg:shadow-none">
 
             {{-- Sidebar Brand --}}
             <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800 bg-slate-950/40">
@@ -159,7 +159,7 @@
         {{-- ================================================================
              MAIN CONTENT WRAPPER
         ================================================================= --}}
-        <div class="lg:pl-64 flex-1 flex flex-col min-w-0 min-h-screen">
+        <div class="flex-1 flex flex-col min-w-0 min-h-screen">
 
             {{-- Topbar --}}
             <header class="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-30 shadow-sm">
