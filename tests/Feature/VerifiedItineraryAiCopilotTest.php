@@ -130,6 +130,10 @@ class VerifiedItineraryAiCopilotTest extends TestCase
         $firstAct = $trip->activities()->where('position', 0)->first();
         $this->assertStringStartsWith('08:30', (string) $firstAct->start_time);
         $this->assertStringStartsWith('10:00', (string) $firstAct->end_time);
+        $this->assertEquals(0, (float) $firstAct->cost);
+
+        $thirdAct = $trip->activities()->where('position', 2)->first();
+        $this->assertEquals(250000, (float) $thirdAct->cost);
     }
 
     public function test_asks_clarification_on_unknown_province_input(): void
@@ -187,6 +191,78 @@ class VerifiedItineraryAiCopilotTest extends TestCase
         // Verify EXACTLY 2 days are generated!
         $this->assertCount(2, $action['params']['days']);
         $this->assertEquals(2, $action['params']['summary']['total_days']);
+    }
+
+    public function test_create_trip_from_itinerary_fills_formatted_ticket_prices_correctly(): void
+    {
+        $user = User::factory()->create();
+
+        $payload = [
+            'province' => [
+                'code' => 'danang',
+                'name' => 'Đà Nẵng',
+            ],
+            'start_date' => '2026-11-01',
+            'days' => [
+                [
+                    'day' => 1,
+                    'items' => [
+                        [
+                            'time' => '08:30',
+                            'duration_min' => 180,
+                            'activity' => 'Sun World Bà Nà Hills',
+                            'note' => 'Cáp treo lên đỉnh núi',
+                            'place' => [
+                                'id' => 'dn_001',
+                                'name_vi' => 'Sun World Bà Nà Hills & Cầu Vàng',
+                                'category' => 'sight',
+                                'ticket_price_vnd' => '450.000 VNĐ',
+                                'price_vnd' => 450000,
+                            ],
+                        ],
+                        [
+                            'time' => '15:00',
+                            'duration_min' => 60,
+                            'activity' => 'Bảo tàng Điêu khắc Chăm',
+                            'place' => [
+                                'id' => 'dn_006',
+                                'name_vi' => 'Bảo tàng Điêu khắc Chăm',
+                                'category' => 'culture',
+                                'ticket_price_vnd' => '60.000 VNĐ',
+                            ],
+                        ],
+                        [
+                            'time' => '17:00',
+                            'duration_min' => 45,
+                            'activity' => 'Cầu Rồng Đà Nẵng',
+                            'place' => [
+                                'id' => 'dn_002',
+                                'name_vi' => 'Cầu Rồng Đà Nẵng',
+                                'category' => 'sight',
+                                'ticket_price_vnd' => 'Miễn phí',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $response = $this->actingAs($user)->postJson(route('ajax.ai-copilot.create-trip'), $payload);
+
+        $response->assertStatus(200);
+        $tripId = $response->json('trip_id');
+        $trip = Trip::find($tripId);
+        $this->assertNotNull($trip);
+
+        $activities = $trip->activities()->orderBy('position')->get();
+        $this->assertCount(3, $activities);
+
+        // 1. Sun World Bà Nà Hills: 450000 VND
+        $this->assertEquals(450000.0, (float) $activities[0]->cost);
+        // 2. Bảo tàng Chăm: parsed from string "60.000 VNĐ" -> 60000 VND
+        $this->assertEquals(60000.0, (float) $activities[1]->cost);
+        // 3. Cầu Rồng: "Miễn phí" -> 0 VND
+        $this->assertEquals(0.0, (float) $activities[2]->cost);
     }
 }
 

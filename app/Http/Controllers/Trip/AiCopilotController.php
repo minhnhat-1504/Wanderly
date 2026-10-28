@@ -331,10 +331,27 @@ class AiCopilotController extends Controller
                     default => 'sightseeing',
                 };
 
-                $ticketPrice = 0;
-                $rawPrice = $place['ticket_price_vnd'] ?? null;
-                if (is_numeric($rawPrice)) {
-                    $ticketPrice = (float) $rawPrice;
+                $ticketPrice = 0.0;
+                if (isset($place['price_vnd']) && is_numeric($place['price_vnd'])) {
+                    $ticketPrice = (float) $place['price_vnd'];
+                } elseif (! empty($place['ticket_price_vnd'])) {
+                    $rawPrice = $place['ticket_price_vnd'];
+                    if (is_numeric($rawPrice)) {
+                        $ticketPrice = (float) $rawPrice;
+                    } elseif (is_string($rawPrice)) {
+                        $clean = preg_replace('/[^\d]/', '', $rawPrice);
+                        if ($clean !== '') {
+                            $ticketPrice = (float) $clean;
+                        }
+                    }
+                }
+
+                // If still 0 and place has an ID, look up directly in verified places dataset
+                if ($ticketPrice === 0.0 && ! empty($place['id'])) {
+                    $origPlace = app(\App\Services\Itinerary\PlaceRepository::class)->getById($place['id'], $province['code'] ?? null);
+                    if ($origPlace && isset($origPlace['ticket_price_vnd']) && is_numeric($origPlace['ticket_price_vnd'])) {
+                        $ticketPrice = (float) $origPlace['ticket_price_vnd'];
+                    }
                 }
 
                 $hoursNote = '';
