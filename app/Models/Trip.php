@@ -109,4 +109,21 @@ class Trip extends Model
     {
         return $this->hasMany(AiChatMessage::class);
     }
+
+    /**
+     * Get the total amount spent on activities for this trip based on selected participants.
+     */
+    public function getSpentAttribute(): float
+    {
+        $activities = $this->relationLoaded('activities')
+            ? $this->activities
+            : $this->activities()->with('participants')->get();
+
+        $total = 0.00;
+        foreach ($activities as $act) {
+            $total += $act->calculateTotalSpent();
+        }
+
+        return round($total, 2);
+    }
 }

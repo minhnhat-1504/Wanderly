@@ -35,7 +35,7 @@ class PdfExportService
         $trip->load([
             'owner',
             'members.user',
-            'activities',
+            'activities.participants',
             'roomBookings',
         ]);
 
@@ -47,12 +47,10 @@ class PdfExportService
         $activityDays = $this->organizeActivitiesByDay($trip);
 
         // Budget summary
-        $totalSpent = $trip->activities->sum('cost') ?? 0;
-        $roomCost = $trip->roomBookings
-            ->where('include_in_budget', true)
-            ->sum('price_per_night') ?? 0;
-        $totalCost = $totalSpent + $roomCost;
-        $remaining = (float) $trip->budget - $totalCost;
+        $budgetStatus = app(BudgetService::class)->calculateBudgetStatus($trip);
+        $activitiesCost = (float) $budgetStatus['activities_cost'];
+        $totalCost = (float) $budgetStatus['total_spent'];
+        $remaining = (float) $budgetStatus['remaining_budget'];
 
         // Trip duration
         $startDate = Carbon::parse($trip->start_date);
@@ -66,6 +64,7 @@ class PdfExportService
             'startDate' => $startDate,
             'endDate' => $endDate,
             'totalBudget' => (float) $trip->budget,
+            'activitiesCost' => $activitiesCost,
             'totalCost' => $totalCost,
             'remaining' => $remaining,
             'budgetPercentage' => $trip->budget > 0 ? min(100, round(($totalCost / $trip->budget) * 100)) : 0,

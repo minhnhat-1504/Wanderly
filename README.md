@@ -64,3 +64,64 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+---
+
+# Wanderly Verified Itinerary Architecture (34 Provinces of Vietnam)
+
+Wanderly AI Travel Assistant implements a verified, hallucination-free itinerary planning pipeline for Vietnam according to the **Resolution 202/2025/QH15** (34 official provinces and cities).
+
+### Core Principle
+> **The LLM never recalls facts from memory.** It only selects and orders places from a reviewed, verified dataset (`data/places/*.json`), and every output is checked by deterministic code before it is rendered to the user.
+
+### Key Components
+
+1. **Province Resolver (`App\Services\Itinerary\ProvinceResolver`)**
+   - Exact & accent-insensitive fuzzy matching for 34 official provincial units.
+   - Comprehensive alias map for historical merged units (e.g. Hà Tây -> Hà Nội, Quảng Nam -> Đà Nẵng).
+   - Administrative units cleaner stripping out `quận/huyện/thị xã`.
+   - Never guesses; prompts for clarification if the input is ambiguous.
+
+2. **Verified Place Dataset (`data/places/*.json` & `PlaceRepository`)**
+   - 150+ rigorously reviewed tourist destinations across key provinces (Đà Nẵng, Lâm Đồng, Quảng Ninh, Hà Nội, Khánh Hòa).
+   - Strict schema: coordinates, category, opening hours, ticket price, duration, best/avoid months, indoor flag.
+   - Excludes unverified and draft entries by default.
+   - Legal attributions: © OpenStreetMap contributors (ODbL) and Wikivoyage (CC BY-SA 4.0).
+
+3. **Travel Time & Distance Matrix (`TravelTimeService`)**
+   - Haversine great-circle formula with realistic road detour factors (1.38x).
+   - Region-specific terrain speeds: highlands/mountainous (1.35x - 1.45x) vs plains/coasts (1.20x - 1.25x).
+   - Island ferry/crossing penalties (Cù Lao Chàm, Phú Quốc, Cô Tô).
+   - Precomputation command: `php artisan travel:matrix`.
+
+4. **Weather & Season Service (`OpenMeteoWeatherService`)**
+   - Live 16-day forecast from Open-Meteo API with disk cache.
+   - Graceful fallback to regional climate hazard rules (Central storm season in Sep-Nov, North winter cold, Mekong flooding).
+   - Attribution: *Weather data by Open-Meteo.com (CC BY 4.0)*.
+
+5. **Planner with Repair Loop (`ItineraryPlannerService`)**
+   - LLM functions strictly as a selector and orderer over provided verified candidates.
+   - Repair loop retries up to 2 times with targeted validator feedback.
+   - Guaranteed deterministic greedy fallback if LLM fails or is offline.
+
+6. **Deterministic Validator (`ItineraryValidator`)**
+   - 9 deterministic rules: place existence, no duplicates, operating hours & closed days, daily travel time <= 180 min, consecutive distance <= 60 km, avoid months, weather outdoor safety, item bounds, and meal slots.
+
+7. **One-Click Trip Creation**
+   - Users can review the verified itinerary card in the AI drawer (with Google Maps links, ticket prices, hours) and click **"Tạo chuyến đi từ lịch trình này"** to generate an actual `Trip` and daily `Activity` records in Wanderly.
+
+### Artisan Commands
+```bash
+# Validate places dataset schema
+php artisan places:validate
+
+# Offline crawler to build place dataset
+php artisan places:build {province}
+
+# Precompute travel time matrix
+php artisan travel:matrix
+
+# Run evaluation harness
+php eval/run_eval.php
+```
+

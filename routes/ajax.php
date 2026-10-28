@@ -139,6 +139,8 @@ Route::middleware('auth')->group(function () {
         ->name('trips.activities.split.get');
     Route::post('/trips/{trip}/activities/{activity}/split', [SplitBillController::class, 'assignParticipants'])
         ->name('trips.activities.split.assign');
+    Route::post('/trips/{trip}/activities/{activity}/toggle-join', [SplitBillController::class, 'toggleJoin'])
+        ->name('trips.activities.toggle-join');
     Route::post('/trips/{trip}/settlements/vietqr', [SplitBillController::class, 'generateVietQr'])
         ->name('trips.settlements.vietqr');
     Route::post('/trips/{trip}/settlements/confirm', [SplitBillController::class, 'confirmPayment'])
@@ -147,11 +149,17 @@ Route::middleware('auth')->group(function () {
     // AI Co-pilot & Action Engine AJAX routes (Sprint 4 - F1)
     Route::get('/ai-copilot/messages', [AiCopilotController::class, 'getGlobalMessages'])
         ->name('ai-copilot.global-messages');
+    Route::delete('/ai-copilot/messages', [AiCopilotController::class, 'clearGlobalMessages'])
+        ->name('ai-copilot.clear-global-messages');
     Route::post('/ai-copilot/chat', [AiCopilotController::class, 'sendGlobalMessage'])
         ->name('ai-copilot.global-chat');
+    Route::post('/ai-copilot/create-trip', [AiCopilotController::class, 'createTripFromItinerary'])
+        ->name('ai-copilot.create-trip');
 
     Route::get('/trips/{trip}/ai-copilot/messages', [AiCopilotController::class, 'getMessages'])
         ->name('trips.ai-copilot.messages');
+    Route::delete('/trips/{trip}/ai-copilot/messages', [AiCopilotController::class, 'clearTripMessages'])
+        ->name('trips.ai-copilot.clear-messages');
     Route::post('/trips/{trip}/ai-copilot/chat', [AiCopilotController::class, 'sendMessage'])
         ->name('trips.ai-copilot.chat');
     Route::post('/trips/{trip}/ai-copilot/apply-action/{message}', [AiCopilotController::class, 'applyAction'])

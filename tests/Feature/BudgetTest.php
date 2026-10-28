@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Events\RoomBudgetToggled;
+use App\Models\Activity;
+use App\Models\ActivityParticipant;
 use App\Models\RoomBooking;
 use App\Models\Trip;
 use App\Models\TripMember;
@@ -284,5 +286,122 @@ class BudgetTest extends TestCase
         Event::assertDispatched(RoomBudgetToggled::class, function ($event) use ($room) {
             return $event->roomBooking->id === $room->id;
         });
+    }
+
+    public function test_activities_initial_cost_is_not_counted_until_users_choose_to_participate(): void
+    {
+        $owner = User::factory()->create();
+        $trip = Trip::factory()->create([
+            'owner_id' => $owner->id,
+            'budget' => 5000000.00,
+        ]);
+
+        Activity::factory()->create([
+            'trip_id' => $trip->id,
+            'title' => 'Bà Nà Hills',
+            'cost' => 450000.00,
+        ]);
+
+        Activity::factory()->create([
+            'trip_id' => $trip->id,
+            'title' => 'Bảo tàng Chăm',
+            'cost' => 60000.00,
+        ]);
+
+        // When initially created with no participants, cost counted toward budget must be 0!
+        $status = $this->budgetService->calculateBudgetStatus($trip);
+        $this->assertEquals(0.00, $status['activities_cost']);
+        $this->assertEquals(0.00, $status['total_spent']);
+        $this->assertEquals(5000000.00, $status['remaining_budget']);
+        $this->assertEquals(0.00, $status['percentage']);
+        $this->assertEquals(0.00, (float) $trip->spent);
+    }
+
+    public function test_activity_cost_multiplies_when_multiple_users_choose_it(): void
+    {
+        $owner = User::factory()->create();
+        $memberB = User::factory()->create();
+
+        $trip = Trip::factory()->create([
+            'owner_id' => $owner->id,
+            'budget' => 5000000.00,
+        ]);
+
+        TripMember::factory()->create([
+            'trip_id' => $trip->id,
+            'user_id' => $memberB->id,
+            'role' => 'editor',
+        ]);
+
+        $actA = Activity::factory()->create([
+            'trip_id' => $trip->id,
+            'title' => 'Vé Cáp Treo Bà Nà Hills',
+            'cost' => 450000.00,
+        ]);
+
+        // 1. Owner chooses Activity A: 1 * 450k = 450k
+        ActivityParticipant::create([
+            'activity_id' => $actA->id,
+            'user_id' => $owner->id,
+        ]);
+
+        $status1 = $this->budgetService->calculateBudgetStatus($trip);
+        $this->assertEquals(450000.00, $status1['activities_cost']);
+        $this->assertEquals(450000.00, $status1['total_spent']);
+        $this->assertEquals(4550000.00, $status1['remaining_budget']);
+
+        // 2. Member B also chooses Activity A: 2 * 450k = 900k!
+        ActivityParticipant::create([
+            'activity_id' => $actA->id,
+            'user_id' => $memberB->id,
+        ]);
+
+        $status2 = $this->budgetService->calculateBudgetStatus($trip);
+        $this->assertEquals(900000.00, $status2['activities_cost']);
+        $this->assertEquals(900000.00, $status2['total_spent']);
+        $this->assertEquals(4100000.00, $status2['remaining_budget']);
+    }
+
+    public function test_user_can_toggle_join_activity_via_ajax_endpoint_and_budget_updates(): void
+    {
+        $owner = User::factory()->create();
+        $trip = Trip::factory()->create([
+            'owner_id' => $owner->id,
+            'budget' => 2000000.00,
+        ]);
+
+        $activity = Activity::factory()->create([
+            'trip_id' => $trip->id,
+            'title' => 'Vé VinWonders Nam Hội An',
+            'cost' => 550000.00,
+        ]);
+
+        // 1. User toggles join -> joins activity
+        $response = $this->actingAs($owner)->postJson("/ajax/trips/{$trip->id}/activities/{$activity->id}/toggle-join");
+        $response->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('joined', true)
+            ->assertJsonPath('participants_count', 1)
+            ->assertJsonPath('total_spent', fn ($v) => (float) $v === 550000.0)
+            ->assertJsonPath('budget_status.total_spent', fn ($v) => (float) $v === 550000.0);
+
+        $this->assertDatabaseHas('activity_participants', [
+            'activity_id' => $activity->id,
+            'user_id' => $owner->id,
+        ]);
+
+        // 2. User toggles again -> unjoins activity
+        $response2 = $this->actingAs($owner)->postJson("/ajax/trips/{$trip->id}/activities/{$activity->id}/toggle-join");
+        $response2->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('joined', false)
+            ->assertJsonPath('participants_count', 0)
+            ->assertJsonPath('total_spent', fn ($v) => (float) $v === 0.0)
+            ->assertJsonPath('budget_status.total_spent', fn ($v) => (float) $v === 0.0);
+
+        $this->assertDatabaseMissing('activity_participants', [
+            'activity_id' => $activity->id,
+            'user_id' => $owner->id,
+        ]);
     }
 }

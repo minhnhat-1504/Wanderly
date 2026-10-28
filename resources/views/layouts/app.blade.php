@@ -296,7 +296,17 @@
 
         {{-- Global AI Copilot / Travel Assistant (Trip-scoped on trip view, Global elsewhere) --}}
         @auth
-            <x-ai-copilot-drawer :trip="$trip ?? null" />
+            @php
+                // Resolve active trip strictly from route parameter to prevent variable leakage from child view loops (e.g. @foreach($trips as $trip))
+                $routeTrip = request()->route('trip');
+                $activeTrip = null;
+                if ($routeTrip instanceof \App\Models\Trip && $routeTrip->exists) {
+                    $activeTrip = $routeTrip;
+                } elseif (is_numeric($routeTrip)) {
+                    $activeTrip = \App\Models\Trip::find($routeTrip);
+                }
+            @endphp
+            <x-ai-copilot-drawer :trip="$activeTrip" />
         @endauth
 
     </div>

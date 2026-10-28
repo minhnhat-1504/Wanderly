@@ -1,0 +1,1412 @@
+[
+    {
+        "id": "kh_001",
+        "province_code": "khanhhoa",
+        "name_vi": "Quần thể Tháp Bà Ponagar Nha Trang",
+        "name_en": "Ponagar Cham Towers",
+        "category": "culture",
+        "lat": 12.2655,
+        "lng": 109.1958,
+        "description_vi": "Di tích kiến trúc đền tháp Chăm Pa cổ kính xây dựng từ thế kỷ VIII đến XIII thờ nữ thần Yan Po Nagar, tọa lạc trên đồi Cù Lao soi bóng cửa sông Cái.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "17:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 30000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "culture",
+            "history",
+            "religion",
+            "heritage"
+        ],
+        "local_specialties": [
+            "Múa Chăm đội nước"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Có biểu diễn múa Chăm truyền thống vào các khung giờ buổi sáng và chiều.",
+        "address": "Đảo Hòn Tre, Vĩnh Nguyên, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_002",
+        "province_code": "khanhhoa",
+        "name_vi": "VinWonders Nha Trang (Hòn Tre)",
+        "name_en": "VinWonders Nha Trang Amusement Park",
+        "category": "sight",
+        "lat": 12.2185,
+        "lng": 109.2412,
+        "description_vi": "Công viên giải trí kỷ lục trên đảo Hòn Tre với cáp treo vượt biển, công viên nước trên bãi biển, vịnh phao nổi và show Tata đa phương tiện đỉnh cao.",
+        "suggested_duration_min": 360,
+        "opening_hours": {
+            "open": "08:00",
+            "close": "20:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 880000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "themepark",
+            "family",
+            "entertainment",
+            "cablecar"
+        ],
+        "local_specialties": [
+            "Buffet ẩm thực đảo"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/vinwonders.com\/vi\/vinwonders-nha-trang\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Nên dành trọn 1 ngày và ở lại xem Tata Show lúc 19:30.",
+        "address": "Đường 2 Tháng 4, Vĩnh Phước, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_003",
+        "province_code": "khanhhoa",
+        "name_vi": "Viện Hải Dương Học Nha Trang",
+        "name_en": "National Oceanographic Museum",
+        "category": "culture",
+        "lat": 12.2078,
+        "lng": 109.2152,
+        "description_vi": "Cơ sở nghiên cứu biển đầu tiên của Đông Dương thành lập năm 1922 với bể thủy cung sinh vật biển phong phú và bộ xương cá voi khổng lồ dài 26m.",
+        "suggested_duration_min": 120,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "18:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 40000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "museum",
+            "aquarium",
+            "marine",
+            "education"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "http:\/\/www.baotanghaiduonghoc.com.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Điểm tham quan giáo dục biển tuyệt vời cho cả trẻ em lẫn người lớn.",
+        "address": "01 Trần Phú, Cầu Đá, Vĩnh Nguyên, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_004",
+        "province_code": "khanhhoa",
+        "name_vi": "Chùa Long Sơn & Tượng Kim Thân Phật Tổ",
+        "name_en": "Long Son Pagoda",
+        "category": "culture",
+        "lat": 12.2505,
+        "lng": 109.1802,
+        "description_vi": "Ngôi tổ đình hơn trăm năm tuổi trên đồi Trại Thủy nổi bật với pho tượng Đức Phật trắng khổng lồ cao 24m uy nghi giữa nền trời xanh thẳm.",
+        "suggested_duration_min": 75,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "18:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "culture",
+            "religion",
+            "viewpoint",
+            "buddhism"
+        ],
+        "local_specialties": [
+            "Cơm chay chùa"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Leo 193 bậc đá lên đỉnh đồi để chiêm bái Phật và ngắm toàn cảnh thành phố.",
+        "address": "Đường Trần Phú, Lộc Thọ, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_005",
+        "province_code": "khanhhoa",
+        "name_vi": "Khu bảo tồn Đảo Hòn Mun",
+        "name_en": "Hon Mun Island Marine Protected Area",
+        "category": "nature",
+        "lat": 12.1685,
+        "lng": 109.3025,
+        "description_vi": "Thiên đường lặn biển san hô số 1 Việt Nam với vách đá đen tuyền như mun và hơn 350 loài san hô rực rỡ dưới làn nước trong vắt nhìn thấy đáy.",
+        "suggested_duration_min": 240,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "16:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 220000,
+        "best_months": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "diving",
+            "snorkeling",
+            "island",
+            "coral"
+        ],
+        "local_specialties": [
+            "Nhum biển nướng mỡ hành"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Có tour lặn bình dưỡng khí Scuba diving có huấn luyện viên kèm 1-1.",
+        "address": "01 Thái Nguyên, Phước Tân, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_006",
+        "province_code": "khanhhoa",
+        "name_vi": "Khu du lịch Đảo Hòn Tằm",
+        "name_en": "Hon Tam Island Resort & Mud Bath",
+        "category": "experience",
+        "lat": 12.1788,
+        "lng": 109.2415,
+        "description_vi": "Khu nghỉ dưỡng đảo xanh với tổ hợp tắm bùn khoáng trên đảo lớn nhất Việt Nam hướng nhìn ra vịnh Nha Trang biển ngọc.",
+        "suggested_duration_min": 240,
+        "opening_hours": {
+            "open": "08:00",
+            "close": "17:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 350000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "wellness",
+            "mudbath",
+            "island",
+            "spa"
+        ],
+        "local_specialties": [
+            "Trà gừng ấm sau tắm bùn"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/hontamresort.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Vé trọn gói đã gồm ca nô khứ hồi, tắm bùn khoáng, hồ bơi vô cực.",
+        "address": "20 Đường 23 Tháng 10, Phương Sơn, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_007",
+        "province_code": "khanhhoa",
+        "name_vi": "Thắng cảnh Hòn Chồng - Hòn Vợ",
+        "name_en": "Hon Chong Promontory",
+        "category": "sight",
+        "lat": 12.2721,
+        "lng": 109.2052,
+        "description_vi": "Quần thể khối đá lớn xếp chồng lên nhau kỳ ảo vươn ra biển với dấu bàn tay năm ngón khổng lồ in trên vách đá gắn liền truyền thuyết dân gian.",
+        "suggested_duration_min": 60,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "18:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 30000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "scenic",
+            "rocks",
+            "photography",
+            "legend"
+        ],
+        "local_specialties": [
+            "Cà phê Hội Quán Hòn Chồng"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Có biểu diễn nhạc cụ dân tộc đàn tranh, đàn đá tại nhà rường cổ.",
+        "address": "Quần thể Hòn Chồng, Vĩnh Phước, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_008",
+        "province_code": "khanhhoa",
+        "name_vi": "Bãi biển Dốc Lết",
+        "name_en": "Doc Let Beach",
+        "category": "beach",
+        "lat": 12.5685,
+        "lng": 109.2312,
+        "description_vi": "Bãi biển cát trắng tinh như tuyết, nước cạn thoai thoải trong xanh phẳng lặng lý tưởng cho trẻ nhỏ và người không biết bơi.",
+        "suggested_duration_min": 180,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "beach",
+            "swimming",
+            "sand",
+            "seafood"
+        ],
+        "local_specialties": [
+            "Hải sản tươi làng chài Dốc Lết",
+            "Mực cơm nướng"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Cách trung tâm Nha Trang 45km về phía bắc, bãi biển rất sạch và êm.",
+        "address": "Suối khoáng nóng Tháp Bà, 438 Ngô Đến, Ngọc Hiệp, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_009",
+        "province_code": "khanhhoa",
+        "name_vi": "Vịnh Vĩnh Hy (Vườn Quốc gia Núi Chúa)",
+        "name_en": "Vinh Hy Bay & Nui Chua National Park",
+        "category": "nature",
+        "lat": 11.7225,
+        "lng": 109.1985,
+        "description_vi": "Một trong bốn vịnh biển đẹp nhất Việt Nam với làn nước ngọc bích phẳng lặng được ôm trọn bởi rặng núi Chúa nguyên sinh và rạn san hô kỳ ảo.",
+        "suggested_duration_min": 240,
+        "opening_hours": {
+            "open": "06:30",
+            "close": "18:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 100000,
+        "best_months": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "bay",
+            "coral",
+            "boating",
+            "unesco"
+        ],
+        "local_specialties": [
+            "Nho Ninh Thuận",
+            "Tôm hùm Vĩnh Hy",
+            "Ốc mặt trăng"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Trải nghiệm đi tàu đáy kính ngắm san hô và tắm bãi Cóc.",
+        "address": "Vịnh Ninh Vân, Xã Ninh Phước, Ninh Hòa, Khánh Hòa"
+    },
+    {
+        "id": "kh_010",
+        "province_code": "khanhhoa",
+        "name_vi": "Tháp Po Klong Garai Phan Rang",
+        "name_en": "Po Klong Garai Cham Towers",
+        "category": "culture",
+        "lat": 11.6022,
+        "lng": 108.9485,
+        "description_vi": "Quần thể tháp Chăm hùng vĩ và nguyên vẹn nhất Việt Nam xây dựng cuối thế kỷ XIII đầu thế kỷ XIV trên đồi Trầu, kiệt tác kiến trúc gạch nung Chăm Pa.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "17:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 20000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "unesco",
+            "heritage",
+            "history",
+            "architecture"
+        ],
+        "local_specialties": [
+            "Gốm Bàu Trúc",
+            "Dệt thổ cẩm Mỹ Nghiệp"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Diễn ra lễ hội Katê lớn nhất năm của đồng bào Chăm vào tháng 7 Chăm lịch (khoảng tháng 10 dương lịch).",
+        "address": "Bán đảo Đầm Môn, Vạn Thạnh, Vạn Ninh, Khánh Hòa"
+    },
+    {
+        "id": "kh_011",
+        "province_code": "khanhhoa",
+        "name_vi": "Nem nướng Đặng Văn Quyên",
+        "name_en": "Dang Van Quyen Grilled Pork Rolls",
+        "category": "food",
+        "lat": 12.2538,
+        "lng": 109.1925,
+        "description_vi": "Quán nem nướng trứ danh đất Nha Trang, nem nướng lụi than hoa thơm lừng cuộn bánh tráng giòn rụm, xoài chua, dưa leo chấm nước sốt tương nếp gan heo bí truyền.",
+        "suggested_duration_min": 50,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "21:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 50000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "lunch",
+            "dinner",
+            "specialty",
+            "local"
+        ],
+        "local_specialties": [
+            "Nem nướng Ninh Hòa",
+            "Nem chua nướng"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Nước chấm nếp vàng sánh mịn là linh hồn tạo nên độ ngon của món ăn.",
+        "address": "Vịnh Cam Ranh, Cam Ranh, Khánh Hòa"
+    },
+    {
+        "id": "kh_012",
+        "province_code": "khanhhoa",
+        "name_vi": "Bún cá sứa Năm Beo",
+        "name_en": "Nam Beo Jellyfish Fish Noodles",
+        "category": "food",
+        "lat": 12.2572,
+        "lng": 109.1932,
+        "description_vi": "Quán bún cá sứa lâu đời gần chợ Đầm, sứa biển tươi giòn sần sật, chả cá thu chiên và hấp dai ngọt cùng nước lèo nấu từ cá dầm trong veo thanh đạm.",
+        "suggested_duration_min": 40,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "21:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 40000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "breakfast",
+            "local",
+            "seafood"
+        ],
+        "local_specialties": [
+            "Bún sứa cá dầm",
+            "Bánh canh chả cá"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Món ăn sáng giàu dinh dưỡng thanh nhiệt của người dân xứ Trầm Hương.",
+        "address": "Đảo Điệp Sơn, Vịnh Vân Phong, Vạn Ninh, Khánh Hòa"
+    },
+    {
+        "id": "kh_013",
+        "province_code": "khanhhoa",
+        "name_vi": "Bánh căn mực Út Năm",
+        "name_en": "Ut Nam Squid Can Cake",
+        "category": "food",
+        "lat": 12.2475,
+        "lng": 109.1948,
+        "description_vi": "Món bánh đổ khuôn đất nung nóng giòn nhân mực cơm nguyên con tươi rói nhai giòn ngọt, chấm nước mắm mỡ hành xíu mại hoặc mắm nêm đậm đà.",
+        "suggested_duration_min": 45,
+        "opening_hours": {
+            "open": "14:30",
+            "close": "21:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 45000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "streetfood",
+            "dinner",
+            "specialty"
+        ],
+        "local_specialties": [
+            "Bánh căn mực trứng",
+            "Bánh căn tôm thịt bò"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Ăn ngon nhất lúc bánh vừa nhấc khỏi khuôn đất còn nóng hổi.",
+        "address": "Đảo Bình Ba, Xã Cam Bình, Cam Ranh, Khánh Hòa"
+    },
+    {
+        "id": "kh_014",
+        "province_code": "khanhhoa",
+        "name_vi": "Chợ Đầm Nha Trang",
+        "name_en": "Dam Market Nha Trang",
+        "category": "market",
+        "lat": 12.2575,
+        "lng": 109.1921,
+        "description_vi": "Chợ trung tâm mang kiến trúc hình hoa sen nở độc đáo, trung tâm thương mại truyền thống sầm uất chuyên đặc sản khô và hải sản miền biển.",
+        "suggested_duration_min": 75,
+        "opening_hours": {
+            "open": "05:00",
+            "close": "18:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "market",
+            "shopping",
+            "souvenirs",
+            "local"
+        ],
+        "local_specialties": [
+            "Mực một nắng",
+            "Cá mai khô rim",
+            "Rong nho biển"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Nơi tốt nhất mua quà đặc sản Nha Trang mang về.",
+        "address": "Đảo Bình Hưng, Cam Ranh, Khánh Hòa"
+    },
+    {
+        "id": "kh_015",
+        "province_code": "khanhhoa",
+        "name_vi": "Nhà thờ Chánh Tòa Kitô Vua (Nhà thờ Đá Nha Trang)",
+        "name_en": "Stone Church Nha Trang",
+        "category": "culture",
+        "lat": 12.2478,
+        "lng": 109.1885,
+        "description_vi": "Nhà thờ Công giáo phong cách kiến trúc Gothic phương Tây cổ kính xây dựng hoàn toàn bằng đá từ năm 1928, tọa lạc trên đỉnh đồi Bông thoáng mát.",
+        "suggested_duration_min": 60,
+        "opening_hours": {
+            "open": "05:30",
+            "close": "17:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "culture",
+            "religion",
+            "architecture",
+            "vintage"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Yêu cầu trang phục nghiêm túc, không gây ồn ào giờ lễ.",
+        "address": "Thác Ba Hồ, Xã Ninh Ích, Ninh Hòa, Khánh Hòa"
+    },
+    {
+        "id": "kh_016",
+        "province_code": "khanhhoa",
+        "name_vi": "Tắm bùn khoáng nóng Tháp Bà",
+        "name_en": "Thap Ba Hot Mineral Springs",
+        "category": "experience",
+        "lat": 12.2785,
+        "lng": 109.1825,
+        "description_vi": "Khu suối khoáng nóng tiên phong dịch vụ tắm bùn khoáng tự nhiên tại Nha Trang, giúp thư giãn phục hồi sức khỏe và làm mịn da hiệu quả.",
+        "suggested_duration_min": 150,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "17:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 250000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "wellness",
+            "hotsprings",
+            "mudbath",
+            "health"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "http:\/\/tambunthapba.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Có hồ ngâm khoáng nóng thủy lực ôn tuyền thủy liệu pháp.",
+        "address": "Khu du lịch Tàu Ngầm Nha Trang, Thôn Suối Lùng, Diên Khánh, Khánh Hòa"
+    },
+    {
+        "id": "kh_017",
+        "province_code": "khanhhoa",
+        "name_vi": "Bãi Dài Cam Ranh",
+        "name_en": "Bai Dai Beach Cam Ranh",
+        "category": "beach",
+        "lat": 12.0658,
+        "lng": 109.1852,
+        "description_vi": "Bãi biển nguyên sơ dài hơn 15km với cát trắng mịn màng và mực nước biển thoai thoải, tập trung nhiều resort cao cấp nghỉ dưỡng quốc tế.",
+        "suggested_duration_min": 180,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "beach",
+            "swimming",
+            "resorts",
+            "relaxation"
+        ],
+        "local_specialties": [
+            "Sá sùng Bãi Dài",
+            "Cá mao ếch nướng"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Gần sân bay quốc tế Cam Ranh, tiện tham quan đầu hoặc cuối hành trình.",
+        "address": "Thành cổ Diên Khánh, Thị trấn Diên Khánh, Khánh Hòa"
+    },
+    {
+        "id": "kh_018",
+        "province_code": "khanhhoa",
+        "name_vi": "Đảo Điệp Sơn & Con đường đi bộ giữa biển",
+        "name_en": "Diep Son Island Sandbar",
+        "category": "experience",
+        "lat": 12.6025,
+        "lng": 109.2155,
+        "description_vi": "Con đường cát trắng tự nhiên dài gần 700m chìm dưới mặt nước biển nối liền 3 hòn đảo nhỏ trong vịnh Vân Phong, trải nghiệm đi bộ giữa lòng đại dương.",
+        "suggested_duration_min": 240,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "16:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 200000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11,
+            12
+        ],
+        "indoor": false,
+        "tags": [
+            "island",
+            "sandbar",
+            "nature",
+            "unique"
+        ],
+        "local_specialties": [
+            "Bánh xèo mực Điệp Sơn",
+            "Hàu sữa nướng"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Con đường cát lộ rõ nhất khi thủy triều rút vào buổi sáng từ tháng 1 đến tháng 8.",
+        "address": "Bãi Dài, Cam Hải Đông, Cam Lâm, Khánh Hòa"
+    },
+    {
+        "id": "kh_019",
+        "province_code": "khanhhoa",
+        "name_vi": "Vườn nho Ba Mọi Ninh Thuận",
+        "name_en": "Ba Moi Vineyard",
+        "category": "experience",
+        "lat": 11.5845,
+        "lng": 108.9212,
+        "description_vi": "Vườn nho sinh thái mẫu mực của nông dân Ba Mọi, nơi du khách tự tay cắt chùm nho chín mọng và thưởng thức mật nho, rượu vang nho miễn phí.",
+        "suggested_duration_min": 75,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "17:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            8,
+            9,
+            12
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "vineyard",
+            "grapes",
+            "farm",
+            "tasting"
+        ],
+        "local_specialties": [
+            "Nho đỏ Red Cardinal",
+            "Nho xanh NH01-48",
+            "Rượu vang nho"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Miễn phí vé vào cổng và thử rượu vang nho.",
+        "address": "Hòn Mun, Vịnh Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_020",
+        "province_code": "khanhhoa",
+        "name_vi": "Đồi Cát Nam Cương Phan Rang",
+        "name_en": "Nam Cuong Sand Dunes",
+        "category": "nature",
+        "lat": 11.5325,
+        "lng": 108.9958,
+        "description_vi": "Đồi cát đỏ mịn màng trải dài như dải lụa mềm bay trong gió Nam Trung Bộ, nét đẹp thanh bình hoang sơ của làng Chăm An Hải.",
+        "suggested_duration_min": 75,
+        "opening_hours": null,
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "nature",
+            "desert",
+            "sunset",
+            "sunrise"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Khung giờ đẹp nhất là 05:30 sáng hoặc 16:30 chiều ngắm các cô gái Chăm đội thúng đi trên đồi cát.",
+        "address": "Hòn Tằm, Vịnh Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_021",
+        "province_code": "khanhhoa",
+        "name_vi": "Làng gốm Bàu Trúc",
+        "name_en": "Bau Truc Pottery Village",
+        "category": "culture",
+        "lat": 11.5185,
+        "lng": 108.9325,
+        "description_vi": "Làng gốm cổ xưa nhất Đông Nam Á của người Chăm được UNESCO ghi danh Di sản Văn hóa phi vật thể, nung thủ công lộ thiên bằng rơm rạ không dùng bàn xoay.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "17:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "unesco",
+            "pottery",
+            "culture",
+            "crafts"
+        ],
+        "local_specialties": [
+            "Bình gốm phong thủy Chăm"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Du khách được nghệ nhân hướng dẫn tự tay nặn gốm theo ý thích.",
+        "address": "Bún cá Mịn, 170 Bạch Đằng, Tân Lập, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_022",
+        "province_code": "khanhhoa",
+        "name_vi": "Quán Cà phê Bốn Mùa (Four Seasons E-Coffee)",
+        "name_en": "Four Seasons Cafe Nha Trang",
+        "category": "cafe",
+        "lat": 12.2415,
+        "lng": 109.1975,
+        "description_vi": "Quán cà phê sát bãi biển trên đại lộ Trần Phú với không gian mở thoáng đãng đón gió đại dương, ngắm bình minh trên vịnh biển tuyệt mỹ.",
+        "suggested_duration_min": 60,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "22:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 50000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "cafe",
+            "beachfront",
+            "sunrise",
+            "relaxation"
+        ],
+        "local_specialties": [
+            "Cà phê muối Nha Trang",
+            "Nước dừa tươi"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Ngồi đón gió biển sáng sớm ngắm người dân tập thể dục tắm biển.",
+        "address": "Nem nướng Đặng Văn Quyên, 16A Lãn Ông, Xương Huân, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_023",
+        "province_code": "khanhhoa",
+        "name_vi": "Bảo tàng Alexandre Yersin",
+        "name_en": "Alexandre Yersin Museum",
+        "category": "culture",
+        "lat": 12.2518,
+        "lng": 109.1982,
+        "description_vi": "Nơi lưu giữ các kỷ vật, kính hiển vi và tư liệu quý giá của nhà bác học vĩ đại người Pháp - người đã cống hiến trọn đời cho y học và vùng đất Nha Trang.",
+        "suggested_duration_min": 60,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "17:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 25000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "history",
+            "science",
+            "museum",
+            "education"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Nằm trong khuôn viên Viện Pasteur Nha Trang.",
+        "address": "Bánh căn 51 Tô Hiến Thành, Tân Lập, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_024",
+        "province_code": "khanhhoa",
+        "name_vi": "Đảo Khỉ & Đảo Hoa Lan (Vịnh Nha Phu)",
+        "name_en": "Monkey Island & Orchid Island",
+        "category": "sight",
+        "lat": 12.3842,
+        "lng": 109.1985,
+        "description_vi": "Vương quốc của hơn 1.200 chú khỉ sinh sống tự nhiên trên đảo và thung lũng hoa lan rừng khoe sắc bên bãi tắm An Bình thanh bình.",
+        "suggested_duration_min": 240,
+        "opening_hours": {
+            "open": "07:30",
+            "close": "16:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 220000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "island",
+            "nature",
+            "animals",
+            "family"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Không nên cầm đồ ăn lộ liễu để tránh khỉ giật đồ.",
+        "address": "Hải sản Thanh Sương, 21 Trần Phú, Vĩnh Nguyên, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_025",
+        "province_code": "khanhhoa",
+        "name_vi": "Hải sản Bờ Kè Tháp Bà",
+        "name_en": "Thap Ba Embankment Seafood",
+        "category": "food",
+        "lat": 12.2612,
+        "lng": 109.1988,
+        "description_vi": "Khu phố hải sản bình dân nằm dọc kè sông Cái lộng gió, hải sản ghe cập bến tươi sống giá cả phải chăng.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "11:00",
+            "close": "23:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 200000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "food",
+            "dinner",
+            "seafood",
+            "riverview"
+        ],
+        "local_specialties": [
+            "Tôm hùm baby nướng phô mai",
+            "Ốc hương xào bơ tỏi",
+            "Cá bò hòm nướng"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Nên hỏi giá theo kg trước khi chế biến.",
+        "address": "Quán Cà phê Bốn Mùa, Đường Trần Phú, Lộc Thọ, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_026",
+        "province_code": "khanhhoa",
+        "name_vi": "Bánh xèo mực chảo Tô Hiến Thành",
+        "name_en": "To Hien Thanh Squid Pancakes",
+        "category": "food",
+        "lat": 12.2412,
+        "lng": 109.1912,
+        "description_vi": "Bánh xèo giòn rụm đúc chảo gang với nhân mực sữa nguyên con béo bùi còn nguyên túi mực đen óng, ăn kèm rau sống cải xanh chấm mắm ớt chua ngọt.",
+        "suggested_duration_min": 45,
+        "opening_hours": {
+            "open": "15:00",
+            "close": "21:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 40000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "streetfood",
+            "dinner",
+            "local"
+        ],
+        "local_specialties": [
+            "Bánh xèo mực sữa",
+            "Bánh xèo tôm nhảy"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Món ăn xế chiều khoái khẩu của giới trẻ Nha Trang.",
+        "address": "Chợ Đầm, Vạn Thạnh, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_027",
+        "province_code": "khanhhoa",
+        "name_vi": "Chợ Đêm Nha Trang",
+        "name_en": "Nha Trang Night Market",
+        "category": "market",
+        "lat": 12.2405,
+        "lng": 109.1955,
+        "description_vi": "Phố đi bộ chợ đêm sôi động nằm ngay góc đường Trần Phú và Hùng Vương, bán đồ lưu niệm vỏ sò ốc, quần áo đi biển và đồ ăn vặt hấp dẫn.",
+        "suggested_duration_min": 60,
+        "opening_hours": {
+            "open": "18:00",
+            "close": "23:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 0,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": false,
+        "tags": [
+            "market",
+            "nightlife",
+            "shopping",
+            "souvenirs"
+        ],
+        "local_specialties": [
+            "Kem cuộn Thái Lan",
+            "Mực nướng xiên que"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Thuận tiện dạo bộ sau bữa tối ven biển.",
+        "address": "Chợ đêm Nha Trang, Trần Phú, Lộc Thọ, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_028",
+        "province_code": "khanhhoa",
+        "name_vi": "Đồng Cừu An Hòa Phan Rang",
+        "name_en": "An Hoa Sheep Farm",
+        "category": "experience",
+        "lat": 11.6358,
+        "lng": 108.9725,
+        "description_vi": "Thảo nguyên cừu rộng lớn hàng nghìn con chăn thả tự do trên đồng cỏ xanh thơ mộng, bức tranh du mục độc đáo giữa nắng gió Ninh Thuận.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "17:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 20000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "farm",
+            "animals",
+            "sheep",
+            "photography"
+        ],
+        "local_specialties": [
+            "Thịt cừu nướng Ninh Thuận"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Thời gian cừu ra đồng đông nhất từ 07:30 - 09:30 sáng và 15:30 - 17:00 chiều.",
+        "address": "Tháp Trầm Hương, Quảng trường 2 Tháng 4, Lộc Thọ, Nha Trang, Khánh Hòa"
+    },
+    {
+        "id": "kh_029",
+        "province_code": "khanhhoa",
+        "name_vi": "Hang Rái (Vườn Quốc gia Núi Chúa)",
+        "name_en": "Hang Rai Coral Reef",
+        "category": "nature",
+        "lat": 11.7058,
+        "lng": 109.1825,
+        "description_vi": "Rạn san hô cổ hàng triệu năm tuổi nổi lên trên mặt biển tựa như thác nước trên đại dương khi sóng tràn qua thềm đá vôi kỳ ảo.",
+        "suggested_duration_min": 90,
+        "opening_hours": {
+            "open": "06:00",
+            "close": "18:00"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 30000,
+        "best_months": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+        ],
+        "avoid_months": [
+            10,
+            11
+        ],
+        "indoor": false,
+        "tags": [
+            "nature",
+            "coral",
+            "photography",
+            "sunrise"
+        ],
+        "local_specialties": [],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Thiên đường chụp ảnh bình minh siêu thực cho các nhiếp ảnh gia.",
+        "address": "Đảo Khỉ Hòn Lao, Vịnh Nha Phu, Ninh Hòa, Khánh Hòa"
+    },
+    {
+        "id": "kh_030",
+        "province_code": "khanhhoa",
+        "name_vi": "Cơm gà xé Phan Rang Khánh Kỳ",
+        "name_en": "Khanh Ky Phan Rang Chicken Rice",
+        "category": "food",
+        "lat": 11.5725,
+        "lng": 108.9882,
+        "description_vi": "Món cơm gà luộc chặt miếng thịt vàng ươm dai ngọt chấm cùng 4 loại nước chấm đặc biệt: nước hèm rượu, mắm ớt gừng, nước mắm tỏi ớt và muối tiêu chanh.",
+        "suggested_duration_min": 45,
+        "opening_hours": {
+            "open": "07:00",
+            "close": "21:30"
+        },
+        "closed_days": [],
+        "ticket_price_vnd": 50000,
+        "best_months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+        ],
+        "avoid_months": [],
+        "indoor": true,
+        "tags": [
+            "food",
+            "lunch",
+            "dinner",
+            "specialty"
+        ],
+        "local_specialties": [
+            "Cơm gà chặt miếng",
+            "Lòng gà xào hành tây"
+        ],
+        "source": "curated",
+        "source_url": "https:\/\/khanhhoa.gov.vn\/",
+        "last_verified": "2026-10-28",
+        "verified": true,
+        "notes": "Thịt gà thả vườn vùng đất cát đầm chắc, da giòn sần sật.",
+        "address": "Suối Hoa Lan, Bán đảo Hòn Hèo, Ninh Hòa, Khánh Hòa"
+    }
+]

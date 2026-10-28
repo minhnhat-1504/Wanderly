@@ -47,8 +47,8 @@
                             }
                         });
                     } else {
-                        // Default: all members participate, equal split
-                        this.selectedMembers = this.allMembers.map(m => m.id);
+                        // Default: no members selected initially until members choose
+                        this.selectedMembers = [];
                         this.splitType = 'equal';
                         this.customAmounts = {};
                     }
@@ -91,12 +91,7 @@
         },
 
         async saveSplit() {
-            if (this.selectedMembers.length === 0) {
-                this.errorMessage = '{{ __('Please select at least one participant.') }}';
-                return;
-            }
-
-            if (this.splitType === 'custom') {
+            if (this.splitType === 'custom' && this.selectedMembers.length > 0) {
                 const diff = Math.abs(this.customTotal - this.activityCost);
                 if (diff > 1) { // 1 VND tolerance
                     this.errorMessage = `{{ __('Total allocated amount (:allocated) does not match activity cost (:cost).') }}`
@@ -111,7 +106,7 @@
 
             try {
                 const payload = {
-                    payer_id: this.payerId,
+                    payer_id: this.selectedMembers.length > 0 ? this.payerId : null,
                     user_ids: this.selectedMembers,
                     custom_amounts: this.splitType === 'custom' ? this.customAmounts : null
                 };
@@ -132,9 +127,11 @@
                     window.dispatchEvent(new CustomEvent('activity-split-updated', {
                         detail: {
                             activityId: this.activityId,
-                            splitDetails: data.split_details
+                            splitDetails: data.split_details,
+                            totalSpent: data.total_spent
                         }
                     }));
+                    window.dispatchEvent(new CustomEvent('budget-recalculate'));
                 } else {
                     this.errorMessage = data.message || '{{ __('Failed to update split-bill.') }}';
                 }

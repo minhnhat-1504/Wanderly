@@ -1,0 +1,410 @@
+[
+  {
+    "code": "hanoi",
+    "name": "TP. Hà Nội",
+    "aliases": ["Ha Noi", "Hà Nội", "Hanoi", "Thủ đô Hà Nội", "Thủ đô", "HN", "Ha Dong", "Hà Đông", "Son Tay", "Sơn Tây", "Hà Tây", "Ha Tay"],
+    "region": "red_river",
+    "centroid": { "lat": 21.0285, "lng": 105.8542 },
+    "season_notes": {
+      "best_months": [9, 10, 11, 2, 3, 4],
+      "avoid_months": [6, 7],
+      "note": "Mùa thu (tháng 9-11) đẹp và mát mẻ nhất; mùa hè nóng ẩm; mùa đông hanh khô lạnh."
+    }
+  },
+  {
+    "code": "haiphong",
+    "name": "Hải Phòng",
+    "aliases": ["Hai Phong", "Hải Phòng", "Thành phố Cảng", "Đất Cảng", "Hai Duong", "Hải Dương", "Cat Ba", "Cát Bà", "Do Son", "Đồ Sơn", "Bach Long Vi", "Bạch Long Vĩ"],
+    "region": "red_river",
+    "centroid": { "lat": 20.8449, "lng": 106.6881 },
+    "season_notes": {
+      "best_months": [4, 5, 6, 9, 10],
+      "avoid_months": [7, 8],
+      "note": "Mùa du lịch biển đảo Cát Bà từ tháng 4-10; đề phòng bão lũ tháng 7-8."
+    }
+  },
+  {
+    "code": "quangninh",
+    "name": "Quảng Ninh",
+    "aliases": ["Quang Ninh", "Quảng Ninh", "Ha Long", "Hạ Long", "Vịnh Hạ Long", "Bai Tu Long", "Bái Tử Long", "Co To", "Cô Tô", "Van Don", "Vân Đồn", "Yen Tu", "Yên Tử", "Mong Cai", "Móng Cái"],
+    "region": "red_river",
+    "centroid": { "lat": 21.0064, "lng": 107.2925 },
+    "season_notes": {
+      "best_months": [3, 4, 5, 9, 10, 11],
+      "avoid_months": [7, 8],
+      "note": "Mùa xuân và thu thời tiết êm dịu thích hợp du thuyền vịnh Hạ Long; tháng 7-8 hay có bão."
+    }
+  },
+  {
+    "code": "ninhbinh",
+    "name": "Ninh Bình",
+    "aliases": ["Ninh Binh", "Ninh Bình", "Ha Nam", "Hà Nam", "Nam Dinh", "Nam Định", "Trang An", "Tràng An", "Tam Coc", "Tam Cốc", "Bai Dinh", "Bái Đính", "Phu Ly", "Phủ Lý"],
+    "region": "red_river",
+    "centroid": { "lat": 20.2506, "lng": 105.9745 },
+    "season_notes": {
+      "best_months": [1, 2, 3, 5, 6, 9, 10],
+      "avoid_months": [7, 8],
+      "note": "Mùa lúa chín Tam Cốc tháng 5-6; lễ hội mùa xuân tháng 1-3."
+    }
+  },
+  {
+    "code": "hungyen",
+    "name": "Hưng Yên",
+    "aliases": ["Hung Yen", "Hưng Yên", "Thai Binh", "Thái Bình", "Pho Hien", "Phố Hiến", "Dong Chau", "Đồng Châu", "Con Vanh", "Cồn Vành"],
+    "region": "red_river",
+    "centroid": { "lat": 20.6464, "lng": 106.0511 },
+    "season_notes": {
+      "best_months": [2, 3, 8, 9, 10],
+      "avoid_months": [6, 7],
+      "note": "Mùa nhãn lồng tháng 8-9; du lịch làng nghề văn hóa quanh năm."
+    }
+  },
+  {
+    "code": "bacninh",
+    "name": "Bắc Ninh",
+    "aliases": ["Bac Ninh", "Bắc Ninh", "Bac Giang", "Bắc Giang", "Kinh Bac", "Kinh Bắc", "Quan ho", "Quan họ", "Dong Ho", "Đông Hồ", "Tay Yen Tu", "Tây Yên Tử"],
+    "region": "red_river",
+    "centroid": { "lat": 21.1861, "lng": 106.0763 },
+    "season_notes": {
+      "best_months": [1, 2, 3, 6, 9, 10],
+      "avoid_months": [],
+      "note": "Mùa lễ hội vùng Kinh Bắc tháng 1-3 âm lịch; mùa vải thiều tháng 6."
+    }
+  },
+  {
+    "code": "phutho",
+    "name": "Phú Thọ",
+    "aliases": ["Phu Tho", "Phú Thọ", "Vinh Phuc", "Vĩnh Phúc", "Hoa Binh", "Hòa Bình", "Den Hung", "Đền Hùng", "Tam Dao", "Tam Đảo", "Tay Thien", "Tây Thiên", "Mai Chau", "Mai Châu", "Thung Nai", "Thung Nai"],
+    "region": "north_mountain",
+    "centroid": { "lat": 21.3228, "lng": 105.2280 },
+    "season_notes": {
+      "best_months": [3, 4, 9, 10, 11, 12],
+      "avoid_months": [7, 8],
+      "note": "Giỗ tổ Hùng Vương tháng 3 âm lịch; Tam Đảo và Mai Châu mát mẻ quanh năm."
+    }
+  },
+  {
+    "code": "thainguyen",
+    "name": "Thái Nguyên",
+    "aliases": ["Thai Nguyen", "Thái Nguyên", "Bac Kan", "Bắc Kạn", "Ba Be", "Ba Bể", "Hồ Ba Bể", "Ho Ba Be", "Che Thai Nguyen", "Chè Thái Nguyên"],
+    "region": "north_mountain",
+    "centroid": { "lat": 21.5942, "lng": 105.8482 },
+    "season_notes": {
+      "best_months": [4, 5, 8, 9, 10, 11],
+      "avoid_months": [6, 7],
+      "note": "Khám phá Hồ Ba Bể mùa thu nước trong xanh mát mẻ; đồi chè Tân Cương quanh năm."
+    }
+  },
+  {
+    "code": "laocai",
+    "name": "Lào Cai",
+    "aliases": ["Lao Cai", "Lào Cai", "Sa Pa", "Sapa", "Fansipan", "Phan Xi Păng", "Yen Bai", "Yên Bái", "Mu Cang Chai", "Mù Cang Chải", "Y Ty", "Y Tý", "Bac Ha", "Bắc Hà"],
+    "region": "north_mountain",
+    "centroid": { "lat": 22.4856, "lng": 103.9707 },
+    "season_notes": {
+      "best_months": [3, 4, 9, 10, 11, 12],
+      "avoid_months": [7, 8],
+      "note": "Mùa lúa chín tháng 9-10; mùa săn mây và hoa đào tháng 11-3; tránh mưa sạt lở đèo tháng 7-8."
+    }
+  },
+  {
+    "code": "tuyenquang",
+    "name": "Tuyên Quang",
+    "aliases": ["Tuyen Quang", "Tuyên Quang", "Ha Giang", "Hà Giang", "Dong Van", "Đồng Văn", "Meo Vac", "Mèo Vạc", "Ma Pi Leng", "Mã Pí Lèng", "Hoang Su Phi", "Hoàng Su Phì", "Na Hang", "Nà Hang"],
+    "region": "north_mountain",
+    "centroid": { "lat": 21.8236, "lng": 105.2180 },
+    "season_notes": {
+      "best_months": [9, 10, 11, 12, 1, 2, 3],
+      "avoid_months": [6, 7, 8],
+      "note": "Mùa hoa tam giác mạch và lúa chín tháng 9-11; mùa đông đèo dốc lạnh; tránh mưa lũ tháng 6-8."
+    }
+  },
+  {
+    "code": "caobang",
+    "name": "Cao Bằng",
+    "aliases": ["Cao Bang", "Cao Bằng", "Ban Gioc", "Bản Giốc", "Thac Ban Gioc", "Thác Bản Giốc", "Pac Bo", "Pác Bó", "Nui Thung", "Núi Thủng", "Non Nuoc Cao Bang", "Non Nước Cao Bằng"],
+    "region": "north_mountain",
+    "centroid": { "lat": 22.6666, "lng": 106.2639 },
+    "season_notes": {
+      "best_months": [8, 9, 10, 11, 12],
+      "avoid_months": [6, 7],
+      "note": "Thác Bản Giốc đẹp nhất mùa nước tháng 8-11; mùa hoa tam giác mạch tháng 11."
+    }
+  },
+  {
+    "code": "langson",
+    "name": "Lạng Sơn",
+    "aliases": ["Lang Son", "Lạng Sơn", "Mau Son", "Mẫu Sơn", "Dong Dang", "Đồng Đăng", "Chi Lang", "Chi Lăng", "Huu Nghi", "Hữu Nghị"],
+    "region": "north_mountain",
+    "centroid": { "lat": 21.8537, "lng": 106.7615 },
+    "season_notes": {
+      "best_months": [1, 2, 9, 10, 11, 12],
+      "avoid_months": [6, 7],
+      "note": "Săn tuyết đỉnh Mẫu Sơn mùa đông tháng 12-1; mùa hồng và lúa tháng 9-10."
+    }
+  },
+  {
+    "code": "dienbien",
+    "name": "Điện Biên",
+    "aliases": ["Dien Bien", "Điện Biên", "Dien Bien Phu", "Điện Biên Phủ", "Muong Thanh", "Mường Thanh", "A Pa Chai", "A Pa Chải", "Pha Din", "Pha Đin"],
+    "region": "north_mountain",
+    "centroid": { "lat": 21.3860, "lng": 103.0234 },
+    "season_notes": {
+      "best_months": [3, 4, 5, 9, 10, 11],
+      "avoid_months": [7, 8],
+      "note": "Mùa hoa ban tháng 3; kỷ niệm chiến thắng Điện Biên Phủ tháng 5; mùa lúa vàng tháng 9-10."
+    }
+  },
+  {
+    "code": "laichau",
+    "name": "Lai Châu",
+    "aliases": ["Lai Chau", "Lai Châu", "Sin Ho", "Sìn Hồ", "O Quy Ho", "Ô Quy Hồ", "Pu Si Lung", "Pú Si Lung", "Bach Moc Luong Tu", "Bạch Mộc Lương Tử"],
+    "region": "north_mountain",
+    "centroid": { "lat": 22.3963, "lng": 103.4678 },
+    "season_notes": {
+      "best_months": [9, 10, 11, 12, 1, 2, 3],
+      "avoid_months": [6, 7, 8],
+      "note": "Mùa trekking đèo Ô Quy Hồ và đỉnh Bạch Mộc Lương Tử từ tháng 10-4; tránh mùa lũ tháng 6-8."
+    }
+  },
+  {
+    "code": "sonla",
+    "name": "Sơn La",
+    "aliases": ["Son La", "Sơn La", "Moc Chau", "Mộc Châu", "Ta Xua", "Tà Xùa", "Bac Yen", "Bắc Yên", "Thuy Dien Son La", "Thủy Điện Sơn La"],
+    "region": "north_mountain",
+    "centroid": { "lat": 21.3283, "lng": 103.9148 },
+    "season_notes": {
+      "best_months": [10, 11, 12, 1, 2, 3, 4],
+      "avoid_months": [7, 8],
+      "note": "Săn mây Tà Xùa tháng 10-4; mùa hoa mận và hoa cải Mộc Châu tháng 11-2."
+    }
+  },
+  {
+    "code": "thanhhoa",
+    "name": "Thanh Hóa",
+    "aliases": ["Thanh Hoa", "Thanh Hóa", "Sam Son", "Sầm Sơn", "Pu Luong", "Pù Luông", "Hai Tien", "Hải Tiến", "Lam Kinh", "Lam Kinh", "Thanh Nha Ho", "Thành Nhà Hồ"],
+    "region": "north_central",
+    "centroid": { "lat": 19.8067, "lng": 105.7852 },
+    "season_notes": {
+      "best_months": [4, 5, 6, 9, 10],
+      "avoid_months": [7, 8],
+      "note": "Pù Luông mùa lúa chín tháng 5-6 và 9-10; du lịch biển Sầm Sơn từ tháng 4-7."
+    }
+  },
+  {
+    "code": "nghean",
+    "name": "Nghệ An",
+    "aliases": ["Nghe An", "Nghệ An", "Cua Lo", "Cửa Lò", "Vinh", "TP Vinh", "Nam Dan", "Nam Đàn", "Que Bac", "Quê Bác", "Pu Mat", "Pù Mát"],
+    "region": "north_central",
+    "centroid": { "lat": 19.2342, "lng": 104.9200 },
+    "season_notes": {
+      "best_months": [3, 4, 5, 6, 9],
+      "avoid_months": [7, 8, 10],
+      "note": "Mùa du lịch biển Cửa Lò tháng 4-7; thăm làng Sen quê Bác tháng 3-5; tháng 10 hay có mưa bão."
+    }
+  },
+  {
+    "code": "hatinh",
+    "name": "Hà Tĩnh",
+    "aliases": ["Ha Tinh", "Hà Tĩnh", "Thien Cam", "Thiên Cầm", "Nga Ba Dong Loc", "Ngã Ba Đồng Lộc", "Huong Tich", "Hương Tích", "Song La", "Sông La"],
+    "region": "north_central",
+    "centroid": { "lat": 18.3560, "lng": 105.9059 },
+    "season_notes": {
+      "best_months": [4, 5, 6, 7],
+      "avoid_months": [9, 10, 11],
+      "note": "Biển Thiên Cầm đẹp nhất từ tháng 4-7; mùa bão lũ lớn tập trung tháng 9-11."
+    }
+  },
+  {
+    "code": "quangtri",
+    "name": "Quảng Trị",
+    "aliases": ["Quang Tri", "Quảng Trị", "Quang Binh", "Quảng Bình", "Phong Nha", "Phong Nha Ke Bang", "Phong Nha Kẻ Bàng", "Son Doong", "Sơn Đoòng", "Dong Hoi", "Đồng Hới", "Cua Tung", "Cửa Tùng", "Thanh Co", "Thành Cổ"],
+    "region": "north_central",
+    "centroid": { "lat": 16.7500, "lng": 107.1855 },
+    "season_notes": {
+      "best_months": [3, 4, 5, 6, 7, 8],
+      "avoid_months": [9, 10, 11],
+      "note": "Mùa khám phá hang động Phong Nha tháng 3-8 khô ráo; tránh tháng 9-11 mùa bão ngập lụt."
+    }
+  },
+  {
+    "code": "hue",
+    "name": "TP. Huế",
+    "aliases": ["Hue", "Huế", "TP Huế", "Thua Thien Hue", "Thừa Thiên Huế", "Co Do Hue", "Cố Đô Huế", "Dai Noi", "Đại Nội", "Lang Co", "Lăng Cô"],
+    "region": "north_central",
+    "centroid": { "lat": 16.4637, "lng": 107.5909 },
+    "season_notes": {
+      "best_months": [1, 2, 3, 4, 5],
+      "avoid_months": [9, 10, 11, 12],
+      "note": "Festival Huế mùa xuân tháng 2-4 thời tiết mát; mùa mưa dầm và bão tập trung tháng 9-12."
+    }
+  },
+  {
+    "code": "danang",
+    "name": "Đà Nẵng",
+    "aliases": ["Da Nang", "Đà Nẵng", "Danang", "Quang Nam", "Quảng Nam", "Hoi An", "Hội An", "Ba Na Hills", "Bà Nà Hills", "Son Tra", "Sơn Trà", "My Khe", "Mỹ Khê", "Ngu Hanh Son", "Ngũ Hành Sơn", "Cu Lao Cham", "Cù Lao Chàm"],
+    "region": "central_coast",
+    "centroid": { "lat": 16.0544, "lng": 108.2022 },
+    "season_notes": {
+      "best_months": [2, 3, 4, 5, 6, 7, 8],
+      "avoid_months": [9, 10, 11],
+      "note": "Mùa khô biển đẹp và lễ hội pháo hoa quốc tế tháng 3-8; mùa mưa bão lớn tháng 9-11."
+    }
+  },
+  {
+    "code": "quangngai",
+    "name": "Quảng Ngãi",
+    "aliases": ["Quang Ngai", "Quảng Ngãi", "Kon Tum", "Kon Tum", "Ly Son", "Lý Sơn", "Mang Den", "Măng Đen", "My Khe Quang Ngai", "Mỹ Khê Quảng Ngãi"],
+    "region": "central_coast",
+    "centroid": { "lat": 15.1205, "lng": 108.7923 },
+    "season_notes": {
+      "best_months": [3, 4, 5, 6, 7, 8],
+      "avoid_months": [9, 10, 11],
+      "note": "Đảo Lý Sơn biển êm xanh ngắt từ tháng 4-8; Măng Đen mát mẻ quanh năm; tháng 9-11 biển động tàu cấm chạy."
+    }
+  },
+  {
+    "code": "gialai",
+    "name": "Gia Lai",
+    "aliases": ["Gia Lai", "Gia Lai", "Binh Dinh", "Bình Định", "Quy Nhon", "Quy Nhơn", "Ky Co", "Kỳ Co", "Eo Gio", "Eo Gió", "Pleiku", "Pleiku", "Bien Ho", "Biển Hồ"],
+    "region": "central_coast",
+    "centroid": { "lat": 13.9833, "lng": 108.0000 },
+    "season_notes": {
+      "best_months": [2, 3, 4, 5, 6, 7, 8],
+      "avoid_months": [9, 10, 11],
+      "note": "Biển Quy Nhơn Kỳ Co đẹp từ tháng 3-8; cao nguyên Pleiku ngắm dã quỳ tháng 11-12."
+    }
+  },
+  {
+    "code": "khanhhoa",
+    "name": "Khánh Hòa",
+    "aliases": ["Khanh Hoa", "Khánh Hòa", "Nha Trang", "Nha Trang", "Ninh Thuan", "Ninh Thuận", "Phan Rang", "Phan Rang", "Cam Ranh", "Cam Ranh", "Vinh Hy", "Vĩnh Hy", "Binh Ba", "Bình Ba", "Binh Lap", "Bình Lập", "Diep Son", "Điệp Sơn"],
+    "region": "central_coast",
+    "centroid": { "lat": 12.2388, "lng": 109.1967 },
+    "season_notes": {
+      "best_months": [1, 2, 3, 4, 5, 6, 7, 8],
+      "avoid_months": [10, 11],
+      "note": "Nha Trang và Vĩnh Hy nắng ấm biển êm hầu như quanh năm; mùa mưa ngắn vào tháng 10-11."
+    }
+  },
+  {
+    "code": "daklak",
+    "name": "Đắk Lắk",
+    "aliases": ["Dak Lak", "Đắk Lắk", "Phu Yen", "Phú Yên", "Tuy Hoa", "Tuy Hòa", "Ganh Da Dia", "Gành Đá Đĩa", "Buon Ma Thuot", "Buôn Ma Thuột", "Ho Lak", "Hồ Lắk", "Ban Don", "Bản Đôn"],
+    "region": "central_highlands",
+    "centroid": { "lat": 12.6667, "lng": 108.0500 },
+    "season_notes": {
+      "best_months": [1, 2, 3, 4, 5, 12],
+      "avoid_months": [9, 10, 11],
+      "note": "Mùa hoa cà phê Buôn Ma Thuột tháng 2-3; biển Phú Yên tháng 3-8; mùa mưa Tây Nguyên tháng 5-10."
+    }
+  },
+  {
+    "code": "lamdong",
+    "name": "Lâm Đồng",
+    "aliases": ["Lam Dong", "Lâm Đồng", "Da Lat", "Đà Lạt", "Dalat", "Dak Nong", "Đắk Nông", "Binh Thuan", "Bình Thuận", "Phan Thiet", "Phan Thiết", "Mui Ne", "Mũi Né", "Bao Loc", "Bảo Lộc", "Ta Dung", "Tà Đùng"],
+    "region": "central_highlands",
+    "centroid": { "lat": 11.9404, "lng": 108.4583 },
+    "season_notes": {
+      "best_months": [11, 12, 1, 2, 3, 4],
+      "avoid_months": [7, 8, 9],
+      "note": "Đà Lạt se lạnh mùa hoa tháng 11-3; Mũi Né nắng ấm quanh năm; hồ Tà Đùng đẹp nhất mùa tích nước tháng 9-12."
+    }
+  },
+  {
+    "code": "tphcm",
+    "name": "TP. Hồ Chí Minh",
+    "aliases": ["TP.HCM", "TP HCM", "Ho Chi Minh", "Hồ Chí Minh", "Sai Gon", "Sài Gòn", "Saigon", "Ba Ria", "Bà Rịa", "Vung Tau", "Vũng Tàu", "Binh Duong", "Bình Dương", "Con Dao", "Côn Đảo"],
+    "region": "southeast",
+    "centroid": { "lat": 10.8231, "lng": 106.6297 },
+    "season_notes": {
+      "best_months": [12, 1, 2, 3, 4],
+      "avoid_months": [],
+      "note": "Mùa khô tháng 12-4 thích hợp khám phá đô thị và tắm biển Vũng Tàu; mùa mưa từ tháng 5-11 thường mưa rào nhanh tạnh."
+    }
+  },
+  {
+    "code": "dongnai",
+    "name": "Đồng Nai",
+    "aliases": ["Dong Nai", "Đồng Nai", "Binh Phuoc", "Bình Phước", "Bien Hoa", "Biên Hòa", "Nam Cat Tien", "Nam Cát Tiên", "Cat Tien", "Cát Tiên", "Dong Xoai", "Đồng Xoài", "Bu Gia Map", "Bù Gia Mập"],
+    "region": "southeast",
+    "centroid": { "lat": 10.9574, "lng": 106.8427 },
+    "season_notes": {
+      "best_months": [11, 12, 1, 2, 3, 4, 5],
+      "avoid_months": [7, 8],
+      "note": "Vườn quốc gia Cát Tiên mùa bướm và khô ráo tháng 12-5; mùa mưa đường rừng lầy lội."
+    }
+  },
+  {
+    "code": "tayninh",
+    "name": "Tây Ninh",
+    "aliases": ["Tay Ninh", "Tây Ninh", "Long An", "Long An", "Nui Ba Den", "Núi Bà Đen", "Toa Thanh", "Tòa Thánh", "Lang Sen", "Làng Sen", "Tan An", "Tân An"],
+    "region": "southeast",
+    "centroid": { "lat": 11.3351, "lng": 106.1099 },
+    "season_notes": {
+      "best_months": [11, 12, 1, 2, 3, 4],
+      "avoid_months": [8, 9],
+      "note": "Hội xuân núi Bà Đen tháng 1-3 âm lịch; ngắm mây đỉnh núi Bà Đen quanh năm."
+    }
+  },
+  {
+    "code": "cantho",
+    "name": "Cần Thơ",
+    "aliases": ["Can Tho", "Cần Thơ", "Tay Do", "Tây Đô", "Cai Rang", "Cái Răng", "Cho Noi Cai Rang", "Chợ Nổi Cái Răng", "Soc Trang", "Sóc Trăng", "Hau Giang", "Hậu Giang", "Vi Thanh", "Vị Thanh"],
+    "region": "mekong",
+    "centroid": { "lat": 10.0452, "lng": 105.7469 },
+    "season_notes": {
+      "best_months": [1, 2, 3, 4, 5, 9, 10, 11],
+      "avoid_months": [],
+      "note": "Mùa nước nổi miền Tây tháng 9-11; mùa trái cây miệt vườn trĩu quả tháng 5-8."
+    }
+  },
+  {
+    "code": "vinhlong",
+    "name": "Vĩnh Long",
+    "aliases": ["Vinh Long", "Vĩnh Long", "Ben Tre", "Bến Tre", "Xu Dua", "Xứ Dừa", "Tra Vinh", "Trà Vinh", "Ba Om", "Bà Om", "Cu Lao An Binh", "Cù Lao An Bình"],
+    "region": "mekong",
+    "centroid": { "lat": 10.2537, "lng": 105.9722 },
+    "season_notes": {
+      "best_months": [12, 1, 2, 3, 4, 5, 6, 7],
+      "avoid_months": [],
+      "note": "Du lịch sinh thái cù lao sông nước và vườn cây ăn trái sum suê quanh năm."
+    }
+  },
+  {
+    "code": "dongthap",
+    "name": "Đồng Tháp",
+    "aliases": ["Dong Thap", "Đồng Tháp", "Tien Giang", "Tiền Giang", "My Tho", "Mỹ Tho", "Sa Dec", "Sa Đéc", "Lang Hoa Sa Dec", "Làng Hoa Sa Đéc", "Tram Chim", "Tràm Chim", "Gao Giong", "Gáo Giồng", "Thoi Son", "Thới Sơn"],
+    "region": "mekong",
+    "centroid": { "lat": 10.4578, "lng": 105.6334 },
+    "season_notes": {
+      "best_months": [9, 10, 11, 12, 1],
+      "avoid_months": [],
+      "note": "Làng hoa Sa Đéc rực rỡ dịp cận Tết tháng 12-1; Vườn quốc gia Tràm Chim mùa nước nổi tháng 9-11."
+    }
+  },
+  {
+    "code": "angiang",
+    "name": "An Giang",
+    "aliases": ["An Giang", "An Giang", "Chau Doc", "Châu Đốc", "Mieu Ba Chua Xu", "Miếu Bà Chúa Xứ", "Tra Su", "Trà Sư", "Rung Tram Tra Su", "Rừng Tràm Trà Sư", "Kien Giang", "Kiên Giang", "Phu Quoc", "Phú Quốc", "Rach Gia", "Rạch Giá", "Ha Tien", "Hà Tiên", "Nam Du", "Nam Du"],
+    "region": "mekong",
+    "centroid": { "lat": 10.3759, "lng": 105.4185 },
+    "season_notes": {
+      "best_months": [11, 12, 1, 2, 3, 4],
+      "avoid_months": [7, 8, 9],
+      "note": "Thiên đường biển đảo Phú Quốc biển êm nắng vàng từ tháng 11-4; mùa bèo cám rừng tràm Trà Sư tháng 9-11; tránh mùa mưa biển động tháng 7-9."
+    }
+  },
+  {
+    "code": "camau",
+    "name": "Cà Mau",
+    "aliases": ["Ca Mau", "Cà Mau", "Dat Mui", "Đất Mũi", "Mui Ca Mau", "Mũi Cà Mau", "U Minh Ha", "U Minh Hạ", "Bac Lieu", "Bạc Liêu", "Cong Tu Bac Lieu", "Công Tử Bạc Liêu"],
+    "region": "mekong",
+    "centroid": { "lat": 9.1769, "lng": 105.1524 },
+    "season_notes": {
+      "best_months": [12, 1, 2, 3, 4],
+      "avoid_months": [8, 9, 10],
+      "note": "Mùa khô tháng 12-4 thích hợp chinh phục cột mốc cực Nam Tổ quốc Đất Mũi và rừng ngập mặn."
+    }
+  }
+]

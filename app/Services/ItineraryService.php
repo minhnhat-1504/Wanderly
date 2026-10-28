@@ -16,12 +16,24 @@ class ItineraryService
      */
     public const TIME_SLOTS = ['morning', 'midday', 'afternoon', 'evening'];
 
+    /**
+     * Standard time boundaries for each timeslot.
+     *
+     * @var array<string, array{start: string, end: string}>
+     */
+    public const SLOT_BOUNDS = [
+        'morning' => ['start' => '06:00', 'end' => '11:00'],
+        'midday' => ['start' => '11:00', 'end' => '14:00'],
+        'afternoon' => ['start' => '14:00', 'end' => '18:00'],
+        'evening' => ['start' => '18:00', 'end' => '23:59'],
+    ];
+
     public function __construct(
         protected TripService $tripService
     ) {}
 
     /**
-     * Group all activities of a trip by day and time slot, ordered by position.
+     * Group all activities of a trip by day and time slot, ordered by start_time ascending.
      *
      * @return array<int, array<string, Collection<int, Activity>>>
      */
@@ -29,8 +41,8 @@ class ItineraryService
     {
         $tripDays = $this->tripService->calculateTripDays($trip);
         $activities = $trip->activities()
+            ->orderByRaw('CASE WHEN start_time IS NULL THEN 1 ELSE 0 END, start_time ASC')
             ->orderBy('position', 'asc')
-            ->orderBy('start_time', 'asc')
             ->get();
 
         $timeline = [];
@@ -40,6 +52,18 @@ class ItineraryService
             foreach (self::TIME_SLOTS as $slot) {
                 $timeline[$day][$slot] = $activities->filter(function (Activity $act) use ($day, $slot) {
                     return (int) $act->day === $day && $act->time_slot === $slot;
+                })->sort(function (Activity $a, Activity $b) {
+                    if ($a->start_time && $b->start_time) {
+                        return strcmp((string) $a->start_time, (string) $b->start_time);
+                    }
+                    if ($a->start_time) {
+                        return -1;
+                    }
+                    if ($b->start_time) {
+                        return 1;
+                    }
+
+                    return $a->position <=> $b->position;
                 })->values();
             }
         }
@@ -155,12 +179,14 @@ class ItineraryService
         $data['trip_id'] = $trip->id;
         $activity = Activity::create($data);
 
+        $this->resequenceSlotPositions($trip, (int) $activity->day, $activity->time_slot);
+
         $eventClass = '\App\Events\ActivityCostChanged';
         if (class_exists($eventClass)) {
             event(new $eventClass($trip));
         }
 
-        return $activity;
+        return $activity->fresh();
     }
 
     /**
@@ -170,14 +196,42 @@ class ItineraryService
      */
     public function updateActivity(Activity $activity, array $data): Activity
     {
+        $oldDay = (int) $activity->day;
+        $oldSlot = $activity->time_slot;
+
         $activity->update($data);
+
+        $this->resequenceSlotPositions($activity->trip, (int) $activity->day, $activity->time_slot);
+        if ($oldDay !== (int) $activity->day || $oldSlot !== $activity->time_slot) {
+            $this->resequenceSlotPositions($activity->trip, $oldDay, $oldSlot);
+        }
 
         $eventClass = '\App\Events\ActivityCostChanged';
         if (class_exists($eventClass)) {
             event(new $eventClass($activity->trip));
         }
 
-        return $activity;
+        return $activity->fresh();
+    }
+
+    /**
+     * Automatically resequence activity positions in a slot so earlier start_times come first.
+     */
+    public function resequenceSlotPositions(Trip $trip, int $day, string $slot): void
+    {
+        $slotActivities = $trip->activities()
+            ->where('day', $day)
+            ->where('time_slot', $slot)
+            ->orderByRaw('CASE WHEN start_time IS NULL THEN 1 ELSE 0 END, start_time ASC')
+            ->orderBy('position', 'asc')
+            ->orderBy('id', 'asc')
+            ->get();
+
+        foreach ($slotActivities as $index => $act) {
+            if ($act->position !== $index) {
+                $act->update(['position' => $index]);
+            }
+        }
     }
 
     /**

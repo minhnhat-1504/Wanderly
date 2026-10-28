@@ -305,7 +305,20 @@
 
         $activitiesGrouped = [];
         if (isset($trip->activities)) {
-            foreach ($trip->activities as $act) {
+            $sortedActs = $trip->activities->sort(function ($a, $b) {
+                if ($a->start_time && $b->start_time) {
+                    return strcmp((string) $a->start_time, (string) $b->start_time);
+                }
+                if ($a->start_time) {
+                    return -1;
+                }
+                if ($b->start_time) {
+                    return 1;
+                }
+
+                return $a->position <=> $b->position;
+            });
+            foreach ($sortedActs as $act) {
                 $activitiesGrouped[$act->day][$act->time_slot][] = $act;
             }
         }
@@ -415,32 +428,68 @@
                                 <span class="text-xs font-medium text-gray-400 pl-4 md:pl-4">06:00 – 11:00</span>
                             </div>
 
-                            <div class="flex-1 min-w-0">
+                            <div class="flex-1 min-w-0" x-data="{ expanded: false }">
                                 <div
                                     class="timeline-slot-container space-y-3 min-h-[56px]"
                                     data-day="{{ $d }}"
                                     data-slot="morning"
                                 >
-                                    @php $morningActs = $activitiesGrouped[$d]['morning'] ?? []; @endphp
-                                    @foreach($morningActs as $act)
-                                        <x-activity-card :activity="$act" :can-edit="$canEdit" />
+                                    @php
+                                        $morningActs = $activitiesGrouped[$d]['morning'] ?? [];
+                                        $countMorning = count($morningActs);
+                                    @endphp
+                                    @foreach($morningActs as $idx => $act)
+                                        <x-activity-card
+                                            :activity="$act"
+                                            :can-edit="$canEdit"
+                                            x-show="expanded || {{ $idx < 2 ? 'true' : 'false' }}"
+                                            x-cloak="{{ $idx >= 2 ? 'true' : 'false' }}"
+                                        />
                                     @endforeach
 
                                     @if($canEdit)
                                         <div
-                                            class="slot-empty-placeholder {{ count($morningActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-12 border border-dashed border-gray-300 rounded-xl text-xs font-medium text-gray-500 hover:border-teal-600 hover:text-teal-700 hover:bg-teal-50/20 transition cursor-pointer"
+                                            class="slot-empty-placeholder {{ $countMorning > 0 ? 'hidden' : 'flex' }} items-center justify-center h-12 border border-dashed border-gray-300 rounded-xl text-xs font-medium text-gray-500 hover:border-teal-600 hover:text-teal-700 hover:bg-teal-50/20 transition cursor-pointer"
                                             @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'morning' })"
                                         >
                                             <span>+ {{ __('Add Activity') }}</span>
                                         </div>
                                     @else
                                         <div
-                                            class="slot-empty-placeholder {{ count($morningActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-10 border border-dashed border-gray-200 rounded-xl text-xs text-gray-400 select-none"
+                                            class="slot-empty-placeholder {{ $countMorning > 0 ? 'hidden' : 'flex' }} items-center justify-center h-10 border border-dashed border-gray-200 rounded-xl text-xs text-gray-400 select-none"
                                         >
                                             <span>{{ __('No activities scheduled') }}</span>
                                         </div>
                                     @endif
                                 </div>
+
+                                {{-- Show All / Hide Button & Quick Add --}}
+                                @if($countMorning > 0)
+                                    <div class="mt-2.5 flex items-center justify-between gap-2 flex-wrap">
+                                        @if($countMorning > 2)
+                                            <button
+                                                type="button"
+                                                @click="expanded = !expanded"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200/80 transition"
+                                            >
+                                                <span x-show="!expanded">{{ __('Show all (:count activities)', ['count' => $countMorning]) }} &darr;</span>
+                                                <span x-show="expanded" x-cloak>{{ __('Hide (Show 2 only)') }} &uarr;</span>
+                                            </button>
+                                        @else
+                                            <div></div>
+                                        @endif
+
+                                        @if($canEdit)
+                                            <button
+                                                type="button"
+                                                @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'morning' })"
+                                                class="inline-flex items-center gap-1 text-xs font-semibold text-teal-700 hover:text-teal-900 hover:underline py-1 px-2 rounded-md hover:bg-teal-50/50 transition"
+                                            >
+                                                <span>+ {{ __('Add Activity') }}</span>
+                                            </button>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -454,32 +503,68 @@
                                 <span class="text-xs font-medium text-gray-400 pl-4 md:pl-4">11:00 – 14:00</span>
                             </div>
 
-                            <div class="flex-1 min-w-0">
+                            <div class="flex-1 min-w-0" x-data="{ expanded: false }">
                                 <div
                                     class="timeline-slot-container space-y-3 min-h-[56px]"
                                     data-day="{{ $d }}"
                                     data-slot="midday"
                                 >
-                                    @php $middayActs = $activitiesGrouped[$d]['midday'] ?? []; @endphp
-                                    @foreach($middayActs as $act)
-                                        <x-activity-card :activity="$act" :can-edit="$canEdit" />
+                                    @php
+                                        $middayActs = $activitiesGrouped[$d]['midday'] ?? [];
+                                        $countMidday = count($middayActs);
+                                    @endphp
+                                    @foreach($middayActs as $idx => $act)
+                                        <x-activity-card
+                                            :activity="$act"
+                                            :can-edit="$canEdit"
+                                            x-show="expanded || {{ $idx < 2 ? 'true' : 'false' }}"
+                                            x-cloak="{{ $idx >= 2 ? 'true' : 'false' }}"
+                                        />
                                     @endforeach
 
                                     @if($canEdit)
                                         <div
-                                            class="slot-empty-placeholder {{ count($middayActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-12 border border-dashed border-gray-300 rounded-xl text-xs font-medium text-gray-500 hover:border-teal-600 hover:text-teal-700 hover:bg-teal-50/20 transition cursor-pointer"
+                                            class="slot-empty-placeholder {{ $countMidday > 0 ? 'hidden' : 'flex' }} items-center justify-center h-12 border border-dashed border-gray-300 rounded-xl text-xs font-medium text-gray-500 hover:border-teal-600 hover:text-teal-700 hover:bg-teal-50/20 transition cursor-pointer"
                                             @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'midday' })"
                                         >
                                             <span>+ {{ __('Add Activity') }}</span>
                                         </div>
                                     @else
                                         <div
-                                            class="slot-empty-placeholder {{ count($middayActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-10 border border-dashed border-gray-200 rounded-xl text-xs text-gray-400 select-none"
+                                            class="slot-empty-placeholder {{ $countMidday > 0 ? 'hidden' : 'flex' }} items-center justify-center h-10 border border-dashed border-gray-200 rounded-xl text-xs text-gray-400 select-none"
                                         >
                                             <span>{{ __('No activities scheduled') }}</span>
                                         </div>
                                     @endif
                                 </div>
+
+                                {{-- Show All / Hide Button & Quick Add --}}
+                                @if($countMidday > 0)
+                                    <div class="mt-2.5 flex items-center justify-between gap-2 flex-wrap">
+                                        @if($countMidday > 2)
+                                            <button
+                                                type="button"
+                                                @click="expanded = !expanded"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200/80 transition"
+                                            >
+                                                <span x-show="!expanded">{{ __('Show all (:count activities)', ['count' => $countMidday]) }} &darr;</span>
+                                                <span x-show="expanded" x-cloak>{{ __('Hide (Show 2 only)') }} &uarr;</span>
+                                            </button>
+                                        @else
+                                            <div></div>
+                                        @endif
+
+                                        @if($canEdit)
+                                            <button
+                                                type="button"
+                                                @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'midday' })"
+                                                class="inline-flex items-center gap-1 text-xs font-semibold text-teal-700 hover:text-teal-900 hover:underline py-1 px-2 rounded-md hover:bg-teal-50/50 transition"
+                                            >
+                                                <span>+ {{ __('Add Activity') }}</span>
+                                            </button>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -493,32 +578,68 @@
                                 <span class="text-xs font-medium text-gray-400 pl-4 md:pl-4">14:00 – 18:00</span>
                             </div>
 
-                            <div class="flex-1 min-w-0">
+                            <div class="flex-1 min-w-0" x-data="{ expanded: false }">
                                 <div
                                     class="timeline-slot-container space-y-3 min-h-[56px]"
                                     data-day="{{ $d }}"
                                     data-slot="afternoon"
                                 >
-                                    @php $afternoonActs = $activitiesGrouped[$d]['afternoon'] ?? []; @endphp
-                                    @foreach($afternoonActs as $act)
-                                        <x-activity-card :activity="$act" :can-edit="$canEdit" />
+                                    @php
+                                        $afternoonActs = $activitiesGrouped[$d]['afternoon'] ?? [];
+                                        $countAfternoon = count($afternoonActs);
+                                    @endphp
+                                    @foreach($afternoonActs as $idx => $act)
+                                        <x-activity-card
+                                            :activity="$act"
+                                            :can-edit="$canEdit"
+                                            x-show="expanded || {{ $idx < 2 ? 'true' : 'false' }}"
+                                            x-cloak="{{ $idx >= 2 ? 'true' : 'false' }}"
+                                        />
                                     @endforeach
 
                                     @if($canEdit)
                                         <div
-                                            class="slot-empty-placeholder {{ count($afternoonActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-12 border border-dashed border-gray-300 rounded-xl text-xs font-medium text-gray-500 hover:border-teal-600 hover:text-teal-700 hover:bg-teal-50/20 transition cursor-pointer"
+                                            class="slot-empty-placeholder {{ $countAfternoon > 0 ? 'hidden' : 'flex' }} items-center justify-center h-12 border border-dashed border-gray-300 rounded-xl text-xs font-medium text-gray-500 hover:border-teal-600 hover:text-teal-700 hover:bg-teal-50/20 transition cursor-pointer"
                                             @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'afternoon' })"
                                         >
                                             <span>+ {{ __('Add Activity') }}</span>
                                         </div>
                                     @else
                                         <div
-                                            class="slot-empty-placeholder {{ count($afternoonActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-10 border border-dashed border-gray-200 rounded-xl text-xs text-gray-400 select-none"
+                                            class="slot-empty-placeholder {{ $countAfternoon > 0 ? 'hidden' : 'flex' }} items-center justify-center h-10 border border-dashed border-gray-200 rounded-xl text-xs text-gray-400 select-none"
                                         >
                                             <span>{{ __('No activities scheduled') }}</span>
                                         </div>
                                     @endif
                                 </div>
+
+                                {{-- Show All / Hide Button & Quick Add --}}
+                                @if($countAfternoon > 0)
+                                    <div class="mt-2.5 flex items-center justify-between gap-2 flex-wrap">
+                                        @if($countAfternoon > 2)
+                                            <button
+                                                type="button"
+                                                @click="expanded = !expanded"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200/80 transition"
+                                            >
+                                                <span x-show="!expanded">{{ __('Show all (:count activities)', ['count' => $countAfternoon]) }} &darr;</span>
+                                                <span x-show="expanded" x-cloak>{{ __('Hide (Show 2 only)') }} &uarr;</span>
+                                            </button>
+                                        @else
+                                            <div></div>
+                                        @endif
+
+                                        @if($canEdit)
+                                            <button
+                                                type="button"
+                                                @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'afternoon' })"
+                                                class="inline-flex items-center gap-1 text-xs font-semibold text-teal-700 hover:text-teal-900 hover:underline py-1 px-2 rounded-md hover:bg-teal-50/50 transition"
+                                            >
+                                                <span>+ {{ __('Add Activity') }}</span>
+                                            </button>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -532,32 +653,68 @@
                                 <span class="text-xs font-medium text-gray-400 pl-4 md:pl-4">18:00 – 23:00</span>
                             </div>
 
-                            <div class="flex-1 min-w-0">
+                            <div class="flex-1 min-w-0" x-data="{ expanded: false }">
                                 <div
                                     class="timeline-slot-container space-y-3 min-h-[56px]"
                                     data-day="{{ $d }}"
                                     data-slot="evening"
                                 >
-                                    @php $eveningActs = $activitiesGrouped[$d]['evening'] ?? []; @endphp
-                                    @foreach($eveningActs as $act)
-                                        <x-activity-card :activity="$act" :can-edit="$canEdit" />
+                                    @php
+                                        $eveningActs = $activitiesGrouped[$d]['evening'] ?? [];
+                                        $countEvening = count($eveningActs);
+                                    @endphp
+                                    @foreach($eveningActs as $idx => $act)
+                                        <x-activity-card
+                                            :activity="$act"
+                                            :can-edit="$canEdit"
+                                            x-show="expanded || {{ $idx < 2 ? 'true' : 'false' }}"
+                                            x-cloak="{{ $idx >= 2 ? 'true' : 'false' }}"
+                                        />
                                     @endforeach
 
                                     @if($canEdit)
                                         <div
-                                            class="slot-empty-placeholder {{ count($eveningActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-12 border border-dashed border-gray-300 rounded-xl text-xs font-medium text-gray-500 hover:border-teal-600 hover:text-teal-700 hover:bg-teal-50/20 transition cursor-pointer"
+                                            class="slot-empty-placeholder {{ $countEvening > 0 ? 'hidden' : 'flex' }} items-center justify-center h-12 border border-dashed border-gray-300 rounded-xl text-xs font-medium text-gray-500 hover:border-teal-600 hover:text-teal-700 hover:bg-teal-50/20 transition cursor-pointer"
                                             @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'evening' })"
                                         >
                                             <span>+ {{ __('Add Activity') }}</span>
                                         </div>
                                     @else
                                         <div
-                                            class="slot-empty-placeholder {{ count($eveningActs) > 0 ? 'hidden' : 'flex' }} items-center justify-center h-10 border border-dashed border-gray-200 rounded-xl text-xs text-gray-400 select-none"
+                                            class="slot-empty-placeholder {{ $countEvening > 0 ? 'hidden' : 'flex' }} items-center justify-center h-10 border border-dashed border-gray-200 rounded-xl text-xs text-gray-400 select-none"
                                         >
                                             <span>{{ __('No activities scheduled') }}</span>
                                         </div>
                                     @endif
                                 </div>
+
+                                {{-- Show All / Hide Button & Quick Add --}}
+                                @if($countEvening > 0)
+                                    <div class="mt-2.5 flex items-center justify-between gap-2 flex-wrap">
+                                        @if($countEvening > 2)
+                                            <button
+                                                type="button"
+                                                @click="expanded = !expanded"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200/80 transition"
+                                            >
+                                                <span x-show="!expanded">{{ __('Show all (:count activities)', ['count' => $countEvening]) }} &darr;</span>
+                                                <span x-show="expanded" x-cloak>{{ __('Hide (Show 2 only)') }} &uarr;</span>
+                                            </button>
+                                        @else
+                                            <div></div>
+                                        @endif
+
+                                        @if($canEdit)
+                                            <button
+                                                type="button"
+                                                @click="$dispatch('open-activity-modal', { mode: 'create', day: {{ $d }}, time_slot: 'evening' })"
+                                                class="inline-flex items-center gap-1 text-xs font-semibold text-teal-700 hover:text-teal-900 hover:underline py-1 px-2 rounded-md hover:bg-teal-50/50 transition"
+                                            >
+                                                <span>+ {{ __('Add Activity') }}</span>
+                                            </button>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -638,7 +795,7 @@
     {{-- ================================================================
          5. MODALS & DRAWERS (Preserved 100% logic and functionality)
     ================================================================= --}}
-    @include('trips.partials.activity-modal', ['trip' => $trip, 'tripDays' => $tripDays, 'canEdit' => $canEdit])
+    @include('trips.partials.activity-modal', ['trip' => $trip, 'tripDays' => $tripDays, 'canEdit' => $canEdit, 'allActivities' => $trip->activities])
     @include('trips.partials.room-drawer', ['trip' => $trip, 'canEdit' => $canEdit])
     @include('trips.partials.budget-override-modal')
     @include('trips.partials.checklist-drawer', ['trip' => $trip, 'canEdit' => $canEdit])
