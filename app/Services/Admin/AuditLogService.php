@@ -20,17 +20,23 @@ class AuditLogService
         User $admin,
         string $action,
         ?Model $subject = null,
-        array $old = [],
-        array $new = [],
-        ?string $ip = null
+        array $oldValues = [],
+        array $newValues = [],
+        ?string $ip = null,
+        array $metadata = []
     ): AuditLog {
+        $finalNew = $newValues;
+        if (! empty($metadata)) {
+            $finalNew = array_merge($finalNew, ['_metadata' => $metadata]);
+        }
+
         return AuditLog::create([
             'admin_id' => $admin->id,
             'action' => $action,
             'subject_type' => $subject ? get_class($subject) : null,
             'subject_id' => $subject?->getKey(),
-            'old_values' => ! empty($old) ? $old : null,
-            'new_values' => ! empty($new) ? $new : null,
+            'old_values' => ! empty($oldValues) ? $oldValues : null,
+            'new_values' => ! empty($finalNew) ? $finalNew : null,
             'ip_address' => $ip ?? request()->ip(),
         ]);
     }

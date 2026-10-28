@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminAuditLogController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDestinationController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -183,8 +184,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
 
+        // Users Management (Module 1)
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/{id}', [AdminUserController::class, 'show'])->name('users.show');
+        Route::post('/users/{user}/role', [AdminUserController::class, 'changeRole'])->name('users.role');
+        Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');
+        Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])->name('users.unsuspend');
+        Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+        Route::post('/users/{id}/restore', [AdminUserController::class, 'restore'])->name('users.restore');
+
         // Module route placeholders (to be expanded in subsequent steps)
-        Route::get('/users', fn () => redirect()->route('admin.dashboard'))->name('users.index');
         Route::get('/moderation', fn () => redirect()->route('admin.dashboard'))->name('moderation.index');
         Route::get('/broadcasts', fn () => redirect()->route('admin.dashboard'))->name('broadcasts.index');
         Route::get('/backups', fn () => redirect()->route('admin.dashboard'))->name('backups.index');

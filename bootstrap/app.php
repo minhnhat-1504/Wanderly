@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnsureAdmin;
 use App\Http\Middleware\EnsureEmailIsVerified;
+use App\Http\Middleware\EnsureNotSuspended;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->web(append: [
             SetLocale::class,
+            EnsureNotSuspended::class,
         ]);
 
         $middleware->alias([

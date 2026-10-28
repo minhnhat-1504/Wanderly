@@ -23,6 +23,12 @@ class NotificationService
 
     const TYPE_POST_LIKE = 'post_like';
 
+    const TYPE_ACCOUNT_SUSPENDED = 'account_suspended';
+
+    const TYPE_ACCOUNT_UNSUSPENDED = 'account_unsuspended';
+
+    const TYPE_ROLE_CHANGED = 'role_changed';
+
     const TYPE_GENERAL = 'general';
 
     /**
@@ -112,6 +118,48 @@ class NotificationService
             __(':name liked your post', ['name' => $likerName]),
             __('":title" is getting popular!', ['title' => $postTitle]),
             $postUrl,
+        );
+    }
+
+    /**
+     * Notify user that their account was suspended.
+     */
+    public function notifyAccountSuspended(User $user, string $reason): Notification
+    {
+        return $this->notify(
+            $user,
+            self::TYPE_ACCOUNT_SUSPENDED,
+            __('Account Suspended'),
+            __('Your account has been suspended. Reason: :reason', ['reason' => $reason]),
+            null,
+        );
+    }
+
+    /**
+     * Notify user that their account was unsuspended.
+     */
+    public function notifyAccountUnsuspended(User $user): Notification
+    {
+        return $this->notify(
+            $user,
+            self::TYPE_ACCOUNT_UNSUSPENDED,
+            __('Account Restored'),
+            __('Your account suspension has been lifted. Welcome back to Wanderly!'),
+            null,
+        );
+    }
+
+    /**
+     * Notify user that their account role has changed.
+     */
+    public function notifyRoleChanged(User $user, string $newRole): Notification
+    {
+        return $this->notify(
+            $user,
+            self::TYPE_ROLE_CHANGED,
+            __('Role Updated'),
+            __('Your account role has been updated to :role.', ['role' => ucfirst($newRole)]),
+            null,
         );
     }
 
