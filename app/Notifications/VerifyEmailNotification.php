@@ -3,13 +3,14 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
 
-class VerifyEmailNotification extends Notification
+class VerifyEmailNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -31,14 +32,14 @@ class VerifyEmailNotification extends Notification
         $verificationUrl = $this->verificationUrl($notifiable);
 
         return (new MailMessage)
-            ->subject('Xác thực địa chỉ Email của bạn - Wanderly')
-            ->greeting('Xin chào ' . ($notifiable->name ?? 'Bạn') . '!')
-            ->line('Chào mừng bạn đến với Wanderly - Nền tảng lập kế hoạch và đồng hành du lịch thông minh.')
-            ->line('Vui lòng bấm vào nút bên dưới để xác thực địa chỉ email và bắt đầu tạo các hành trình du lịch tuyệt vời cùng bạn bè:')
-            ->action('Xác thực Email ngay', $verificationUrl)
-            ->line('Link xác thực này sẽ hết hạn sau 60 phút.')
-            ->line('Nếu bạn không đăng ký tài khoản Wanderly, bạn hoàn toàn có thể bỏ qua email này.')
-            ->salutation('Trân trọng, Đội ngũ Wanderly');
+            ->subject('Verify Your Email Address — Wanderly')
+            ->greeting('Hello ' . ($notifiable->name ?? 'there') . '!')
+            ->line('Welcome to Wanderly — your smart travel planning companion.')
+            ->line('Please click the button below to verify your email address and start exploring or planning memorable journeys with friends:')
+            ->action('Verify Email Address', $verificationUrl)
+            ->line('This verification link will expire in 60 minutes.')
+            ->line('If you did not create an account on Wanderly, no further action is required.')
+            ->salutation('Warm regards, The Wanderly Team');
     }
 
     /**
