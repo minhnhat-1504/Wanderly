@@ -9,6 +9,7 @@ use App\Models\Trip;
 use App\Models\TripMember;
 use App\Services\ActionEngineService;
 use App\Services\AiCopilotService;
+use App\Services\TripService;
 use App\Services\WeatherAdaptiveService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +21,8 @@ class AiCopilotController extends Controller
     public function __construct(
         protected AiCopilotService $aiCopilotService,
         protected ActionEngineService $actionEngineService,
-        protected WeatherAdaptiveService $weatherService
+        protected WeatherAdaptiveService $weatherService,
+        protected TripService $tripService
     ) {}
 
     /**
@@ -245,9 +247,8 @@ class AiCopilotController extends Controller
         $startDate = ! empty($validated['start_date']) ? Carbon::parse($validated['start_date']) : Carbon::tomorrow();
         $endDate = $startDate->copy()->addDays($dayCount - 1);
 
-        // 1. Create Trip
-        $trip = Trip::create([
-            'owner_id' => $user->id,
+        // 1. Create Trip using TripService (automatically sets leader role)
+        $trip = $this->tripService->createTrip([
             'name' => 'Chuyến đi ' . ($province['name'] ?? 'Việt Nam') . " ({$dayCount} ngày)",
             'destination' => $province['name'] ?? 'Việt Nam',
             'start_date' => $startDate->toDateString(),
@@ -255,16 +256,9 @@ class AiCopilotController extends Controller
             'budget' => 2000000 * $dayCount,
             'privacy' => 'private',
             'status' => 'planning',
-        ]);
+        ], $user);
 
-        // 2. Add owner as member
-        TripMember::create([
-            'trip_id' => $trip->id,
-            'user_id' => $user->id,
-            'role' => 'owner',
-        ]);
-
-        // 3. Create activities for each day
+        // 2. Create activities for each day with strict enum mappings
         foreach ($days as $dayData) {
             $dayNum = (int) ($dayData['day'] ?? 1);
             $items = $dayData['items'] ?? [];
@@ -282,14 +276,27 @@ class AiCopilotController extends Controller
                 $endH = floor($endTotalMinutes / 60) % 24;
                 $endM = $endTotalMinutes % 60;
                 $endTimeStr = sprintf('%02d:%02d', $endH, $endM);
+                $formattedStartTime = sprintf('%02d:%02d', $startH, $startM);
 
-                // Determine time slot
+                // Map time slot enum: ['morning', 'midday', 'afternoon', 'evening']
                 $timeSlot = 'morning';
-                if ($startH >= 12 && $startH < 17) {
+                if ($startH >= 11 && $startH < 14) {
+                    $timeSlot = 'midday';
+                } elseif ($startH >= 14 && $startH < 18) {
                     $timeSlot = 'afternoon';
-                } elseif ($startH >= 17) {
+                } elseif ($startH >= 18) {
                     $timeSlot = 'evening';
                 }
+
+                // Map category enum: ['sightseeing', 'dining', 'cafe', 'shopping', 'entertainment', 'other']
+                $rawCategory = $place['category'] ?? '';
+                $category = match ($rawCategory) {
+                    'food' => 'dining',
+                    'cafe' => 'cafe',
+                    'market' => 'shopping',
+                    'entertainment', 'experience' => 'entertainment',
+                    default => 'sightseeing',
+                };
 
                 $ticketPrice = 0;
                 $rawPrice = $place['ticket_price_vnd'] ?? null;
@@ -306,11 +313,11 @@ class AiCopilotController extends Controller
                     'trip_id' => $trip->id,
                     'day' => $dayNum,
                     'time_slot' => $timeSlot,
-                    'start_time' => $startTimeStr,
+                    'start_time' => $formattedStartTime,
                     'end_time' => $endTimeStr,
                     'title' => $place['name_vi'] ?? $item['activity'] ?? 'Điểm tham quan',
                     'cost' => $ticketPrice,
-                    'category' => $place['category'] ?? 'sight',
+                    'category' => $category,
                     'location' => $place['name_vi'] ?? ($province['name'] ?? ''),
                     'address' => $place['google_maps_url'] ?? '',
                     'notes' => trim(($item['note'] ?? '') . $hoursNote),
