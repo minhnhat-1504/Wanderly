@@ -1,9 +1,16 @@
 @props(['trip' => null])
 
 @php
-    $isTrip = ($trip instanceof \App\Models\Trip);
+    $isTrip = ($trip instanceof \App\Models\Trip && $trip->exists);
+    // Double check that we are not leaking a loop variable if on a non-trip route
+    if ($isTrip && !request()->route('trip') && !request()->routeIs('trips.show')) {
+        $isTrip = false;
+        $trip = null;
+    }
     $tripIdVal = $isTrip ? $trip->id : 'null';
     $isGlobal = !$isTrip;
+    // Only elevate the floating button if we are on a page with other floating action bubbles (trips.show)
+    $hasFloatingStack = $isTrip && request()->routeIs('trips.show');
 @endphp
 
 <div x-data="aiCopilotDrawer({ tripId: {{ $tripIdVal }} })"
@@ -19,7 +26,7 @@
          x-transition:leave="transition-all ease-in duration-150"
          x-transition:leave-start="opacity-100 scale-100"
          x-transition:leave-end="opacity-0 scale-75"
-         class="fixed right-5 sm:right-6 {{ $isGlobal ? 'bottom-6 sm:bottom-8' : 'bottom-[148px] sm:bottom-[164px]' }} z-40 select-none pointer-events-auto"
+         class="fixed right-5 sm:right-6 {{ $hasFloatingStack ? 'bottom-[148px] sm:bottom-[164px]' : 'bottom-6 sm:bottom-8' }} z-40 select-none pointer-events-auto"
          x-cloak>
         <button @click="openDrawer()"
                 type="button"
