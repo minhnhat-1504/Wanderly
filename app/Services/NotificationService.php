@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Broadcast;
 use App\Models\Notification;
 use App\Models\Report;
 use App\Models\User;
@@ -34,6 +35,8 @@ class NotificationService
 
     const TYPE_CONTENT_MODERATED = 'content_moderated';
 
+    const TYPE_BROADCAST = 'broadcast';
+
     const TYPE_GENERAL = 'general';
 
     /**
@@ -44,10 +47,12 @@ class NotificationService
         string $type,
         string $title,
         string $message,
-        ?string $actionUrl = null
+        ?string $actionUrl = null,
+        ?int $broadcastId = null
     ): Notification {
         return Notification::create([
             'user_id' => $user->id,
+            'broadcast_id' => $broadcastId,
             'type' => $type,
             'title' => $title,
             'message' => $message,
@@ -197,6 +202,21 @@ class NotificationService
                 'reason' => $reason,
             ]),
             null,
+        );
+    }
+
+    /**
+     * Send a broadcast announcement notification to a user.
+     */
+    public function sendBroadcastToUser(User $user, Broadcast $broadcast): Notification
+    {
+        return $this->notify(
+            $user,
+            self::TYPE_BROADCAST,
+            $broadcast->title,
+            $broadcast->message,
+            $broadcast->action_url,
+            $broadcast->id,
         );
     }
 

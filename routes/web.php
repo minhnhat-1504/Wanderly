@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAuditLogController;
+use App\Http\Controllers\Admin\AdminBroadcastController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDestinationController;
 use App\Http\Controllers\Admin\AdminModerationController;
@@ -206,8 +207,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/moderation/posts/{post}/toggle-hide', [AdminModerationController::class, 'toggleHidePost'])->name('moderation.posts.toggle-hide');
         Route::post('/moderation/comments/{comment}/toggle-hide', [AdminModerationController::class, 'toggleHideComment'])->name('moderation.comments.toggle-hide');
 
+        // System Broadcasts & Notifications (Module 3)
+        Route::get('/broadcasts', [AdminBroadcastController::class, 'index'])->name('broadcasts.index');
+        Route::get('/broadcasts/create', [AdminBroadcastController::class, 'create'])->name('broadcasts.create');
+        Route::post('/broadcasts', [AdminBroadcastController::class, 'store'])->name('broadcasts.store');
+        Route::get('/broadcasts/{id}', [AdminBroadcastController::class, 'show'])->name('broadcasts.show');
+
         // Module route placeholders (to be expanded in subsequent steps)
-        Route::get('/broadcasts', fn () => redirect()->route('admin.dashboard'))->name('broadcasts.index');
         Route::get('/backups', fn () => redirect()->route('admin.dashboard'))->name('backups.index');
 
         // Destinations & POIs

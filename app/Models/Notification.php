@@ -20,6 +20,7 @@ class Notification extends Model
 
     protected $fillable = [
         'id',
+        'broadcast_id',
         'user_id',
         'type',
         'title',
@@ -52,6 +53,11 @@ class Notification extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function broadcast(): BelongsTo
+    {
+        return $this->belongsTo(Broadcast::class, 'broadcast_id');
     }
 
     public function isRead(): bool
