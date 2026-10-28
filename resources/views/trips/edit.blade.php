@@ -77,9 +77,6 @@
                 @error('destination')
                     <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
                 @enderror
-                <p class="mt-1 text-xs text-gray-400">
-                    {{ __('Standardized list of 34 official administrative provinces/cities of Vietnam to optimize AI recommendations.') }}
-                </p>
             </div>
 
             {{-- Dates: Start & End --}}
