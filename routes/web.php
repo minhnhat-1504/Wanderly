@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\AdminDestinationController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Discovery\DiscoveryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Provider\ProviderDashboardController;
@@ -59,6 +61,12 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+
+    // Password Reset Routes
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 });
 
 // Email Verification Routes
@@ -191,7 +199,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/settings/preferences', [ProfileController::class, 'updatePreferences'])->name('profile.preferences.update');
     Route::patch('/settings/privacy', [ProfileController::class, 'updatePrivacy'])->name('profile.privacy.update');
     Route::patch('/settings/notifications', [ProfileController::class, 'updateNotifications'])->name('profile.notifications.update');
-    Route::put('/settings/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::put('/settings/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::post('/settings/logout-others', [ProfileController::class, 'logoutOthers'])->name('profile.logout-others');
     Route::delete('/settings/avatar', [ProfileController::class, 'removeAvatar'])->name('profile.avatar.destroy');
     Route::delete('/settings/cover', [ProfileController::class, 'removeCover'])->name('profile.cover.destroy');
