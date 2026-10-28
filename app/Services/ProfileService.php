@@ -477,7 +477,7 @@ class ProfileService
                 DB::table('sessions')->where('user_id', $user->id)->delete();
             }
 
-            $user->delete();
+            $user->forceDelete();
         });
     }
 }

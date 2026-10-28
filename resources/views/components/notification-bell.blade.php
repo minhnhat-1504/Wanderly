@@ -40,8 +40,16 @@
             headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
         });
         this.notifications = this.notifications.map(n => n.id === id ? { ...n, is_read: true } : n);
-        if (this.unread > 0) this.unread--;
-        if (url) window.location.href = url;
+        if (url) {
+            try {
+                const parsed = new URL(url, window.location.origin);
+                if (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1' || parsed.hostname === window.location.hostname) {
+                    window.location.href = parsed.pathname + parsed.search + parsed.hash;
+                    return;
+                }
+            } catch (e) {}
+            window.location.href = url;
+        }
     }
 }"
      @click.outside="open = false"
@@ -129,6 +137,8 @@
                                 'bg-violet-100': notif.type === 'new_proposal',
                                 'bg-green-100': notif.type === 'booking_update',
                                 'bg-yellow-100': notif.type === 'post_like' || notif.type === 'new_comment',
+                                'bg-emerald-100': notif.type === 'report_resolved',
+                                'bg-teal-100': notif.type === 'broadcast',
                                 'bg-gray-100': notif.type === 'general' || notif.type === 'new_message',
                              }">
                             <span x-text="{
@@ -139,6 +149,8 @@
                                 new_message: '💬',
                                 new_comment: '💬',
                                 post_like: '❤️',
+                                report_resolved: '🛡️',
+                                broadcast: '📢',
                                 general: '🔔'
                             }[notif.type] || '🔔'"></span>
                         </div>

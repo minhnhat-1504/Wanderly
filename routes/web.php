@@ -1,6 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminAuditLogController;
+use App\Http\Controllers\Admin\AdminBackupController;
+use App\Http\Controllers\Admin\AdminBroadcastController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDestinationController;
+use App\Http\Controllers\Admin\AdminModerationController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -8,6 +14,7 @@ use App\Http\Controllers\Discovery\DiscoveryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Provider\ProviderDashboardController;
 use App\Http\Controllers\Provider\ProviderServiceController;
+use App\Http\Controllers\Social\ReportController;
 use App\Http\Controllers\Social\SocialFeedController;
 use App\Http\Controllers\Trip\ActivityController;
 use App\Http\Controllers\Trip\BookingController;
@@ -91,9 +98,8 @@ Route::middleware('auth')->group(function () {
         return back()->with('status', 'verification-link-sent');
     })->middleware(['throttle:6,1'])->name('verification.send');
 });
-
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->withoutMiddleware('verified');
+    Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout')->withoutMiddleware('verified');
     Route::post('/trips/{trip}/duplicate', [TripController::class, 'duplicate'])->name('trips.duplicate');
     Route::post('/trips/{trip}/members/invite', [TripMemberController::class, 'generateInvite'])->name('trips.members.invite');
     Route::delete('/trips/{trip}/members/{user}', [TripMemberController::class, 'destroy'])->name('trips.members.destroy');
@@ -174,9 +180,48 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/social/posts', [SocialFeedController::class, 'store'])->name('social.posts.store');
     Route::delete('/social/posts/{post}', [SocialFeedController::class, 'destroy'])->name('social.posts.destroy');
     Route::post('/social/posts/{post}/clone-trip', [SocialFeedController::class, 'cloneTrip'])->name('social.posts.clone-trip');
+    Route::post('/social/posts/{post}/report', [ReportController::class, 'reportPost'])->name('social.posts.report')->middleware('throttle:10,1');
+    Route::post('/social/comments/{comment}/report', [ReportController::class, 'reportComment'])->name('social.comments.report')->middleware('throttle:10,1');
+    Route::get('/social/reports/{report}', [ReportController::class, 'showReport'])->name('social.reports.show');
 
-    // ─── Admin Destination Management (D4-05 M16) ─────────────────────────────
-    Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
+    // ─── Admin Platform & Operations (Admin Redesign) ────────────────────────
+    Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('root');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
+
+        // Users Management (Module 1)
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/{id}', [AdminUserController::class, 'show'])->name('users.show');
+        Route::post('/users/{user}/role', [AdminUserController::class, 'changeRole'])->name('users.role');
+        Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');
+        Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])->name('users.unsuspend')->withTrashed();
+        Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+        Route::post('/users/{id}/restore', [AdminUserController::class, 'restore'])->name('users.restore');
+
+        // Community Moderation (Module 2)
+        Route::get('/moderation', [AdminModerationController::class, 'index'])->name('moderation.index');
+        Route::get('/moderation/reports/{report}', [AdminModerationController::class, 'show'])->name('moderation.show');
+        Route::post('/moderation/reports/{report}/resolve', [AdminModerationController::class, 'resolve'])->name('moderation.resolve');
+        Route::post('/moderation/reports/{report}/dismiss', [AdminModerationController::class, 'dismiss'])->name('moderation.dismiss');
+        Route::get('/moderation/content', [AdminModerationController::class, 'content'])->name('moderation.content');
+        Route::post('/moderation/posts/{post}/toggle-hide', [AdminModerationController::class, 'toggleHidePost'])->name('moderation.posts.toggle-hide');
+        Route::post('/moderation/comments/{comment}/toggle-hide', [AdminModerationController::class, 'toggleHideComment'])->name('moderation.comments.toggle-hide');
+
+        // System Broadcasts & Notifications (Module 3)
+        Route::get('/broadcasts', [AdminBroadcastController::class, 'index'])->name('broadcasts.index');
+        Route::get('/broadcasts/create', [AdminBroadcastController::class, 'create'])->name('broadcasts.create');
+        Route::post('/broadcasts', [AdminBroadcastController::class, 'store'])->name('broadcasts.store');
+        Route::get('/broadcasts/{id}', [AdminBroadcastController::class, 'show'])->name('broadcasts.show');
+
+        // System Backups & Disaster Recovery (Module 4)
+        Route::get('/backups', [AdminBackupController::class, 'index'])->name('backups.index');
+        Route::post('/backups', [AdminBackupController::class, 'store'])->name('backups.store');
+        Route::get('/backups/{backup}/download', [AdminBackupController::class, 'download'])->name('backups.download');
+        Route::delete('/backups/{backup}', [AdminBackupController::class, 'destroy'])->name('backups.destroy');
+        Route::get('/backups/{backup}/instructions', [AdminBackupController::class, 'instructions'])->name('backups.instructions');
+
+        // Destinations & POIs
         Route::get('/destinations', [AdminDestinationController::class, 'index'])->name('destinations.index');
         Route::get('/destinations/create', [AdminDestinationController::class, 'createDestination'])->name('destinations.create');
         Route::post('/destinations', [AdminDestinationController::class, 'storeDestination'])->name('destinations.store');

@@ -114,6 +114,19 @@
                 title="{{ $isSaved ? __('Unsave') : __('Save') }}">
             <svg class="w-4 h-4" fill="{{ $isSaved ? '#f59e0b' : 'none' }}" stroke="{{ $isSaved ? '#f59e0b' : 'currentColor' }}" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
         </button>
+
+        {{-- Report Post --}}
+        @auth
+        @if(!$isAuthor)
+        <button type="button"
+                onclick="window.openReportModal && window.openReportModal('{{ route('social.posts.report', $post->id) }}', '{{ addslashes($post->title) }}')"
+                class="flex items-center gap-1 px-2.5 py-2 rounded-xl text-xs text-gray-400 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                title="{{ __('Report violation') }}">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
+            <span class="hidden sm:inline text-[11px] font-medium">{{ __('Report') }}</span>
+        </button>
+        @endif
+        @endauth
     </div>
 
     {{-- Comments Section --}}
@@ -143,6 +156,17 @@
                         <p class="text-sm text-gray-600 mt-0.5">{{ $comment->content }}</p>
                     </div>
                 @endif
+
+                @auth
+                @if($comment->user_id !== auth()->id())
+                    <button type="button"
+                            onclick="window.openReportModal && window.openReportModal('{{ route('social.comments.report', $comment->id) }}', 'Comment by {{ addslashes($comment->author->name ?? 'User') }}')"
+                            class="text-gray-300 hover:text-rose-500 p-1 transition-colors"
+                            title="{{ __('Report comment') }}">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2z"/></svg>
+                    </button>
+                @endif
+                @endauth
             </div>
             @endforeach
         </div>
