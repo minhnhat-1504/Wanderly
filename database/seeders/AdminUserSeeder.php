@@ -25,7 +25,7 @@ class AdminUserSeeder extends Seeder
             ]
         );
 
-        // 2. Demo Traveler account
+        // 2. Demo Traveler account (User A - Leader)
         User::updateOrCreate(
             ['email' => 'demo@wanderly.test'],
             [
@@ -36,5 +36,18 @@ class AdminUserSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+        // 3. Demo Member account (User B - Member / Editor)
+        User::updateOrCreate(
+            ['email' => 'member@wanderly.test'],
+            [
+                'name' => 'Member Traveler',
+                'username' => 'membertraveler',
+                'password' => Hash::make('password'),
+                'role' => 'traveler',
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
+

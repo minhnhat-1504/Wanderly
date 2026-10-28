@@ -54,10 +54,21 @@ class TripDemoSeeder extends Seeder
             ]
         );
 
-        // 2. Assign leader membership
+        // 2. Assign leader and member
         TripMember::updateOrCreate(
             ['trip_id' => $trip->id, 'user_id' => $demoUser->id],
             ['role' => 'leader']
+        );
+
+        $memberUser = User::where('email', 'member@wanderly.test')->first() ?? User::factory()->create([
+            'name' => 'Member Traveler',
+            'email' => 'member@wanderly.test',
+            'role' => 'traveler',
+        ]);
+
+        TripMember::updateOrCreate(
+            ['trip_id' => $trip->id, 'user_id' => $memberUser->id],
+            ['role' => 'editor']
         );
 
         // 3. Clear existing sub-items to prevent duplicate on re-run
