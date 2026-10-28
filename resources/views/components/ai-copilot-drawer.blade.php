@@ -95,11 +95,11 @@
                                 {{ $isGlobal ? __('Wanderly Travel Assistant') : __('Wanderly AI Co-pilot') }}
                             </h3>
                             <span class="px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-teal-500/30 text-teal-200 border border-teal-400/30 rounded whitespace-nowrap flex-shrink-0">
-                                {{ $isGlobal ? __('Trợ lý AI') : __('Chuyến đi') }}
+                                {{ $isGlobal ? __('Global AI') : __('Trip Mode') }}
                             </span>
                         </div>
                         <p class="text-[11px] text-teal-100/80 truncate">
-                            {{ $isGlobal ? __('Tư vấn du lịch 34 tỉnh thành Việt Nam') : __('Trợ lý điều phối & giải pháp lịch trình') }}
+                            {{ $isGlobal ? __('Travel advice across 34 Vietnam destinations') : __('Trip coordination & itinerary assistant') }}
                         </p>
                     </div>
                 </div>
@@ -109,8 +109,8 @@
                             type="button"
                             :disabled="isClearing || messages.length === 0"
                             class="p-2 text-white/75 hover:text-rose-300 hover:bg-white/10 disabled:opacity-30 disabled:hover:text-white/75 disabled:hover:bg-transparent rounded-lg transition-colors cursor-pointer"
-                            title="{{ __('Xóa lịch sử') }}"
-                            aria-label="{{ __('Xóa lịch sử') }}">
+                            title="{{ __('Clear history') }}"
+                            aria-label="{{ __('Clear history') }}">
                         <span x-show="!isClearing">
                             <x-icon name="trash" class="w-4 h-4" />
                         </span>
@@ -123,8 +123,8 @@
                     <button @click="isOpen = false" 
                             type="button"
                             class="p-2 text-white/75 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer" 
-                            title="{{ __('Đóng') }}"
-                            aria-label="{{ __('Đóng') }}">
+                            title="{{ __('Close') }}"
+                            aria-label="{{ __('Close') }}">
                         <x-icon name="x" class="w-5 h-5" />
                     </button>
                 </div>
@@ -138,18 +138,18 @@
                  x-cloak>
                 <div class="flex items-center gap-1.5 text-rose-900 dark:text-rose-200 font-medium">
                     <x-icon name="alert-triangle" class="w-4 h-4 text-rose-600 dark:text-rose-400 flex-shrink-0" />
-                    <span>{{ __('Bạn có chắc muốn xóa lịch sử chat?') }}</span>
+                    <span>{{ __('Are you sure you want to clear chat history?') }}</span>
                 </div>
                 <div class="flex items-center gap-1.5 flex-shrink-0">
                     <button @click="cancelClearHistory()" 
                             type="button" 
                             class="px-2.5 py-1 text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800 rounded font-medium transition-colors cursor-pointer">
-                        {{ __('Hủy') }}
+                        {{ __('Cancel') }}
                     </button>
                     <button @click="clearHistory()" 
                             type="button" 
                             class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded font-bold shadow-xs transition-colors cursor-pointer">
-                        {{ __('Xóa') }}
+                        {{ __('Clear') }}
                     </button>
                 </div>
             </div>
@@ -174,33 +174,33 @@
                         <button @click="quickPrompt('Gợi ý điểm du lịch Việt Nam hấp dẫn nhất mùa này')"
                                 type="button"
                                 class="snap-start whitespace-nowrap flex-shrink-0 px-3 py-1.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-2xs font-medium cursor-pointer">
-                            🌸 {{ __('Đi đâu mùa này?') }}
+                            🌸 {{ __('Where to go this season?') }}
                         </button>
                         <button @click="quickPrompt('Lịch trình gợi ý du lịch Đà Lạt 3 ngày 2 đêm')"
                                 type="button"
                                 class="snap-start whitespace-nowrap flex-shrink-0 px-3 py-1.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-2xs font-medium cursor-pointer">
-                            🌲 {{ __('Gợi ý Đà Lạt 3N2Đ') }}
+                            🌲 {{ __('Da Lat 3D2N itinerary') }}
                         </button>
                         <button @click="quickPrompt('Món ăn ngon và đặc sản nhất định phải thử ở Đà Nẵng')"
                                 type="button"
                                 class="snap-start whitespace-nowrap flex-shrink-0 px-3 py-1.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-2xs font-medium cursor-pointer">
-                            🍜 {{ __('Ẩm thực Đà Nẵng') }}
+                            🍜 {{ __('Da Nang cuisine') }}
                         </button>
                     @else
                         <button @click="quickPrompt('Hòa giải: Người thích trekking, người thích cafe ngắm cảnh')"
                                 type="button"
                                 class="snap-start whitespace-nowrap flex-shrink-0 px-3 py-1.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-2xs font-medium cursor-pointer">
-                            🤝 {{ __('Hòa giải bất đồng') }}
+                            🤝 {{ __('Resolve disagreement') }}
                         </button>
                         <button @click="isReviewModalOpen = true"
                                 type="button"
                                 class="snap-start whitespace-nowrap flex-shrink-0 px-3 py-1.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-2xs font-medium cursor-pointer">
-                            📝 {{ __('Nhập bài review') }}
+                            📝 {{ __('Import review') }}
                         </button>
                         <button @click="quickPrompt('Gợi ý hoạt động trong nhà nếu trời mưa')"
                                 type="button"
                                 class="snap-start whitespace-nowrap flex-shrink-0 px-3 py-1.5 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors shadow-2xs font-medium cursor-pointer">
-                            🌧️ {{ __('Ứng phó thời tiết') }}
+                            🌧️ {{ __('Weather plan') }}
                         </button>
                     @endif
                 </div>
@@ -218,9 +218,9 @@
                     </div>
                     <div class="bg-slate-100 dark:bg-slate-800 p-3.5 rounded-2xl rounded-tl-sm text-sm text-slate-800 dark:text-slate-200 max-w-[85%] space-y-2 leading-relaxed shadow-sm">
                         @if($isGlobal)
-                            <p>{{ __('Xin chào! Mình là Wanderly AI Travel Assistant. Mình có thể tư vấn du lịch, gợi ý địa điểm vui chơi, món ăn đặc sản tại 34 tỉnh thành Việt Nam. Hãy hỏi mình bất kỳ điều gì!') }}</p>
+                            <p>{{ __('Hello! I am Wanderly AI Travel Assistant. I can recommend attractions and local cuisine across Vietnam destinations. Ask me anything!') }}</p>
                         @else
-                            <p>{{ __('Xin chào! Mình là Wanderly AI Co-pilot cho chuyến đi này. Mình nắm rõ thông tin lịch trình, ngân sách và sở thích từng thành viên. Hãy hỏi mình hoặc nhờ mình hòa giải ý kiến nhóm!') }}</p>
+                            <p>{{ __('Hello! I am Wanderly AI Co-pilot for this trip. I know the itinerary, budget, and member preferences. Ask me anything or request group consensus!') }}</p>
                         @endif
                     </div>
                 </div>
@@ -230,7 +230,7 @@
                     <div class="flex gap-3" :class="msg.role === 'user' ? 'flex-row-reverse' : ''">
                         <!-- Avatar -->
                         <template x-if="msg.role === 'user'">
-                            <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm" title="{{ auth()->user()?->name ?? __('Bạn') }}">
+                            <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm" title="{{ auth()->user()?->name ?? __('You') }}">
                                 <x-icon name="user" class="w-4 h-4" />
                             </div>
                         </template>
@@ -423,18 +423,18 @@
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center gap-1.5 text-xs font-bold text-teal-800 dark:text-teal-300">
                                             <x-icon name="sparkles" class="w-4 h-4 text-amber-500" />
-                                            <span>{{ __('Action Card: Hoạt động đề xuất') }}</span>
+                                            <span>{{ __('Action Card: Suggested Activity') }}</span>
                                         </div>
                                         <span class="px-2 py-0.5 text-[10px] font-bold rounded uppercase tracking-wide"
                                               :class="msg.is_applied ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'"
-                                              x-text="msg.is_applied ? 'Đã thêm vào lịch' : 'Chờ duyệt'">
+                                              x-text="msg.is_applied ? '{{ __('Added to timeline') }}' : '{{ __('Pending approval') }}'">
                                         </span>
                                     </div>
 
                                     <div class="bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-lg border border-teal-100 dark:border-teal-900/50 text-xs space-y-1">
                                         <div class="font-bold text-slate-900 dark:text-white text-sm" x-text="msg.suggested_action.params.title"></div>
                                         <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
-                                            <span x-text="'Ngày ' + msg.suggested_action.params.day + ' • ' + (msg.suggested_action.params.time_slot || 'morning')"></span>
+                                            <span x-text="'{{ __('Day') }} ' + msg.suggested_action.params.day + ' • ' + (msg.suggested_action.params.time_slot || 'morning')"></span>
                                             <span class="font-bold text-teal-700 dark:text-teal-400" x-text="formatCurrency(msg.suggested_action.params.cost || 0)"></span>
                                         </div>
                                         <template x-if="msg.suggested_action.params.description">
@@ -465,7 +465,7 @@
                         <span class="w-2 h-2 rounded-full bg-teal-500 animate-bounce"></span>
                         <span class="w-2 h-2 rounded-full bg-teal-500 animate-bounce" style="animation-delay: 0.15s"></span>
                         <span class="w-2 h-2 rounded-full bg-teal-500 animate-bounce" style="animation-delay: 0.3s"></span>
-                        <span class="ml-2 text-xs font-medium text-slate-500">{{ __('AI đang suy nghĩ...') }}</span>
+                        <span class="ml-2 text-xs font-medium text-slate-500">{{ __('AI is thinking...') }}</span>
                     </div>
                 </div>
             </div>
@@ -477,12 +477,12 @@
                               @keydown="handleKeydown($event)"
                               :disabled="isLoading"
                               rows="1"
-                              placeholder="{{ __('Hỏi về địa điểm, lịch trình, món ăn...') }}"
+                              placeholder="{{ __('Ask about places, itinerary, food...') }}"
                               class="flex-1 px-3.5 py-2.5 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white dark:focus:bg-slate-900 transition-all text-slate-900 dark:text-white placeholder-slate-400 resize-none max-h-28 overflow-y-auto chat-scrollbar leading-normal"></textarea>
                     <button type="submit"
                             :disabled="isLoading || !inputMessage.trim()"
-                            title="{{ __('Gửi') }}"
-                            aria-label="{{ __('Gửi') }}"
+                            title="{{ __('Send') }}"
+                            aria-label="{{ __('Send') }}"
                             class="p-2.5 bg-teal-600 hover:bg-teal-700 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl shadow-md transition-all flex-shrink-0 cursor-pointer">
                         <x-icon name="send" class="w-4 h-4" />
                     </button>
@@ -501,7 +501,7 @@
                 <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-700">
                     <h4 class="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
                         <x-icon name="file-text" class="w-5 h-5 text-teal-600" />
-                        <span>{{ __('Trích xuất Lịch trình từ Bài Review') }}</span>
+                        <span>{{ __('Extract Itinerary from Review') }}</span>
                     </h4>
                     <button @click="isReviewModalOpen = false" class="text-slate-400 hover:text-slate-600">
                         <x-icon name="x" class="w-5 h-5" />
@@ -509,7 +509,7 @@
                 </div>
                 <div class="mt-4 space-y-3">
                     <p class="text-xs text-slate-600 dark:text-slate-300">
-                        {{ __('Dán đoạn văn bản review chuyến đi từ Facebook, Blog hoặc ghi chú cá nhân. AI sẽ tự động nhận diện ngày, khung giờ (sáng/trưa/chiều/tối) và ước tính chi phí.') }}
+                        {{ __('Paste a trip review from Facebook, blogs, or notes. AI will automatically extract days, timeslots, and estimated costs.') }}
                     </p>
                     <textarea x-model="reviewRawText"
                               rows="6"
@@ -518,14 +518,14 @@
                 </div>
                 <div class="mt-5 flex justify-end gap-2">
                     <button type="button" @click="isReviewModalOpen = false" class="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded-lg">
-                        {{ __('Hủy') }}
+                        {{ __('Cancel') }}
                     </button>
                     <button type="button"
                             @click="ingestReview()"
                             :disabled="isIngesting || !reviewRawText.trim()"
                             class="px-4 py-2 text-xs font-semibold bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50 inline-flex items-center gap-1.5">
                         <x-icon name="sparkles" class="w-4 h-4" />
-                        <span>{{ __('Bóc tách vào Lịch trình') }}</span>
+                        <span>{{ __('Extract into Itinerary') }}</span>
                     </button>
                 </div>
             </div>

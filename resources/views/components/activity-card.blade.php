@@ -208,12 +208,12 @@
                                 :disabled="isToggling"
                                 class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold rounded-lg transition-all shadow-xs cursor-pointer focus:outline-none select-none"
                                 :class="isJoined ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-teal-900/10' : 'bg-teal-50 hover:bg-teal-100/90 text-teal-800 border border-teal-300/80'"
-                                :title="isJoined ? '{{ __('Bạn đã chọn tham gia hoạt động này. Bấm để hủy chọn.') }}' : '{{ __('Bấm để chọn tham gia hoạt động này.') }}'"
+                                :title="isJoined ? '{{ __('You are attending this activity. Click to leave.') }}' : '{{ __('Click to join this activity.') }}'"
                             >
                                 <span x-show="!isToggling && isJoined" class="text-xs">✓</span>
                                 <span x-show="!isToggling && !isJoined" class="text-xs">+</span>
                                 <span x-show="isToggling" class="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
-                                <span x-text="isJoined ? '{{ __('Tôi sẽ đi') }}' : '{{ __('Chọn đi') }}'"></span>
+                                <span x-text="isJoined ? '{{ __('Attending') }}' : '{{ __('Join') }}'"></span>
                             </button>
                         @endauth
 
@@ -223,7 +223,7 @@
                             :class="participantsCount > 0 ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-semibold' : 'bg-gray-100 text-gray-500'"
                         >
                             <span>👥</span>
-                            <span x-text="participantsCount > 0 ? (participantsCount + ' {{ __('người chọn') }} • ' + new Intl.NumberFormat('vi-VN').format(totalSpent) + ' ₫') : '{{ __('Chưa tính ngân sách (0 người)') }}'"></span>
+                            <span x-text="participantsCount > 0 ? (participantsCount + ' ' + (participantsCount === 1 ? '{{ __('attendee') }}' : '{{ __('attendees') }}') + ' • ' + new Intl.NumberFormat('vi-VN').format(totalSpent) + ' ₫') : '{{ __('Not in budget (0 joined)') }}'"></span>
                         </span>
                     </div>
                 @endif
@@ -242,8 +242,8 @@
                 @endif
 
                 {{-- Cost Badge (unit price per person) --}}
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold {{ $cost > 0 ? 'bg-teal-50 text-teal-800 border border-teal-200' : 'bg-gray-100 text-gray-600' }}" title="{{ $cost > 0 ? __('Giá vé / người') : '' }}">
-                    {{ $cost > 0 ? number_format($cost, 0, ',', '.') . ' ₫/người' : __('Free') }}
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold {{ $cost > 0 ? 'bg-teal-50 text-teal-800 border border-teal-200' : 'bg-gray-100 text-gray-600' }}" title="{{ $cost > 0 ? __('Ticket / person') : '' }}">
+                    {{ $cost > 0 ? number_format($cost, 0, ',', '.') . ' ₫/' . __('person') : __('Free') }}
                 </span>
             </div>
 
