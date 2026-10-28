@@ -2,7 +2,7 @@
   {
     "code": "hanoi",
     "name": "TP. Hà Nội",
-    "aliases": ["Ha Noi", "Hà Nội", "Hanoi", "Thủ đô Hà Nội", "Thủ đô", "HN", "Ha Dong", "Hà Đông", "Son Tay", "Sơn Tây"],
+    "aliases": ["Ha Noi", "Hà Nội", "Hanoi", "Thủ đô Hà Nội", "Thủ đô", "HN", "Ha Dong", "Hà Đông", "Son Tay", "Sơn Tây", "Hà Tây", "Ha Tay"],
     "region": "red_river",
     "centroid": { "lat": 21.0285, "lng": 105.8542 },
     "season_notes": {
