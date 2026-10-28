@@ -12,11 +12,11 @@ class ValidatePlacesDatasetCommand extends Command
     protected $description = 'Validate places dataset JSON files for schema correctness, missing fields, and duplicates';
 
     protected array $validCategories = [
-        'sight', 'beach', 'nature', 'culture', 'food', 'cafe', 'market', 'hotel', 'experience'
+        'sight', 'beach', 'nature', 'culture', 'food', 'cafe', 'market', 'hotel', 'experience',
     ];
 
     protected array $validSources = [
-        'osm', 'wikivoyage', 'curated', 'llm_draft'
+        'osm', 'wikivoyage', 'curated', 'llm_draft',
     ];
 
     public function handle(): int
@@ -24,6 +24,7 @@ class ValidatePlacesDatasetCommand extends Command
         $baseDir = base_path('data/places');
         if (! File::exists($baseDir)) {
             $this->error("Directory {$baseDir} does not exist.");
+
             return self::FAILURE;
         }
 
@@ -51,6 +52,7 @@ class ValidatePlacesDatasetCommand extends Command
 
             if (! is_array($places)) {
                 $errors[] = "[{$provinceCode}.json] Invalid JSON format.";
+
                 continue;
             }
 
@@ -76,11 +78,11 @@ class ValidatePlacesDatasetCommand extends Command
                 }
 
                 if (empty($p['province_code']) || $p['province_code'] !== $provinceCode) {
-                    $errors[] = "[{$provinceCode}:{$id}] 'province_code' ('" . ($p['province_code'] ?? 'null') . "') does not match file '{$provinceCode}'.";
+                    $errors[] = "[{$provinceCode}:{$id}] 'province_code' ('".($p['province_code'] ?? 'null')."') does not match file '{$provinceCode}'.";
                 }
 
                 if (empty($p['category']) || ! in_array($p['category'], $this->validCategories, true)) {
-                    $errors[] = "[{$provinceCode}:{$id}] Invalid or missing category '" . ($p['category'] ?? '') . "'.";
+                    $errors[] = "[{$provinceCode}:{$id}] Invalid or missing category '".($p['category'] ?? '')."'.";
                 }
 
                 // 3. Coordinates range in Vietnam (approx 8.0 - 24.0 N, 102.0 - 110.0 E)
@@ -140,14 +142,16 @@ class ValidatePlacesDatasetCommand extends Command
         $this->info("Total: {$totalPlaces} places ({$totalVerified} verified).");
 
         if (! empty($errors)) {
-            $this->error('Found ' . count($errors) . ' validation errors:');
+            $this->error('Found '.count($errors).' validation errors:');
             foreach ($errors as $err) {
                 $this->line(" - {$err}");
             }
+
             return self::FAILURE;
         }
 
         $this->info('All dataset files passed validation cleanly!');
+
         return self::SUCCESS;
     }
 }

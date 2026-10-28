@@ -69,6 +69,7 @@ class ItineraryPlannerService
         // Filter out places with avoid_months matching travel month
         $eligiblePlaces = array_values(array_filter($places, function ($p) use ($travelMonth) {
             $avoid = $p['avoid_months'] ?? [];
+
             return ! in_array((int) $travelMonth, $avoid, true);
         }));
 
@@ -91,6 +92,7 @@ class ItineraryPlannerService
                         $bScore++;
                     }
                 }
+
                 return $bScore <=> $aScore;
             });
         }
@@ -104,6 +106,7 @@ class ItineraryPlannerService
                 usort($eligiblePlaces, function ($a, $b) {
                     $pA = (float) ($a['ticket_price_vnd'] ?? 0);
                     $pB = (float) ($b['ticket_price_vnd'] ?? 0);
+
                     return $pA <=> $pB;
                 });
             }
@@ -116,6 +119,7 @@ class ItineraryPlannerService
 
         if ($forceGreedy || (empty($geminiKey) && empty($openaiKey))) {
             $plan = $this->generateGreedyFallback($provinceCode, $days, $eligiblePlaces, $options);
+
             return $this->enrichPlanOutput($plan, $province, $weatherSummary, 'deterministic_greedy', $options);
         }
 
@@ -126,6 +130,7 @@ class ItineraryPlannerService
         if ($plan === null) {
             // Fallback to greedy if LLM could not produce a valid plan
             $plan = $this->generateGreedyFallback($provinceCode, $days, $eligiblePlaces, $options);
+
             return $this->enrichPlanOutput($plan, $province, $weatherSummary, 'fallback_greedy', $options);
         }
 
@@ -189,7 +194,7 @@ class ItineraryPlannerService
             try {
                 return $this->callGemini($messages);
             } catch (\Throwable $e) {
-                Log::warning('Gemini planner failed: ' . $e->getMessage());
+                Log::warning('Gemini planner failed: '.$e->getMessage());
             }
         }
 
@@ -198,7 +203,7 @@ class ItineraryPlannerService
             try {
                 return $this->callOpenAi($messages);
             } catch (\Throwable $e) {
-                Log::warning('OpenAI planner failed: ' . $e->getMessage());
+                Log::warning('OpenAI planner failed: '.$e->getMessage());
             }
         }
 
@@ -212,7 +217,7 @@ class ItineraryPlannerService
     {
         $apiKey = config('ai.gemini.api_key');
         $model = config('ai.gemini.model', 'gemini-3.5-flash');
-        $endpoint = config('ai.gemini.endpoint') . "/{$model}:generateContent?key={$apiKey}";
+        $endpoint = config('ai.gemini.endpoint')."/{$model}:generateContent?key={$apiKey}";
 
         $systemInstruction = '';
         $contents = [];
@@ -247,6 +252,7 @@ class ItineraryPlannerService
         if ($response->successful()) {
             $data = $response->json();
             $rawText = $data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+
             return json_decode($rawText, true);
         }
 
@@ -271,6 +277,7 @@ class ItineraryPlannerService
         if ($response->successful()) {
             $data = $response->json();
             $rawText = $data['choices'][0]['message']['content'] ?? '';
+
             return json_decode($rawText, true);
         }
 
@@ -332,12 +339,13 @@ class ItineraryPlannerService
                     // In rainy weather, avoid outdoor if possible
                     return false;
                 }
+
                 return true;
             }));
 
             if (count($availableSights) < 2) {
                 // relax rain filter if needed
-                $availableSights = array_values(array_filter($dayCluster, fn($p) => ! isset($usedPlaceIds[$p['id']])));
+                $availableSights = array_values(array_filter($dayCluster, fn ($p) => ! isset($usedPlaceIds[$p['id']])));
             }
 
             // Order sights by nearest neighbor to minimize travel
@@ -595,9 +603,9 @@ class ItineraryPlannerService
                 'total_travel_minutes' => $totalTripTravelMinutes,
                 'total_distance_km' => round($totalTripDistanceKm, 2),
                 'total_ticket_cost' => $totalTicketCost,
-                'total_ticket_cost_formatted' => number_format($totalTicketCost, 0, ',', '.') . ' VNĐ',
+                'total_ticket_cost_formatted' => number_format($totalTicketCost, 0, ',', '.').' VNĐ',
                 'budget' => $effectiveBudget,
-                'budget_formatted' => number_format($effectiveBudget, 0, ',', '.') . ' VNĐ',
+                'budget_formatted' => number_format($effectiveBudget, 0, ',', '.').' VNĐ',
                 'requested_budget' => $requestedBudget,
                 'pace' => $options['pace'] ?? 'balanced',
                 'interests' => $options['interests'] ?? [],
@@ -617,7 +625,6 @@ class ItineraryPlannerService
         ];
     }
 
-
     /**
      * Format price value for display.
      */
@@ -629,7 +636,8 @@ class ItineraryPlannerService
         if ($price === 0) {
             return 'Miễn phí';
         }
-        return number_format($price, 0, ',', '.') . ' VNĐ';
+
+        return number_format($price, 0, ',', '.').' VNĐ';
     }
 
     /**
@@ -652,6 +660,7 @@ class ItineraryPlannerService
         });
 
         $chunkSize = (int) ceil(count($places) / $k);
+
         return array_chunk($places, $chunkSize);
     }
 
@@ -743,7 +752,7 @@ class ItineraryPlannerService
      */
     protected function getSystemPrompt(): string
     {
-        return <<<PROMPT
+        return <<<'PROMPT'
 Bạn là chuyên gia lập lịch trình du lịch chính xác tại Việt Nam của Wanderly.
 NGUYÊN TẮC BẮT BUỘC:
 1. KHÔNG BAO GIỜ tự bịa ra hoặc nhớ từ trí nhớ bất kỳ địa điểm nào.

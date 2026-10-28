@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\AiChatMessage;
 use App\Models\Trip;
-use App\Models\TripMember;
 use App\Services\ActionEngineService;
 use App\Services\AiCopilotService;
+use App\Services\Itinerary\PlaceRepository;
 use App\Services\TripService;
 use App\Services\WeatherAdaptiveService;
 use Carbon\Carbon;
@@ -289,7 +289,7 @@ class AiCopilotController extends Controller
 
         // 1. Create Trip using TripService (automatically sets leader role)
         $trip = $this->tripService->createTrip([
-            'name' => 'Chuyến đi ' . ($province['name'] ?? 'Việt Nam') . " ({$dayCount} ngày)",
+            'name' => 'Chuyến đi '.($province['name'] ?? 'Việt Nam')." ({$dayCount} ngày)",
             'destination' => $province['name'] ?? 'Việt Nam',
             'start_date' => $startDate->toDateString(),
             'end_date' => $endDate->toDateString(),
@@ -386,7 +386,7 @@ class AiCopilotController extends Controller
 
                 // If still 0 and place has an ID, look up directly in verified places dataset
                 if ($ticketPrice === 0.0 && ! empty($place['id'])) {
-                    $origPlace = app(\App\Services\Itinerary\PlaceRepository::class)->getById($place['id'], $province['code'] ?? null);
+                    $origPlace = app(PlaceRepository::class)->getById($place['id'], $province['code'] ?? null);
                     if ($origPlace && isset($origPlace['ticket_price_vnd']) && is_numeric($origPlace['ticket_price_vnd'])) {
                         $ticketPrice = (float) $origPlace['ticket_price_vnd'];
                     }
@@ -408,7 +408,7 @@ class AiCopilotController extends Controller
                     'category' => $category,
                     'location' => $place['name_vi'] ?? ($province['name'] ?? ''),
                     'address' => $place['address'] ?? ($place['name_vi'] ?? ''),
-                    'notes' => trim(($item['note'] ?? '') . $hoursNote),
+                    'notes' => trim(($item['note'] ?? '').$hoursNote),
                     'position' => $pos,
                     'payer_id' => $user->id,
                 ]);

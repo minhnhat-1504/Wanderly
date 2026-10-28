@@ -31,10 +31,10 @@ class SendBroadcastRequest extends FormRequest
                 'string',
                 'max:500',
                 function ($attribute, $value, $fail) {
-                    if (!empty($value)) {
+                    if (! empty($value)) {
                         $isValidPath = str_starts_with($value, '/');
                         $isValidUrl = filter_var($value, FILTER_VALIDATE_URL) !== false;
-                        if (!$isValidPath && !$isValidUrl) {
+                        if (! $isValidPath && ! $isValidUrl) {
                             $fail(__('The action URL must be a valid URL (e.g. https://example.com) or a relative path starting with / (e.g. /trips).'));
                         }
                     }

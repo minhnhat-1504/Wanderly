@@ -7,8 +7,11 @@ use Carbon\Carbon;
 class ItineraryValidator
 {
     public const MAX_DAILY_TRAVEL_MINUTES = 180;
+
     public const MAX_CONSECUTIVE_DISTANCE_KM = 60.0;
+
     public const MIN_ITEMS_PER_DAY = 3;
+
     public const MAX_ITEMS_PER_DAY = 8;
 
     public function __construct(
@@ -55,12 +58,14 @@ class ItineraryValidator
         $provinceCode = strtolower(trim($plan['province_code'] ?? ''));
         if (empty($provinceCode)) {
             $errors[] = 'Mã tỉnh (province_code) không được để trống.';
+
             return $this->formatResult(false, $errors, $warnings, []);
         }
 
         $days = $plan['days'] ?? [];
         if (! is_array($days) || empty($days)) {
             $errors[] = 'Lịch trình không có dữ liệu ngày (days rỗng).';
+
             return $this->formatResult(false, $errors, $warnings, []);
         }
 
@@ -85,7 +90,7 @@ class ItineraryValidator
 
         // Rule 8: Day count
         if (count($days) !== (int) $expectedDays) {
-            $errors[] = "Số ngày trong lịch trình (".count($days)." ngày) không khớp với yêu cầu ({$expectedDays} ngày).";
+            $errors[] = 'Số ngày trong lịch trình ('.count($days)." ngày) không khớp với yêu cầu ({$expectedDays} ngày).";
         }
 
         $seenPlaceIds = [];
@@ -100,9 +105,9 @@ class ItineraryValidator
             // Rule 8: Item count per day
             $itemCount = count($items);
             if ($itemCount < self::MIN_ITEMS_PER_DAY) {
-                $errors[] = "Ngày {$dayNumber} có quá ít hoạt động ({$itemCount} điểm, tối thiểu là ".self::MIN_ITEMS_PER_DAY.").";
+                $errors[] = "Ngày {$dayNumber} có quá ít hoạt động ({$itemCount} điểm, tối thiểu là ".self::MIN_ITEMS_PER_DAY.').';
             } elseif ($itemCount > self::MAX_ITEMS_PER_DAY) {
-                $errors[] = "Ngày {$dayNumber} quá tải ({$itemCount} điểm, tối đa là ".self::MAX_ITEMS_PER_DAY.").";
+                $errors[] = "Ngày {$dayNumber} quá tải ({$itemCount} điểm, tối đa là ".self::MAX_ITEMS_PER_DAY.').';
             }
 
             $currentDate = $startDate ? $startDate->copy()->addDays($dayIndex) : null;
@@ -123,7 +128,8 @@ class ItineraryValidator
 
                 // Rule 1: Place ID existence & verification in dataset
                 if (empty($placeId)) {
-                    $errors[] = "Ngày {$dayNumber}, hoạt động #".($itemIdx + 1).": Thiếu mã địa điểm (place_id).";
+                    $errors[] = "Ngày {$dayNumber}, hoạt động #".($itemIdx + 1).': Thiếu mã địa điểm (place_id).';
+
                     continue;
                 }
 
@@ -131,16 +137,19 @@ class ItineraryValidator
 
                 if (! $place) {
                     $errors[] = "Địa điểm [{$placeId}] không tồn tại trong tập dữ liệu của {$provinceCode}.";
+
                     continue;
                 }
 
                 if (empty($place['verified']) || $place['verified'] !== true || ($place['source'] ?? '') === 'llm_draft') {
                     $errors[] = "Địa điểm [{$place['name_vi']}] ({$placeId}) chưa được kiểm chứng (verified=false hoặc llm_draft).";
+
                     continue;
                 }
 
                 if (($place['province_code'] ?? '') !== $provinceCode) {
                     $errors[] = "Địa điểm [{$place['name_vi']}] ({$placeId}) thuộc {$place['province_code']}, không nằm trong {$provinceCode}.";
+
                     continue;
                 }
 
@@ -204,7 +213,7 @@ class ItineraryValidator
 
                     // Rule 5: Consecutive distance limit
                     if ($distance > self::MAX_CONSECUTIVE_DISTANCE_KM) {
-                        $errors[] = "Khoảng cách giữa [{$previousPlace['name_vi']}] và [{$place['name_vi']}] quá xa (".round($distance, 1)." km > ".self::MAX_CONSECUTIVE_DISTANCE_KM." km).";
+                        $errors[] = "Khoảng cách giữa [{$previousPlace['name_vi']}] và [{$place['name_vi']}] quá xa (".round($distance, 1).' km > '.self::MAX_CONSECUTIVE_DISTANCE_KM.' km).';
                     }
                 }
 
@@ -213,7 +222,7 @@ class ItineraryValidator
 
             // Rule 4: Total daily travel time <= 180 min
             if ($dayTravelMinutes > self::MAX_DAILY_TRAVEL_MINUTES) {
-                $errors[] = "Tổng thời gian di chuyển Ngày {$dayNumber} quá tải ({$dayTravelMinutes} phút > ".self::MAX_DAILY_TRAVEL_MINUTES." phút).";
+                $errors[] = "Tổng thời gian di chuyển Ngày {$dayNumber} quá tải ({$dayTravelMinutes} phút > ".self::MAX_DAILY_TRAVEL_MINUTES.' phút).';
             }
 
             // Rule 9 check: Lunch and Dinner warnings

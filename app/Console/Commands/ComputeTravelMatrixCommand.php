@@ -23,6 +23,7 @@ class ComputeTravelMatrixCommand extends Command
 
             if ($count === 0) {
                 $this->warn("No verified places found for province '{$code}'. Skipping.");
+
                 continue;
             }
 
@@ -36,6 +37,7 @@ class ComputeTravelMatrixCommand extends Command
         }
 
         $this->info('Travel time matrix precomputation complete!');
+
         return self::SUCCESS;
     }
 }

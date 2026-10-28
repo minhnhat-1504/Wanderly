@@ -6,7 +6,6 @@ use App\Services\Itinerary\ProvinceResolver;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class BuildPlacesDatasetCommand extends Command
 {
@@ -22,6 +21,7 @@ class BuildPlacesDatasetCommand extends Command
         $province = $provinceResolver->getByCode($code);
         if (! $province) {
             $this->error("Unknown province code '{$code}'. Please check data/provinces.json.");
+
             return self::FAILURE;
         }
 
@@ -42,7 +42,7 @@ class BuildPlacesDatasetCommand extends Command
             $raw = json_decode(File::get($cacheFile), true);
             $elements = $raw['elements'] ?? [];
         } else {
-            $this->info("Querying Overpass API (rate limited, 1 request)...");
+            $this->info('Querying Overpass API (rate limited, 1 request)...');
 
             $overpassQuery = "[out:json][timeout:25];
 (
@@ -56,21 +56,21 @@ out center tags 60;";
             try {
                 // Respect public Overpass endpoints and backoff
                 $response = Http::withHeaders([
-                    'User-Agent' => 'WanderlyApp/1.0 (Travel Planner Dataset Builder; contact: developer@wanderly.vn)'
+                    'User-Agent' => 'WanderlyApp/1.0 (Travel Planner Dataset Builder; contact: developer@wanderly.vn)',
                 ])->timeout(30)->asForm()->post('https://overpass-api.de/api/interpreter', [
-                    'data' => $overpassQuery
+                    'data' => $overpassQuery,
                 ]);
 
                 if ($response->successful()) {
                     File::put($cacheFile, $response->body());
                     $data = $response->json();
                     $elements = $data['elements'] ?? [];
-                    $this->info("Fetched " . count($elements) . " elements from Overpass.");
+                    $this->info('Fetched '.count($elements).' elements from Overpass.');
                 } else {
-                    $this->warn("Overpass returned status " . $response->status() . ". Using mock fallback candidates.");
+                    $this->warn('Overpass returned status '.$response->status().'. Using mock fallback candidates.');
                 }
             } catch (\Throwable $e) {
-                $this->warn("Overpass network request failed: " . $e->getMessage() . ". Using fallback template.");
+                $this->warn('Overpass network request failed: '.$e->getMessage().'. Using fallback template.');
             }
         }
 
@@ -146,7 +146,7 @@ out center tags 60;";
 
         File::put($draftPath, json_encode($candidates, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
-        $this->info("Wrote " . count($candidates) . " draft candidates to {$draftPath}");
+        $this->info('Wrote '.count($candidates)." draft candidates to {$draftPath}");
         $this->comment("Reminder: Review and curate these places, then move/copy approved items to data/places/{$code}.json with 'verified': true.");
 
         return self::SUCCESS;

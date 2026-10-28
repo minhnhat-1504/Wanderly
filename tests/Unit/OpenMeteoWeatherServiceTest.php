@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use App\Services\Itinerary\OpenMeteoWeatherService;
 use App\Services\Itinerary\ProvinceResolver;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -15,7 +14,7 @@ class OpenMeteoWeatherServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $resolver = new ProvinceResolver();
+        $resolver = new ProvinceResolver;
         $this->weatherService = new OpenMeteoWeatherService($resolver);
     }
 
@@ -40,8 +39,8 @@ class OpenMeteoWeatherServiceTest extends TestCase
                     'temperature_2m_min' => [25.0, 24.5, 24.0],
                     'precipitation_sum' => [0.0, 1.2, 0.0],
                     'weathercode' => [0, 2, 1],
-                ]
-            ], 200)
+                ],
+            ], 200),
         ]);
 
         $summary = $this->weatherService->getWeatherSummary('danang', $startDate, 3);
@@ -81,7 +80,7 @@ class OpenMeteoWeatherServiceTest extends TestCase
 
         // Force network failure (HTTP 503 Service Unavailable)
         Http::fake([
-            'https://api.open-meteo.com/v1/forecast*' => Http::response(['error' => 'Overloaded'], 503)
+            'https://api.open-meteo.com/v1/forecast*' => Http::response(['error' => 'Overloaded'], 503),
         ]);
 
         $summary = $this->weatherService->getWeatherSummary('lamdong', $startDate, 2);

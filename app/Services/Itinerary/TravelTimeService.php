@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\File;
 class TravelTimeService
 {
     protected array $regionRules = [];
+
     protected array $matrixCache = [];
 
     public function __construct(
@@ -243,6 +244,7 @@ class TravelTimeService
             $data = json_decode(File::get($cacheFile), true);
             if (is_array($data)) {
                 $this->matrixCache[$provinceCode] = $data;
+
                 return $data;
             }
         }

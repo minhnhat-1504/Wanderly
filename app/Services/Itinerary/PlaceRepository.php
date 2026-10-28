@@ -36,6 +36,7 @@ class PlaceRepository
         $filePath = "{$this->baseDir}/{$provinceCode}.json";
         if (! File::exists($filePath)) {
             $this->cache[$provinceCode] = [];
+
             return [];
         }
 
@@ -44,10 +45,12 @@ class PlaceRepository
 
         if (! is_array($data)) {
             $this->cache[$provinceCode] = [];
+
             return [];
         }
 
         $this->cache[$provinceCode] = $data;
+
         return $data;
     }
 
@@ -62,8 +65,8 @@ class PlaceRepository
         $all = $this->getByProvince($provinceCode);
 
         return array_values(array_filter($all, function ($place) {
-            return ! empty($place['verified']) 
-                && $place['verified'] === true 
+            return ! empty($place['verified'])
+                && $place['verified'] === true
                 && ($place['source'] ?? '') !== 'llm_draft';
         }));
     }

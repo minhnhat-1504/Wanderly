@@ -15,5 +15,14 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    map3d: ['three', 'd3-geo']
+                }
+            }
+        }
+    }
 });
 

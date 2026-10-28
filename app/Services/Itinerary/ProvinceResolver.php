@@ -96,6 +96,7 @@ class ProvinceResolver
                     'province' => $p,
                     'matched_by' => 'name',
                 ];
+
                 continue;
             }
 
@@ -113,6 +114,7 @@ class ProvinceResolver
 
         if (count($exactMatches) === 1) {
             $match = reset($exactMatches);
+
             return [
                 'resolved' => true,
                 'province' => $match['province'],
@@ -124,10 +126,11 @@ class ProvinceResolver
 
         if (count($exactMatches) > 1) {
             $names = array_map(fn ($m) => $m['province']['name'], $exactMatches);
+
             return [
                 'resolved' => false,
                 'province' => null,
-                'clarification' => 'Tên địa danh "' . $raw . '" có thể thuộc về các tỉnh: ' . implode(', ', $names) . '. Bạn muốn chọn tỉnh/thành phố nào?',
+                'clarification' => 'Tên địa danh "'.$raw.'" có thể thuộc về các tỉnh: '.implode(', ', $names).'. Bạn muốn chọn tỉnh/thành phố nào?',
                 'candidates' => array_values($names),
                 'matched_by' => null,
             ];
@@ -139,6 +142,7 @@ class ProvinceResolver
             $normName = $this->normalizeString($p['name']);
             if (str_contains($normalized, $normName) || (strlen($normName) >= 4 && str_contains($normName, $normalized))) {
                 $substringMatches[$p['code']] = $p;
+
                 continue;
             }
 
@@ -153,6 +157,7 @@ class ProvinceResolver
 
         if (count($substringMatches) === 1) {
             $p = reset($substringMatches);
+
             return [
                 'resolved' => true,
                 'province' => $p,
@@ -164,10 +169,11 @@ class ProvinceResolver
 
         if (count($substringMatches) > 1) {
             $names = array_map(fn ($p) => $p['name'], $substringMatches);
+
             return [
                 'resolved' => false,
                 'province' => null,
-                'clarification' => 'Từ khóa "' . $raw . '" khớp với nhiều tỉnh thành: ' . implode(', ', $names) . '. Hãy làm rõ điểm đến mong muốn của bạn.',
+                'clarification' => 'Từ khóa "'.$raw.'" khớp với nhiều tỉnh thành: '.implode(', ', $names).'. Hãy làm rõ điểm đến mong muốn của bạn.',
                 'candidates' => array_values($names),
                 'matched_by' => null,
             ];
@@ -206,7 +212,7 @@ class ProvinceResolver
             return [
                 'resolved' => false,
                 'province' => null,
-                'clarification' => 'Tên bạn nhập gần giống với: ' . implode(', ', $ambiguous) . '. Vui lòng nhập rõ hơn tên tỉnh/thành phố bạn muốn đi.',
+                'clarification' => 'Tên bạn nhập gần giống với: '.implode(', ', $ambiguous).'. Vui lòng nhập rõ hơn tên tỉnh/thành phố bạn muốn đi.',
                 'candidates' => $ambiguous,
                 'matched_by' => null,
             ];
@@ -226,7 +232,7 @@ class ProvinceResolver
         return [
             'resolved' => false,
             'province' => null,
-            'clarification' => 'Hệ thống không tìm thấy tỉnh/thành phố phù hợp với "' . $raw . '". Hiện tại Việt Nam có 34 tỉnh/thành phố theo Nghị quyết 202/2025/QH15. Vui lòng kiểm tra lại.',
+            'clarification' => 'Hệ thống không tìm thấy tỉnh/thành phố phù hợp với "'.$raw.'". Hiện tại Việt Nam có 34 tỉnh/thành phố theo Nghị quyết 202/2025/QH15. Vui lòng kiểm tra lại.',
             'candidates' => [],
             'matched_by' => null,
         ];
@@ -242,6 +248,7 @@ class ProvinceResolver
         $cleaned = preg_replace('/\b(quận|huyện|thị xã)\s+[\p{L}0-9\s-]+(?=,|$|\.|\n)/iu', '', $text);
         // Clean leftover double commas or spaces
         $cleaned = preg_replace('/\s*,\s*,\s*/', ', ', $cleaned ?? $text);
+
         return trim(preg_replace('/\s{2,}/', ' ', $cleaned));
     }
 

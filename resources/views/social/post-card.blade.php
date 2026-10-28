@@ -37,13 +37,15 @@
 
         {{-- Author Actions --}}
         @if($isAuthor)
-        <form method="POST" action="{{ route('social.posts.destroy', $post) }}"
-              onsubmit="return confirm('{{ __('Delete this post?') }}')" class="inline">
-            @csrf @method('DELETE')
-            <button type="submit" class="p-2 rounded-lg text-gray-300 hover:text-red-400 hover:bg-red-50 transition-colors" title="{{ __('Delete Post') }}">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
-            </button>
-        </form>
+        <button type="button"
+                onclick="openDeleteModal('{{ route('social.posts.destroy', $post) }}')"
+                class="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                title="{{ __('Delete Post') }}"
+                id="btn-delete-post-{{ $post->id }}">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+        </button>
         @endif
     </div>
 
@@ -101,9 +103,11 @@
         </button>
 
         {{-- Comment toggle --}}
-        <button class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm text-gray-500 hover:bg-blue-50 hover:text-blue-500 transition-colors"
-                onclick="this.closest('.post-card').querySelector('.comments-section').classList.toggle('hidden')"
-                title="{{ __('Comment') }}">
+        <button type="button"
+                class="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm text-gray-500 hover:bg-blue-50 hover:text-blue-500 transition-colors"
+                onclick="togglePostComments(this)"
+                title="{{ __('Comment') }}"
+                id="btn-comment-toggle-{{ $post->id }}">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             <span class="comment-count font-medium">{{ $post->comments_count }}</span>
         </button>
@@ -134,40 +138,7 @@
         {{-- Existing comments --}}
         <div class="comment-list space-y-0 mb-3 max-h-48 overflow-y-auto">
             @foreach($post->comments->take(5) as $comment)
-            <div class="flex gap-2 items-start py-2 {{ !$loop->first ? 'border-t border-gray-50' : '' }}">
-                @if($comment->author && $comment->author->username)
-                    <a href="{{ route('profile.show', $comment->author->username) }}" class="shrink-0">
-                        <x-profile.avatar :user="$comment->author" size="sm" />
-                    </a>
-                    <div class="flex-1 min-w-0">
-                        <a href="{{ route('profile.show', $comment->author->username) }}" class="text-xs font-semibold text-gray-700 hover:text-primary transition-colors">
-                            {{ $comment->author->name }}
-                        </a>
-                        <span class="text-xs text-gray-400 ml-2">{{ $comment->created_at->diffForHumans() }}</span>
-                        <p class="text-sm text-gray-600 mt-0.5">{{ $comment->content }}</p>
-                    </div>
-                @else
-                    <div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-emerald-500 flex items-center justify-center text-white text-xs font-semibold shrink-0">
-                        {{ strtoupper(substr($comment->author->name ?? 'U', 0, 1)) }}
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <span class="text-xs font-semibold text-gray-700">{{ $comment->author->name ?? __('User') }}</span>
-                        <span class="text-xs text-gray-400 ml-2">{{ $comment->created_at->diffForHumans() }}</span>
-                        <p class="text-sm text-gray-600 mt-0.5">{{ $comment->content }}</p>
-                    </div>
-                @endif
-
-                @auth
-                @if($comment->user_id !== auth()->id())
-                    <button type="button"
-                            onclick="window.openReportModal && window.openReportModal('{{ route('social.comments.report', $comment->id) }}', 'Comment by {{ addslashes($comment->author->name ?? 'User') }}')"
-                            class="text-gray-300 hover:text-rose-500 p-1 transition-colors"
-                            title="{{ __('Report comment') }}">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2z"/></svg>
-                    </button>
-                @endif
-                @endauth
-            </div>
+                @include('social.comment-item', ['comment' => $comment, 'post' => $post])
             @endforeach
         </div>
 

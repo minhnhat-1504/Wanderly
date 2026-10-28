@@ -180,6 +180,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/social/posts', [SocialFeedController::class, 'store'])->name('social.posts.store');
     Route::delete('/social/posts/{post}', [SocialFeedController::class, 'destroy'])->name('social.posts.destroy');
     Route::post('/social/posts/{post}/clone-trip', [SocialFeedController::class, 'cloneTrip'])->name('social.posts.clone-trip');
+    Route::post('/social/posts/{post}/like', [SocialFeedController::class, 'toggleLike'])->name('social.posts.like');
+    Route::post('/social/posts/{post}/save', [SocialFeedController::class, 'toggleSave'])->name('social.posts.save');
+    Route::post('/social/posts/{post}/comments', [SocialFeedController::class, 'addComment'])->name('social.posts.comments.store');
+    Route::patch('/social/comments/{comment}', [SocialFeedController::class, 'updateComment'])->name('social.comments.update');
+    Route::delete('/social/comments/{comment}', [SocialFeedController::class, 'deleteComment'])->name('social.comments.destroy');
     Route::post('/social/posts/{post}/report', [ReportController::class, 'reportPost'])->name('social.posts.report')->middleware('throttle:10,1');
     Route::post('/social/comments/{comment}/report', [ReportController::class, 'reportComment'])->name('social.comments.report')->middleware('throttle:10,1');
     Route::get('/social/reports/{report}', [ReportController::class, 'showReport'])->name('social.reports.show');
