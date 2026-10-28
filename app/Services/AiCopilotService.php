@@ -145,15 +145,22 @@ params: { title, day, time_slot, cost, poi_id, location, description }";
         // 1. Detect if the user wants an itinerary or mentions a province
         $resolved = $this->provinceResolver->resolve($userPrompt);
 
+        // If province not mentioned in current prompt, check recent history
+        if (! $resolved['resolved'] && ! empty($history)) {
+            foreach (array_reverse($history) as $h) {
+                $histResolved = $this->provinceResolver->resolve($h['content'] ?? '');
+                if ($histResolved['resolved'] && ! empty($histResolved['province'])) {
+                    $resolved = $histResolved;
+                    break;
+                }
+            }
+        }
+
         // Check for itinerary / travel planning intent keywords
-        $isItineraryIntent = preg_match('/(lịch trình|kế hoạch|chuyến đi|trip|gợi ý|đi chơi|du lịch|ở đâu|mấy ngày|\d+\s*(?:ngày|ngay|n)|tham quan|khám phá|tour)/iu', $userPrompt);
+        $isItineraryIntent = preg_match('/(lịch trình|kế hoạch|chuyến đi|trip|gợi ý|đi chơi|du lịch|ở đâu|mấy ngày|\d+\s*(?:ngày|ngay|n)|tham quan|khám phá|tour|hai ngày|ba ngày|bốn ngày|năm ngày|một ngày)/iu', $userPrompt);
 
         if ($resolved['resolved'] && ! empty($resolved['province']) && $isItineraryIntent) {
-            $days = 3;
-            if (preg_match('/(\d+)\s*(?:ngày|ngay|n)/iu', $userPrompt, $matches)) {
-                $days = max(1, min(5, (int) $matches[1]));
-            }
-
+            $days = $this->parseRequestedDays($userPrompt, 3);
             $province = $resolved['province'];
             $plan = $this->itineraryPlanner->plan($province['name'], $days);
 
@@ -365,5 +372,41 @@ Your goals:
             'content' => $text,
             'suggested_action' => null,
         ];
+    }
+
+    /**
+     * Parse requested itinerary duration (in days) from user prompt.
+     * Supports digits (2 ngày, 2n1đ, 3n) and Vietnamese number words (một, hai, ba, bốn, năm ngày).
+     */
+    public function parseRequestedDays(string $prompt, int $default = 3): int
+    {
+        $normalized = mb_strtolower(trim($prompt));
+
+        // 1. Vietnamese number words: "hai ngày", "ba ngày", "bốn ngày", "năm ngày", "một ngày"
+        $wordMap = [
+            'một' => 1, 'mot' => 1, 'nhất' => 1,
+            'hai' => 2, 'nhị' => 2,
+            'ba' => 3, 'tam' => 3,
+            'bốn' => 4, 'bon' => 4, 'tư' => 4, 'tu' => 4,
+            'năm' => 5, 'nam' => 5,
+        ];
+
+        foreach ($wordMap as $word => $num) {
+            if (preg_match('/\b' . preg_quote($word, '/') . '\s*(?:ngày|ngay|hôm|hom)\b/iu', $normalized)) {
+                return $num;
+            }
+        }
+
+        // 2. Formats like "2n1đ", "3n2đ", "2n", "2d", "2 ngày 1 đêm", "2 ngày", "2 ngay"
+        if (preg_match('/(\d+)\s*(?:n\s*\d*\s*(?:đ|d)?|ngày|ngay|hôm|hom|day|days)/iu', $normalized, $matches)) {
+            return max(1, min(5, (int) $matches[1]));
+        }
+
+        // 3. Formats like "lịch trình 2", "chuyến đi 3"
+        if (preg_match('/(?:lịch trình|chuyến đi|tour|kế hoạch)\s*(\d+)/iu', $normalized, $matches)) {
+            return max(1, min(5, (int) $matches[1]));
+        }
+
+        return $default;
     }
 }

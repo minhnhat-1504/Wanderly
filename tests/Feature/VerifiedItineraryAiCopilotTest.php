@@ -171,4 +171,22 @@ class VerifiedItineraryAiCopilotTest extends TestCase
             'trip_id' => null,
         ]);
     }
+
+    public function test_ai_copilot_parses_vietnamese_word_days_and_generates_exact_duration(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('ajax.ai-copilot.global-chat'), [
+            'message' => 'Hãy gợi ý lịch trình hai ngày tại Đà Nẵng',
+        ]);
+
+        $response->assertStatus(200);
+        $action = $response->json('assistant_message.suggested_action');
+        $this->assertNotNull($action);
+        $this->assertEquals('create_trip_itinerary', $action['action']);
+        // Verify EXACTLY 2 days are generated!
+        $this->assertCount(2, $action['params']['days']);
+        $this->assertEquals(2, $action['params']['summary']['total_days']);
+    }
 }
+
