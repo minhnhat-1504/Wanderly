@@ -26,7 +26,7 @@ class StoreTripRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'destination' => ['required', 'string', 'max:255'],
-            'start_date' => ['required', 'date'],
+            'start_date' => ['required', 'date', 'after_or_equal:today'],
             'end_date' => ['required', 'date', 'after_or_equal:start_date'],
             'budget' => ['required', 'numeric', 'min:0'],
             'privacy' => ['required', Rule::in(['private', 'group', 'public'])],
@@ -50,6 +50,7 @@ class StoreTripRequest extends FormRequest
             'destination.max' => __('The destination must not exceed 255 characters.'),
             'start_date.required' => __('The start date field is required.'),
             'start_date.date' => __('The start date is not a valid date.'),
+            'start_date.after_or_equal' => __('The start date must be today or a future date.'),
             'end_date.required' => __('The end date field is required.'),
             'end_date.date' => __('The end date is not a valid date.'),
             'end_date.after_or_equal' => __('The end date must be a date after or equal to the start date.'),

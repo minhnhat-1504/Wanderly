@@ -116,5 +116,7 @@
     "Paste a trip review from Facebook, blogs, or notes. AI will automatically extract days, timeslots, and estimated costs.": "Dán đoạn văn bản review chuyến đi từ Facebook, Blog hoặc ghi chú cá nhân. AI sẽ tự động nhận diện ngày, khung giờ (sáng/trưa/chiều/tối) và ước tính chi phí.",
     "Extract into Itinerary": "Bóc tách vào Lịch trình",
     "You selected to join this activity.": "Bạn đã chọn tham gia hoạt động này.",
-    "You unselected this activity.": "Bạn đã hủy tham gia hoạt động này."
+    "You unselected this activity.": "Bạn đã hủy tham gia hoạt động này.",
+    "The start date must be today or a future date.": "Ngày bắt đầu phải là hôm nay hoặc một ngày trong tương lai."
 }
+

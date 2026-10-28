@@ -270,7 +270,7 @@ class AiCopilotController extends Controller
         $validated = $request->validate([
             'province' => 'required|array',
             'days' => 'required|array|min:1',
-            'start_date' => 'nullable|date',
+            'start_date' => 'nullable|date|after_or_equal:today',
             'budget' => 'nullable|numeric|min:0',
             'summary' => 'nullable|array',
         ]);

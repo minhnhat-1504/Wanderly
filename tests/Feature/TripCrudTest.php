@@ -56,6 +56,22 @@ class TripCrudTest extends TestCase
         ]);
     }
 
+    public function test_validation_fails_when_start_date_is_in_the_past(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('trips.store'), [
+            'name' => 'Past Trip',
+            'destination' => 'Da Lat',
+            'start_date' => now()->subDay()->format('Y-m-d'),
+            'end_date' => now()->addDays(2)->format('Y-m-d'),
+            'budget' => 5000000,
+            'privacy' => 'private',
+        ]);
+
+        $response->assertSessionHasErrors(['start_date']);
+    }
+
     public function test_validation_fails_when_end_date_is_before_start_date(): void
     {
         $user = User::factory()->create();
@@ -63,8 +79,8 @@ class TripCrudTest extends TestCase
         $response = $this->actingAs($user)->post(route('trips.store'), [
             'name' => 'Invalid Dates Trip',
             'destination' => 'Da Lat',
-            'start_date' => '2026-11-10',
-            'end_date' => '2026-11-05',
+            'start_date' => now()->addDays(5)->format('Y-m-d'),
+            'end_date' => now()->addDays(2)->format('Y-m-d'),
             'budget' => 5000000,
             'privacy' => 'private',
         ]);
@@ -76,11 +92,14 @@ class TripCrudTest extends TestCase
     {
         $user = User::factory()->create();
 
+        $startDate = now()->addDays(3)->format('Y-m-d');
+        $endDate = now()->addDays(7)->format('Y-m-d');
+
         $tripData = [
             'name' => 'Explore Da Lat Pine Forests',
             'destination' => 'Da Lat',
-            'start_date' => '2026-11-01',
-            'end_date' => '2026-11-05',
+            'start_date' => $startDate,
+            'end_date' => $endDate,
             'budget' => 6000000,
             'privacy' => 'private',
         ];

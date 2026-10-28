@@ -77,15 +77,19 @@
                 <x-input
                     type="date"
                     name="start_date"
+                    id="start_date"
                     label="{{ __('Start Date') }}"
                     :value="old('start_date')"
+                    min="{{ date('Y-m-d') }}"
                     required
                 />
                 <x-input
                     type="date"
                     name="end_date"
+                    id="end_date"
                     label="{{ __('End Date') }}"
                     :value="old('end_date')"
+                    min="{{ old('start_date', date('Y-m-d')) }}"
                     required
                 />
             </div>
@@ -178,3 +182,27 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const startDateInput = document.getElementById('start_date');
+        const endDateInput = document.getElementById('end_date');
+
+        if (startDateInput && endDateInput) {
+            function syncDates() {
+                if (startDateInput.value) {
+                    endDateInput.min = startDateInput.value;
+                    if (endDateInput.value && endDateInput.value < startDateInput.value) {
+                        endDateInput.value = startDateInput.value;
+                    }
+                }
+            }
+
+            startDateInput.addEventListener('change', syncDates);
+            startDateInput.addEventListener('input', syncDates);
+            syncDates();
+        }
+    });
+</script>
+@endpush
