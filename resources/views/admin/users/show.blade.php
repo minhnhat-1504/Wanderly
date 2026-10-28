@@ -8,7 +8,6 @@
     roleModalOpen: false,
     suspendModalOpen: false,
     unsuspendModalOpen: false,
-    deleteModalOpen: false,
     suspendReason: '',
     logDiffModalOpen: false,
     diffTitle: '',
@@ -49,13 +48,6 @@
                     <button type="button" @click="suspendModalOpen = true"
                             class="py-2 px-3.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200/80 rounded-xl text-xs font-semibold transition-colors">
                         {{ __('Suspend Account') }}
-                    </button>
-                @endif
-
-                @if($user->id !== auth()->id())
-                    <button type="button" @click="deleteModalOpen = true"
-                            class="py-2 px-3.5 bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-700 rounded-xl text-xs font-semibold transition-colors">
-                        {{ __('Delete User') }}
                     </button>
                 @endif
             @else
@@ -365,48 +357,6 @@
                                 :disabled="suspendReason.trim().length < 10"
                                 class="py-2 px-4 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-xs font-semibold shadow-sm">
                             {{ __('Confirm Suspension') }}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    {{-- MODAL: Delete User --}}
-    <div x-show="deleteModalOpen"
-         style="display: none;"
-         class="fixed inset-0 z-50 overflow-y-auto"
-         role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" @click="deleteModalOpen = false"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
-
-            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full border border-slate-200">
-                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <div class="p-6 space-y-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                            </div>
-                            <div>
-                                <h3 class="text-base font-bold text-slate-900">{{ __('Soft Delete Account') }}</h3>
-                                <p class="text-xs text-slate-500">{{ __('Deactivate account with restoration capability.') }}</p>
-                            </div>
-                        </div>
-
-                        <p class="text-xs text-slate-600">
-                            {{ __('Are you sure you want to delete this account? The user will lose access immediately and their active sessions will be terminated.') }}
-                        </p>
-                    </div>
-
-                    <div class="bg-slate-50 px-6 py-3.5 flex justify-end gap-2 border-t border-slate-200/80">
-                        <button type="button" @click="deleteModalOpen = false" class="py-2 px-3.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold">
-                            {{ __('Cancel') }}
-                        </button>
-                        <button type="submit" class="py-2 px-4 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold shadow-sm">
-                            {{ __('Delete Account') }}
                         </button>
                     </div>
                 </form>
