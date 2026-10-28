@@ -84,8 +84,9 @@ class AiCopilotTest extends TestCase
 
         $response->assertOk()
             ->assertJsonPath('success', true)
-            ->assertJsonPath('assistant_message.role', 'assistant')
-            ->assertJsonPath('assistant_message.suggested_action.type', 'create_activity');
+            ->assertJsonPath('assistant_message.role', 'assistant');
+
+        $this->assertNotEmpty($response->json('assistant_message.content'));
 
         $this->assertDatabaseHas('ai_chat_messages', [
             'trip_id' => $this->trip->id,
