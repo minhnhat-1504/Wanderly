@@ -81,5 +81,43 @@
     }
   },
   "default_road_detour_factor": 1.38,
-  "boarding_overhead_minutes": 10
+  "boarding_overhead_minutes": 10,
+  "seasonal_hazards": {
+    "central_storm_season": {
+      "name": "Mùa mưa bão miền Trung",
+      "months": [9, 10, 11],
+      "regions": ["central_coast", "north_central"],
+      "warning": "Mùa mưa bão lớn miền Trung. Biển động mạnh, tàu thuyền cấm xuất bến, nguy cơ ngập lụt cao. Cấm các hoạt động lặn biển, đi cano và hạn chế tắm biển.",
+      "force_indoor": true
+    },
+    "north_winter_cold": {
+      "name": "Mùa rét vùng núi phía Bắc",
+      "months": [12, 1, 2],
+      "regions": ["north_mountain", "red_river"],
+      "warning": "Mùa đông miền Bắc rét đậm, sương mù dày đặc che khuất tầm nhìn đèo dốc. Cần trang bị áo ấm chống nước.",
+      "force_indoor": false
+    },
+    "north_summer_landslide": {
+      "name": "Mùa mưa lũ sạt lở đèo núi",
+      "months": [7, 8],
+      "regions": ["north_mountain"],
+      "warning": "Mùa mưa ngâu lũ quét và nguy cơ sạt lở đất đá trên các cung đường đèo (Hà Giang, Ô Quy Hồ). Hạn chế đi phượt cung đèo hiểm trở.",
+      "force_indoor": true
+    },
+    "mekong_flood_season": {
+      "name": "Mùa nước nổi miền Tây",
+      "months": [9, 10, 11],
+      "regions": ["mekong"],
+      "warning": "Mùa nước nổi Tây Nam Bộ, cảnh sắc sinh thái sông nước đặc sắc nhưng một số tuyến đường nông thôn có thể bị triều cường.",
+      "force_indoor": false
+    },
+    "tet_holiday_crowding": {
+      "name": "Cao điểm lễ hội & Tết",
+      "months": [1, 2],
+      "regions": ["north_mountain", "red_river", "north_central", "central_coast", "central_highlands", "southeast", "mekong"],
+      "warning": "Dịp Tết Nguyên Đán và lễ hội đầu xuân, lượng khách hành hương đông đúc và giá cả dịch vụ có phụ thu.",
+      "force_indoor": false
+    }
+  }
 }
+
