@@ -64,18 +64,68 @@
 
     $isRoom = ($type === 'room');
     $isBooking = ($type === 'booking');
+    $tripId = is_object($activity) ? ($activity->trip_id ?? null) : ($activity['trip_id'] ?? null);
     $participantsCount = is_object($activity) && isset($activity->participants) ? $activity->participants->count() : 0;
     $payerName = is_object($activity) && isset($activity->payer) && $activity->payer ? $activity->payer->name : null;
+    $totalActivityCost = is_object($activity) && method_exists($activity, 'calculateTotalSpent') ? $activity->calculateTotalSpent() : 0.0;
+    $isUserJoined = is_object($activity) && method_exists($activity, 'isParticipating') ? $activity->isParticipating(auth()->id()) : false;
 @endphp
 
 <div
     {{ $attributes->merge([
         'class' => 'timeline-activity-card group relative w-full bg-white rounded-xl border border-gray-200/90 p-3.5 sm:p-4 transition-all duration-200 shadow-sm hover:shadow-md hover:border-teal-300 select-none ' . ($isRoom ? 'bg-indigo-50/30 border-indigo-200' : ($isBooking ? 'bg-emerald-50/30 border-emerald-200' : ''))
     ]) }}
+    x-data="{
+        id: {{ $id }},
+        tripId: {{ $tripId ?: 'null' }} || document.getElementById('timeline-board')?.dataset.tripId,
+        unitCost: {{ $cost }},
+        participantsCount: {{ $participantsCount }},
+        totalSpent: {{ $totalActivityCost }},
+        isJoined: {{ $isUserJoined ? 'true' : 'false' }},
+        isToggling: false,
+        async toggleJoin() {
+            if (this.isToggling || !this.tripId) return;
+            this.isToggling = true;
+            try {
+                const token = document.querySelector('meta[name=csrf-token]')?.getAttribute('content');
+                const res = await fetch(`/ajax/trips/${this.tripId}/activities/${this.id}/toggle-join`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    this.isJoined = data.joined;
+                    this.participantsCount = data.participants_count;
+                    this.totalSpent = data.total_spent;
+                    $el.dataset.cost = data.total_spent;
+                    window.dispatchEvent(new CustomEvent('budget-recalculate'));
+                } else if (data.message) {
+                    alert(data.message);
+                }
+            } catch (err) {
+                console.error('Toggle join error:', err);
+            } finally {
+                this.isToggling = false;
+            }
+        }
+    }"
+    @activity-split-updated.window="
+        if ($event.detail && $event.detail.activityId == id) {
+            participantsCount = $event.detail.splitDetails?.participants_count || 0;
+            totalSpent = typeof $event.detail.totalSpent !== 'undefined' ? $event.detail.totalSpent : (participantsCount * unitCost);
+            $el.dataset.cost = totalSpent;
+            window.dispatchEvent(new CustomEvent('budget-recalculate'));
+        }
+    "
     data-id="{{ $id }}"
     data-day="{{ $day }}"
     data-slot="{{ $slot }}"
-    data-cost="{{ $cost }}"
+    data-cost="{{ $totalActivityCost }}"
+    data-unit-cost="{{ $cost }}"
     data-type="{{ $type }}"
 >
     <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 min-w-0">
@@ -147,6 +197,36 @@
                         {{ $notes }}
                     </p>
                 @endif
+
+                {{-- Participant Selection & Live Attendance --}}
+                @if(!$isRoom && !$isBooking)
+                    <div class="flex items-center gap-2 pt-1.5 flex-wrap">
+                        @auth
+                            <button
+                                type="button"
+                                @click="toggleJoin()"
+                                :disabled="isToggling"
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold rounded-lg transition-all shadow-xs cursor-pointer focus:outline-none select-none"
+                                :class="isJoined ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-teal-900/10' : 'bg-teal-50 hover:bg-teal-100/90 text-teal-800 border border-teal-300/80'"
+                                :title="isJoined ? '{{ __('Bạn đã chọn tham gia hoạt động này. Bấm để hủy chọn.') }}' : '{{ __('Bấm để chọn tham gia hoạt động này.') }}'"
+                            >
+                                <span x-show="!isToggling && isJoined" class="text-xs">✓</span>
+                                <span x-show="!isToggling && !isJoined" class="text-xs">+</span>
+                                <span x-show="isToggling" class="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+                                <span x-text="isJoined ? '{{ __('Tôi sẽ đi') }}' : '{{ __('Chọn đi') }}'"></span>
+                            </button>
+                        @endauth
+
+                        {{-- Participants Count Badge & Total Spent for this activity --}}
+                        <span
+                            class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md"
+                            :class="participantsCount > 0 ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-semibold' : 'bg-gray-100 text-gray-500'"
+                        >
+                            <span>👥</span>
+                            <span x-text="participantsCount > 0 ? (participantsCount + ' {{ __('người chọn') }} • ' + new Intl.NumberFormat('vi-VN').format(totalSpent) + ' ₫') : '{{ __('Chưa tính ngân sách (0 người)') }}'"></span>
+                        </span>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -161,11 +241,12 @@
                     </span>
                 @endif
 
-                {{-- Cost Badge --}}
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold {{ $cost > 0 ? 'bg-teal-50 text-teal-800 border border-teal-200' : 'bg-gray-100 text-gray-600' }}">
-                    {{ $cost > 0 ? number_format($cost, 0, ',', '.') . ' ₫' : __('Free') }}
+                {{-- Cost Badge (unit price per person) --}}
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold {{ $cost > 0 ? 'bg-teal-50 text-teal-800 border border-teal-200' : 'bg-gray-100 text-gray-600' }}" title="{{ $cost > 0 ? __('Giá vé / người') : '' }}">
+                    {{ $cost > 0 ? number_format($cost, 0, ',', '.') . ' ₫/người' : __('Free') }}
                 </span>
             </div>
+
 
             {{-- Hover Actions: Edit & Delete (clean text buttons, only for editors) --}}
             @if($canEdit)

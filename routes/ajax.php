@@ -139,6 +139,8 @@ Route::middleware('auth')->group(function () {
         ->name('trips.activities.split.get');
     Route::post('/trips/{trip}/activities/{activity}/split', [SplitBillController::class, 'assignParticipants'])
         ->name('trips.activities.split.assign');
+    Route::post('/trips/{trip}/activities/{activity}/toggle-join', [SplitBillController::class, 'toggleJoin'])
+        ->name('trips.activities.toggle-join');
     Route::post('/trips/{trip}/settlements/vietqr', [SplitBillController::class, 'generateVietQr'])
         ->name('trips.settlements.vietqr');
     Route::post('/trips/{trip}/settlements/confirm', [SplitBillController::class, 'confirmPayment'])

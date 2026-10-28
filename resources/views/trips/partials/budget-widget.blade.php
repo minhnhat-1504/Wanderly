@@ -4,16 +4,19 @@
 ])
 
 @php
-    $initialBudget = (float) ($trip->budget ?? 0);
-    $initialSpent = (float) ($trip->spent ?? 0);
-    $initialRemaining = max(0, $initialBudget - $initialSpent);
-    $initialPercent = $initialBudget > 0 ? min(round(($initialSpent / $initialBudget) * 100), 100) : 0;
+    $budgetStatus = app(\App\Services\BudgetService::class)->calculateBudgetStatus($trip);
+    $initialBudget = (float) $budgetStatus['budget'];
+    $initialSpent = (float) $budgetStatus['total_spent'];
+    $initialRemaining = (float) $budgetStatus['remaining_budget'];
+    $initialPercent = (float) $budgetStatus['percentage'];
+    $initialRoomCost = (float) $budgetStatus['room_cost'];
 @endphp
 
 <div
     x-data="{
         tripId: {{ $trip->id }},
         budget: {{ $initialBudget }},
+        roomCost: {{ $initialRoomCost }},
         spent: {{ $initialSpent }},
         remaining: {{ $initialRemaining }},
         percentage: {{ $initialPercent }},
@@ -35,8 +38,8 @@
                 totalActivityCost += parseFloat(card.dataset.cost || 0);
             });
 
-            this.spent = totalActivityCost;
-            this.remaining = this.budget - this.spent;
+            this.spent = totalActivityCost + this.roomCost;
+            this.remaining = Math.max(0, this.budget - this.spent);
             this.percentage = this.budget > 0 ? Math.round((this.spent / this.budget) * 100) : 0;
 
             if (this.percentage >= 95 && !this.warningShown95) {
