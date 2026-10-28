@@ -268,10 +268,16 @@
                                             </span>
                                             <div>
                                                 <h4 class="font-extrabold text-slate-900 dark:text-white text-sm" x-text="msg.suggested_action.params.province ? msg.suggested_action.params.province.name : 'Lịch trình du lịch'"></h4>
-                                                <div class="flex items-center gap-1.5 text-[11px] text-teal-700 dark:text-teal-300 font-semibold">
+                                                <div class="flex items-center gap-1.5 text-[11px] text-teal-700 dark:text-teal-300 font-semibold flex-wrap">
                                                     <span x-text="(msg.suggested_action.params.summary ? msg.suggested_action.params.summary.total_days : '3') + ' ngày'"></span>
                                                     <span>•</span>
-                                                    <span x-text="(msg.suggested_action.params.summary ? msg.suggested_action.params.summary.total_places : '0') + ' điểm đến đã xác minh'"></span>
+                                                    <span x-text="(msg.suggested_action.params.summary ? msg.suggested_action.params.summary.total_places : '0') + ' điểm đến'"></span>
+                                                    <template x-if="msg.suggested_action.params.summary && msg.suggested_action.params.summary.budget_formatted">
+                                                        <span class="flex items-center gap-1 text-amber-700 dark:text-amber-400 font-bold">
+                                                            <span>•</span>
+                                                            <span x-text="'💰 ' + msg.suggested_action.params.summary.budget_formatted"></span>
+                                                        </span>
+                                                    </template>
                                                 </div>
                                             </div>
                                         </div>
@@ -376,6 +382,20 @@
                                             Dữ liệu: © OpenStreetMap (ODbL) • Thời tiết: Open-Meteo.com • Wikivoyage (CC BY-SA 4.0)
                                         </p>
                                     </div>
+
+                                    <!-- Summary cost and travel badges -->
+                                    <template x-if="msg.suggested_action.params.summary">
+                                        <div class="p-2.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-xs text-slate-700 dark:text-slate-200 flex items-center justify-between">
+                                            <div class="flex items-center gap-1.5 font-medium">
+                                                <span>🚗 Di chuyển:</span>
+                                                <span class="font-bold text-teal-800 dark:text-teal-300" x-text="(msg.suggested_action.params.summary.total_distance_km || 0) + ' km'"></span>
+                                            </div>
+                                            <div class="flex items-center gap-1.5 font-medium">
+                                                <span>🎟️ Vé tham quan:</span>
+                                                <span class="font-bold text-emerald-800 dark:text-emerald-300" x-text="msg.suggested_action.params.summary.total_ticket_cost_formatted || '0 VNĐ'"></span>
+                                            </div>
+                                        </div>
+                                    </template>
 
                                     <!-- Create Trip CTA Button -->
                                     <button @click="createTripFromItinerary(msg.suggested_action.params)"

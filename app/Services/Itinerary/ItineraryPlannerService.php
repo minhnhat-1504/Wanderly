@@ -77,6 +77,38 @@ class ItineraryPlannerService
             $eligiblePlaces = $places;
         }
 
+        // Rank places by user interests if specified
+        $interests = $options['interests'] ?? [];
+        if (! empty($interests)) {
+            usort($eligiblePlaces, function ($a, $b) use ($interests) {
+                $aScore = in_array($a['category'] ?? '', $interests, true) ? 3 : 0;
+                $bScore = in_array($b['category'] ?? '', $interests, true) ? 3 : 0;
+                foreach ($interests as $int) {
+                    if (in_array($int, $a['tags'] ?? [], true)) {
+                        $aScore++;
+                    }
+                    if (in_array($int, $b['tags'] ?? [], true)) {
+                        $bScore++;
+                    }
+                }
+                return $bScore <=> $aScore;
+            });
+        }
+
+        // Prioritize free & low-cost sights if user requested a tight budget
+        $budget = isset($options['budget']) && is_numeric($options['budget']) ? (float) $options['budget'] : null;
+        if ($budget !== null && $days > 0) {
+            $dailyBudget = $budget / $days;
+            if ($dailyBudget < 1000000) {
+                // Tighter budget: prioritize free/cheap sights
+                usort($eligiblePlaces, function ($a, $b) {
+                    $pA = (float) ($a['ticket_price_vnd'] ?? 0);
+                    $pB = (float) ($b['ticket_price_vnd'] ?? 0);
+                    return $pA <=> $pB;
+                });
+            }
+        }
+
         // 4. If force_greedy or no LLM configured, use deterministic greedy fallback directly
         $forceGreedy = $options['force_greedy'] ?? false;
         $geminiKey = config('ai.gemini.api_key');
@@ -84,7 +116,7 @@ class ItineraryPlannerService
 
         if ($forceGreedy || (empty($geminiKey) && empty($openaiKey))) {
             $plan = $this->generateGreedyFallback($provinceCode, $days, $eligiblePlaces, $options);
-            return $this->enrichPlanOutput($plan, $province, $weatherSummary, 'deterministic_greedy');
+            return $this->enrichPlanOutput($plan, $province, $weatherSummary, 'deterministic_greedy', $options);
         }
 
         // 5. LLM as Selector Only with Repair Loop
@@ -94,10 +126,10 @@ class ItineraryPlannerService
         if ($plan === null) {
             // Fallback to greedy if LLM could not produce a valid plan
             $plan = $this->generateGreedyFallback($provinceCode, $days, $eligiblePlaces, $options);
-            return $this->enrichPlanOutput($plan, $province, $weatherSummary, 'fallback_greedy');
+            return $this->enrichPlanOutput($plan, $province, $weatherSummary, 'fallback_greedy', $options);
         }
 
-        return $this->enrichPlanOutput($plan, $province, $weatherSummary, 'llm_verified');
+        return $this->enrichPlanOutput($plan, $province, $weatherSummary, 'llm_verified', $options);
     }
 
     /**
@@ -333,7 +365,8 @@ class ItineraryPlannerService
 
             // Morning sights (Strictly within Morning: 06:00 - 11:00)
             if (isset($orderedSights[0])) {
-                $hasSecondMorning = isset($orderedSights[1]);
+                $isRelaxed = (($options['pace'] ?? 'balanced') === 'relaxed');
+                $hasSecondMorning = ! $isRelaxed && isset($orderedSights[1]);
                 $sight1Start = '08:00';
                 $sight1Dur = $hasSecondMorning
                     ? min(90, (int) ($orderedSights[0]['suggested_duration_min'] ?? 90))
@@ -380,7 +413,8 @@ class ItineraryPlannerService
 
             // Afternoon sights (Strictly within Afternoon: 14:00 - 18:00)
             if (isset($orderedSights[2])) {
-                $hasSecondAfternoon = isset($orderedSights[3]);
+                $isRelaxed = (($options['pace'] ?? 'balanced') === 'relaxed');
+                $hasSecondAfternoon = ! $isRelaxed && isset($orderedSights[3]);
                 $afternoon1Start = '14:00';
                 $afternoon1Dur = $hasSecondAfternoon
                     ? min(90, (int) ($orderedSights[2]['suggested_duration_min'] ?? 90))
@@ -449,7 +483,8 @@ class ItineraryPlannerService
         array $rawPlan,
         array $province,
         array $weatherSummary,
-        string $sourceType = 'llm_verified'
+        string $sourceType = 'llm_verified',
+        array $options = []
     ): array {
         $provinceCode = $province['code'];
         $enrichedDays = [];
@@ -531,6 +566,20 @@ class ItineraryPlannerService
             ];
         }
 
+        $totalTicketCost = 0;
+        foreach ($allVisitedPlaces as $vp) {
+            $ticket = $vp['ticket_price_vnd'] ?? null;
+            if ($ticket !== null && is_numeric($ticket)) {
+                $totalTicketCost += (int) $ticket;
+            }
+        }
+
+        $daysCount = max(1, count($enrichedDays));
+        $requestedBudget = isset($options['budget']) && is_numeric($options['budget']) && (float) $options['budget'] > 0
+            ? (float) $options['budget']
+            : null;
+        $effectiveBudget = $requestedBudget ?? ($totalTicketCost + ($daysCount * 800000));
+
         return [
             'status' => 'success',
             'source_type' => $sourceType,
@@ -545,6 +594,13 @@ class ItineraryPlannerService
                 'total_places' => count($allVisitedPlaces),
                 'total_travel_minutes' => $totalTripTravelMinutes,
                 'total_distance_km' => round($totalTripDistanceKm, 2),
+                'total_ticket_cost' => $totalTicketCost,
+                'total_ticket_cost_formatted' => number_format($totalTicketCost, 0, ',', '.') . ' VNĐ',
+                'budget' => $effectiveBudget,
+                'budget_formatted' => number_format($effectiveBudget, 0, ',', '.') . ' VNĐ',
+                'requested_budget' => $requestedBudget,
+                'pace' => $options['pace'] ?? 'balanced',
+                'interests' => $options['interests'] ?? [],
             ],
             'tips' => $rawPlan['tips'] ?? [],
             'weather_summary' => [
@@ -560,6 +616,7 @@ class ItineraryPlannerService
             'disclaimer' => 'Giờ mở cửa và giá vé có thể thay đổi tùy thời điểm, vui lòng kiểm tra lại trước chuyến đi.',
         ];
     }
+
 
     /**
      * Format price value for display.

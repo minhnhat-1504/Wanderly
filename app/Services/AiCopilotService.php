@@ -6,7 +6,9 @@ use App\Models\Poi;
 use App\Models\Trip;
 use App\Models\User;
 use App\Services\Itinerary\ItineraryPlannerService;
+use App\Services\Itinerary\PlaceRepository;
 use App\Services\Itinerary\ProvinceResolver;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -16,7 +18,8 @@ class AiCopilotService
         protected CollaborationService $collaborationService,
         protected BudgetService $budgetService,
         protected ProvinceResolver $provinceResolver,
-        protected ItineraryPlannerService $itineraryPlanner
+        protected ItineraryPlannerService $itineraryPlanner,
+        protected PlaceRepository $placeRepository
     ) {}
 
     /**
@@ -157,18 +160,54 @@ params: { title, day, time_slot, cost, poi_id, location, description }";
             }
         }
 
+        // Distinguish factual place/address/food query vs full itinerary request
+        $isFactualQuery = preg_match('/(địa chỉ|mở cửa|đóng cửa|mấy giờ|bao nhiêu tiền|giá vé|vé vào cổng|ở đâu|có gì ngon|nằm ở đâu|nằm tại đâu)/iu', $userPrompt)
+            && ! preg_match('/(lịch trình|kế hoạch|chuyến đi|hành trình|tour|\d+\s*(?:ngày|ngay|n)|(?:một|hai|ba|bốn|năm)\s*ngày)/iu', $userPrompt);
+
         // Check for itinerary / travel planning intent keywords
-        $isItineraryIntent = preg_match('/(lịch trình|kế hoạch|chuyến đi|trip|gợi ý|đi chơi|du lịch|ở đâu|mấy ngày|\d+\s*(?:ngày|ngay|n)|tham quan|khám phá|tour|hai ngày|ba ngày|bốn ngày|năm ngày|một ngày)/iu', $userPrompt);
+        $isItineraryIntent = ! $isFactualQuery && preg_match('/(lịch trình|kế hoạch|chuyến đi|hành trình|tour|trip|gợi ý|đi chơi|du lịch|mấy ngày|\d+\s*(?:ngày|ngay|n)|tham quan|khám phá|hai ngày|ba ngày|bốn ngày|năm ngày|một ngày)/iu', $userPrompt);
 
         if ($resolved['resolved'] && ! empty($resolved['province']) && $isItineraryIntent) {
             $days = $this->parseRequestedDays($userPrompt, 3);
+            $budget = $this->parseRequestedBudget($userPrompt, $history);
+            $pace = $this->parseRequestedPace($userPrompt);
+            $interests = $this->parseRequestedInterests($userPrompt);
+            $startDate = $this->parseRequestedStartDate($userPrompt);
+
+            $options = [
+                'budget' => $budget,
+                'pace' => $pace,
+                'interests' => $interests,
+            ];
+            if ($startDate) {
+                $options['start_date'] = $startDate;
+            }
+
             $province = $resolved['province'];
-            $plan = $this->itineraryPlanner->plan($province['name'], $days);
+            $plan = $this->itineraryPlanner->plan($province['name'], $days, $options);
 
             if ($plan['status'] === 'success') {
-                $content = "Dưới đây là lịch trình {$days} ngày tại **{$province['name']}** được lập tự động từ tập dữ liệu chính xác đã kiểm chứng của Wanderly:\n\n";
+                $summary = $plan['summary'];
+                $budgetStr = $summary['budget_formatted'] ?? ($budget ? number_format($budget, 0, ',', '.') . ' VNĐ' : '');
+                $ticketStr = $summary['total_ticket_cost_formatted'] ?? '0 VNĐ';
+
+                $content = "Dưới đây là lịch trình {$days} ngày tại **{$province['name']}**";
+                if ($budget) {
+                    $content .= " phù hợp với ngân sách **" . number_format($budget, 0, ',', '.') . " VNĐ**";
+                }
+                if ($pace !== 'balanced') {
+                    $paceDesc = $pace === 'relaxed' ? 'chill & thong thả' : 'khám phá năng động';
+                    $content .= " theo phong cách **{$paceDesc}**";
+                }
+                $content .= " được Wanderly lập tự động từ dữ liệu đã kiểm chứng:\n\n";
+
                 $content .= "🌤️ **Thời tiết & Lời khuyên:** {$plan['weather_summary']['general_advice']}\n";
-                $content .= "📍 **Quy mô:** {$plan['summary']['total_places']} địa điểm đã xác thực, tổng thời gian di chuyển dự kiến ~{$plan['summary']['total_travel_minutes']} phút.\n\n";
+                $content .= "📍 **Quy mô:** {$summary['total_places']} điểm đến • ⏱️ Di chuyển: ~{$summary['total_travel_minutes']} phút\n";
+                if (! empty($budgetStr)) {
+                    $content .= "💰 **Dự toán chi phí:** Vé tham quan: **{$ticketStr}** • Ngân sách chuyến đi: **{$budgetStr}**\n\n";
+                } else {
+                    $content .= "💰 **Dự toán chi phí:** Vé tham quan: **{$ticketStr}**\n\n";
+                }
                 $content .= "Mời bạn xem chi tiết các điểm đến bên dưới (có kèm link Google Maps và giờ mở cửa) hoặc nhấn **'Tạo chuyến đi từ lịch trình này'** để lưu thành chuyến đi thực tế!";
 
                 return [
@@ -187,7 +226,23 @@ params: { title, day, time_slot, cost, poi_id, location, description }";
             ];
         }
 
-        // 2. Fallback to general conversational assistant
+        // 2. Ground general conversational assistant with verified local place data
+        $localContext = '';
+        $groundingPlaces = [];
+        if ($resolved['resolved'] && ! empty($resolved['province'])) {
+            $groundingPlaces = $this->placeRepository->getVerifiedByProvince($resolved['province']['code']);
+            if (! empty($groundingPlaces)) {
+                $placeSummaries = [];
+                foreach (array_slice($groundingPlaces, 0, 15) as $lp) {
+                    $hours = is_array($lp['opening_hours'] ?? null) ? "{$lp['opening_hours']['open']}-{$lp['opening_hours']['close']}" : '24/7';
+                    $price = isset($lp['ticket_price_vnd']) && is_numeric($lp['ticket_price_vnd']) ? ($lp['ticket_price_vnd'] == 0 ? 'Miễn phí' : number_format($lp['ticket_price_vnd'], 0, ',', '.') . ' VNĐ') : 'chưa xác minh';
+                    $specialties = ! empty($lp['local_specialties']) ? ' (Đặc sản: ' . implode(', ', $lp['local_specialties']) . ')' : '';
+                    $placeSummaries[] = "- {$lp['name_vi']}: {$lp['address']} [Vé: {$price}, Giờ: {$hours}]{$specialties}";
+                }
+                $localContext = "\n\nDỮ LIỆU ĐỊA ĐIỂM & ĐẶC SẢN THỰC TẾ ĐÃ KIỂM CHỨNG TẠI {$resolved['province']['name']} (HÃY DÙNG ĐỊA CHỈ VÀ GIÁ NÀY ĐỂ TRẢ LỜI CHÍNH XÁC):\n" . implode("\n", $placeSummaries);
+            }
+        }
+
         $systemPrompt = 'You are Wanderly AI Travel Assistant, a friendly and highly knowledgeable travel concierge specialized in tourism across the 34 provinces/cities of Vietnam according to Resolution 202/2025/QH15.
 Your goals:
 1. Provide personalized travel advice, destination recommendations, seasonal best times to visit, local cuisine specialties, and transportation tips.
@@ -198,7 +253,7 @@ Your goals:
 {
   "response": "Your helpful and detailed reply in Vietnamese...",
   "suggested_destinations": ["Da Lat", "Da Nang", "Phu Quoc"] (optional array of province/city names if relevant)
-}';
+}' . $localContext;
 
         $messages = [
             ['role' => 'system', 'content' => $systemPrompt],
@@ -213,7 +268,11 @@ Your goals:
 
         $messages[] = ['role' => 'user', 'content' => $userPrompt];
 
-        return $this->callLlm($messages, ['task' => 'general_travel']);
+        return $this->callLlm($messages, [
+            'task' => 'general_travel',
+            'province' => $resolved['province'] ?? null,
+            'places' => $groundingPlaces,
+        ]);
     }
 
     /**
@@ -310,6 +369,52 @@ Your goals:
         $pois = $context['available_pois'] ?? [];
         $selectedPoi = ! empty($pois) ? $pois[0] : null;
 
+        // If general travel task, respond conversationally with verified destination knowledge
+        if (($tools['task'] ?? '') === 'general_travel') {
+            $province = $tools['province'] ?? null;
+            $provName = $province['name'] ?? 'Việt Nam';
+            $grounding = $tools['places'] ?? [];
+            $normalized = mb_strtolower($lastUserMsg);
+
+            // Search for specific place queries
+            $matchedPlace = null;
+            foreach ($grounding as $gp) {
+                if (str_contains($normalized, mb_strtolower($gp['name_vi'])) || (! empty($gp['name_en']) && str_contains($normalized, mb_strtolower($gp['name_en'])))) {
+                    $matchedPlace = $gp;
+                    break;
+                }
+            }
+
+            if ($matchedPlace) {
+                $pName = $matchedPlace['name_vi'];
+                $addr = $matchedPlace['address'] ?? 'Đang cập nhật';
+                $price = isset($matchedPlace['ticket_price_vnd']) && is_numeric($matchedPlace['ticket_price_vnd']) ? ($matchedPlace['ticket_price_vnd'] == 0 ? 'Miễn phí' : number_format($matchedPlace['ticket_price_vnd'], 0, ',', '.') . ' VNĐ') : 'chưa xác minh';
+                $hours = is_array($matchedPlace['opening_hours'] ?? null) ? "{$matchedPlace['opening_hours']['open']} - {$matchedPlace['opening_hours']['close']}" : 'Mở cửa cả ngày';
+                $note = ! empty($matchedPlace['notes']) ? "\n💡 **Lưu ý:** {$matchedPlace['notes']}" : '';
+
+                $content = "📍 **{$pName}**\n\n- 🏡 **Địa chỉ:** {$addr}\n- 🎫 **Giá vé:** {$price}\n- 🕒 **Giờ mở cửa:** {$hours}{$note}\n\nBạn có muốn mình lập lịch trình chi tiết ghé thăm {$pName} không? (Ví dụ: *'Lịch trình {$provName} 2 ngày'*).";
+            } elseif (str_contains($normalized, 'món') || str_contains($normalized, 'ăn') || str_contains($normalized, 'ẩm thực') || str_contains($normalized, 'đặc sản')) {
+                $foods = [];
+                foreach ($grounding as $gp) {
+                    if (! empty($gp['local_specialties'])) {
+                        foreach ($gp['local_specialties'] as $s) {
+                            $foods[] = "• **{$s}** (gợi ý tại: {$gp['name_vi']})";
+                        }
+                    }
+                }
+                $foodsList = ! empty($foods) ? implode("\n", array_slice(array_unique($foods), 0, 5)) : "• Mì Quảng, Bún chả cá, Bánh tráng cuốn thịt heo...";
+                $content = "🍜 **Đặc sản ẩm thực nhất định phải thử tại {$provName}:**\n\n{$foodsList}\n\nBạn có thể nhắn *'Lịch trình {$provName} 2 ngày'* để mình tạo ngay tour khám phá ẩm thực chuẩn nhất nhé!";
+            } else {
+                $content = "Chào bạn! Mình là Trợ lý Du lịch Wanderly 🌟\n\nTại **{$provName}**, mình có đầy đủ dữ liệu địa điểm, ẩm thực và giá vé đã xác thực. Bạn có thể hỏi thông tin bất kỳ địa điểm nào, hoặc nhắn ví dụ: *'Lịch trình {$provName} 2 ngày ngân sách 3 triệu'* để mình lên lịch trình tối ưu ngay nhé!";
+            }
+
+            return [
+                'content' => $content,
+                'suggested_action' => null,
+            ];
+        }
+
+        // Mediation task fallback
         $title = $selectedPoi['name'] ?? 'Cafe & Trekking Harmony Spot';
         $location = $selectedPoi['name'] ?? ($context['destination'] ?? 'Vietnam');
         $cost = (float) ($selectedPoi['typical_cost'] ?? 150000);
@@ -412,5 +517,145 @@ Your goals:
         }
 
         return $default;
+    }
+
+    /**
+     * Parse requested budget in VND from user prompt or recent history.
+     * Examples: "5 triệu", "3tr", "4tr5", "500k", "3.000.000đ", "ngân sách 2tr".
+     */
+    public function parseRequestedBudget(string $prompt, array $history = []): ?float
+    {
+        $checkText = function (string $text): ?float {
+            $normalized = mb_strtolower(trim($text));
+
+            // 1. Patterns like "4tr5", "2tr5", "1tr2", "4củ5"
+            if (preg_match('/(\d+)\s*(?:tr|củ|cu)\s*(\d+)\b/iu', $normalized, $matches)) {
+                $main = (int) $matches[1];
+                $fraction = (int) $matches[2];
+                return (float) (($main * 1000000) + ($fraction * 100000));
+            }
+
+            // 2. Patterns like "5.5 triệu", "4,5 triệu", "5 triệu", "5tr", "5 củ", "5m"
+            if (preg_match('/(\d+(?:[.,]\d+)?)\s*(?:triệu|trieu|tr\b|củ\b|cu\b|m\b)/iu', $normalized, $matches)) {
+                $val = (float) str_replace(',', '.', $matches[1]);
+                return $val * 1000000;
+            }
+
+            // 3. Patterns like "500k", "800k", "500 nghìn", "800 ngàn"
+            if (preg_match('/(\d+(?:[.,]\d+)?)\s*(?:k\b|nghìn|nghin|ngàn|ngan)/iu', $normalized, $matches)) {
+                $val = (float) str_replace(',', '.', $matches[1]);
+                return $val * 1000;
+            }
+
+            // 4. Formatted currency numbers like "5.000.000", "5,000,000", "3000000"
+            if (preg_match('/(?:\b(?:ngân sách|kinh phí|budget|chi phí|tầm|khoảng|giá)\s*[:=]?\s*)?(\d{1,3}(?:[.,]\d{3}){1,3}|\d{6,9})\s*(?:đ|vnd|vnđ|đồng|dong)?\b/iu', $normalized, $matches)) {
+                $clean = preg_replace('/[^\d]/', '', $matches[1]);
+                if (! empty($clean) && (float) $clean >= 50000) {
+                    return (float) $clean;
+                }
+            }
+
+            return null;
+        };
+
+        // Check current prompt
+        $budget = $checkText($prompt);
+        if ($budget !== null) {
+            return $budget;
+        }
+
+        // Fallback: check history
+        if (! empty($history)) {
+            foreach (array_reverse($history) as $h) {
+                if (($h['role'] ?? '') === 'user' || ($h['role'] ?? '') === 'model') {
+                    $histBudget = $checkText($h['content'] ?? '');
+                    if ($histBudget !== null) {
+                        return $histBudget;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Parse requested travel pace from user prompt.
+     * Returns: 'relaxed' | 'fast' | 'balanced'
+     */
+    public function parseRequestedPace(string $prompt): string
+    {
+        $normalized = mb_strtolower($prompt);
+        if (preg_match('/(thong thả|chill|nhẹ nhàng|nghỉ dưỡng|ít điểm|chậm rãi|không vội|thư thái)/iu', $normalized)) {
+            return 'relaxed';
+        }
+        if (preg_match('/(khám phá nhiều|dày đặc|nhiều điểm|tối đa|năng động|chạy show|check-in nhiều|dày)/iu', $normalized)) {
+            return 'fast';
+        }
+        return 'balanced';
+    }
+
+    /**
+     * Parse requested interests/categories from user prompt.
+     * Returns array of categories: ['food', 'cafe', 'beach', 'nature', 'culture', 'entertainment', 'shopping']
+     */
+    public function parseRequestedInterests(string $prompt): array
+    {
+        $normalized = mb_strtolower($prompt);
+        $interests = [];
+
+        if (preg_match('/(ẩm thực|ăn uống|món ngon|đặc sản|quán ăn|ăn vặt)/iu', $normalized)) {
+            $interests[] = 'food';
+        }
+        if (preg_match('/(cafe|cà phê|sống ảo|view đẹp|trà chiều)/iu', $normalized)) {
+            $interests[] = 'cafe';
+        }
+        if (preg_match('/(biển|tắm biển|bãi biển|hải sản|lặn biển)/iu', $normalized)) {
+            $interests[] = 'beach';
+        }
+        if (preg_match('/(thiên nhiên|núi|rừng|thác|trekking|hoang sơ|ngắm cảnh)/iu', $normalized)) {
+            $interests[] = 'nature';
+        }
+        if (preg_match('/(văn hóa|lịch sử|bảo tàng|chùa|di tích|phố cổ)/iu', $normalized)) {
+            $interests[] = 'culture';
+        }
+        if (preg_match('/(vui chơi|giải trí|công viên|chợ đêm|quầy bar)/iu', $normalized)) {
+            $interests[] = 'entertainment';
+        }
+        if (preg_match('/(mua sắm|chợ|quà lưu niệm)/iu', $normalized)) {
+            $interests[] = 'shopping';
+        }
+
+        return array_unique($interests);
+    }
+
+    /**
+     * Parse requested departure/start date from user prompt.
+     */
+    public function parseRequestedStartDate(string $prompt): ?string
+    {
+        $normalized = mb_strtolower($prompt);
+
+        if (preg_match('/(ngày mai|mai|hôm sau)/iu', $normalized)) {
+            return Carbon::tomorrow()->toDateString();
+        }
+
+        if (preg_match('/(cuối tuần|thứ 7|chủ nhật)/iu', $normalized)) {
+            return Carbon::now()->next(Carbon::SATURDAY)->toDateString();
+        }
+
+        // Formats like "ngày 15/11", "15-11", "20/12/2026"
+        if (preg_match('/(?:ngày\s*)?(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{4}))?/iu', $normalized, $matches)) {
+            $day = (int) $matches[1];
+            $month = (int) $matches[2];
+            $year = ! empty($matches[3]) ? (int) $matches[3] : Carbon::now()->year;
+            try {
+                return Carbon::createFromDate($year, $month, $day)->toDateString();
+            } catch (\Throwable $e) {
+                // Ignore invalid date
+            }
+        }
+
+        return null;
     }
 }

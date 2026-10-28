@@ -271,6 +271,8 @@ class AiCopilotController extends Controller
             'province' => 'required|array',
             'days' => 'required|array|min:1',
             'start_date' => 'nullable|date',
+            'budget' => 'nullable|numeric|min:0',
+            'summary' => 'nullable|array',
         ]);
 
         $province = $validated['province'];
@@ -280,13 +282,18 @@ class AiCopilotController extends Controller
         $startDate = ! empty($validated['start_date']) ? Carbon::parse($validated['start_date']) : Carbon::tomorrow();
         $endDate = $startDate->copy()->addDays($dayCount - 1);
 
+        $tripBudget = (float) ($validated['budget'] ?? ($validated['summary']['budget'] ?? 0));
+        if ($tripBudget <= 0) {
+            $tripBudget = 2000000 * $dayCount;
+        }
+
         // 1. Create Trip using TripService (automatically sets leader role)
         $trip = $this->tripService->createTrip([
             'name' => 'Chuyến đi ' . ($province['name'] ?? 'Việt Nam') . " ({$dayCount} ngày)",
             'destination' => $province['name'] ?? 'Việt Nam',
             'start_date' => $startDate->toDateString(),
             'end_date' => $endDate->toDateString(),
-            'budget' => 2000000 * $dayCount,
+            'budget' => $tripBudget,
             'privacy' => 'private',
             'status' => 'planning',
         ], $user);

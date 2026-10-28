@@ -326,5 +326,77 @@ class VerifiedItineraryAiCopilotTest extends TestCase
         $this->assertStringStartsWith('11:00', (string) $act2->start_time);
         $this->assertStringStartsWith('12:00', (string) $act2->end_time);
     }
+
+    public function test_ai_copilot_parses_budget_and_propagates_to_trip_creation(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('ajax.ai-copilot.global-chat'), [
+            'message' => 'Lên lịch trình du lịch Đà Nẵng 3 ngày với ngân sách 5 triệu',
+        ]);
+
+        $response->assertStatus(200);
+        $action = $response->json('assistant_message.suggested_action');
+        $this->assertNotNull($action);
+
+        $summary = $action['params']['summary'];
+        $this->assertEquals(5000000, (float) $summary['budget']);
+        $this->assertEquals(5000000, (float) $summary['requested_budget']);
+        $this->assertEquals('5.000.000 VNĐ', $summary['budget_formatted']);
+
+        // Now create trip from this itinerary
+        $createResponse = $this->actingAs($user)->postJson(route('ajax.ai-copilot.create-trip'), [
+            'province' => $action['params']['province'],
+            'days' => $action['params']['days'],
+            'budget' => $summary['budget'],
+            'summary' => $summary,
+        ]);
+
+        $createResponse->assertStatus(200);
+        $tripId = $createResponse->json('trip_id');
+        $trip = Trip::find($tripId);
+        $this->assertNotNull($trip);
+        $this->assertEquals(5000000.0, (float) $trip->budget);
+    }
+
+    public function test_ai_copilot_parses_relaxed_pace_and_schedules_fewer_places_per_day(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('ajax.ai-copilot.global-chat'), [
+            'message' => 'Lập lịch trình Đà Nẵng 2 ngày phong cách chill, thong thả',
+        ]);
+
+        $response->assertStatus(200);
+        $action = $response->json('assistant_message.suggested_action');
+        $this->assertNotNull($action);
+
+        $params = $action['params'];
+        $this->assertEquals('relaxed', $params['summary']['pace']);
+
+        // In relaxed mode, each day has exactly 4 items (1 morning + lunch + 1 afternoon + dinner)
+        foreach ($params['days'] as $day) {
+            $this->assertCount(4, $day['items']);
+        }
+    }
+
+    public function test_ai_copilot_answers_factual_place_query_with_verified_address_and_hours(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('ajax.ai-copilot.global-chat'), [
+            'message' => 'Chợ Hàn Đà Nẵng địa chỉ ở đâu và mở cửa lúc mấy giờ?',
+        ]);
+
+        $response->assertStatus(200);
+        $msg = $response->json('assistant_message');
+
+        // Verify factual query does not trigger full itinerary action card
+        $this->assertNull($msg['suggested_action']);
+
+        // Verify response contains exact verified address from danang.json
+        $this->assertStringContainsString('119 Trần Phú', $msg['content']);
+        $this->assertStringContainsString('Hải Châu', $msg['content']);
+    }
 }
 

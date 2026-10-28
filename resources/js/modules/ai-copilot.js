@@ -295,7 +295,9 @@ document.addEventListener('alpine:init', () => {
                     body: JSON.stringify({
                         province: plan.province,
                         days: plan.days,
-                        start_date: plan.start_date
+                        start_date: plan.start_date,
+                        budget: plan.summary?.budget || plan.budget || null,
+                        summary: plan.summary || null
                     })
                 });
 
