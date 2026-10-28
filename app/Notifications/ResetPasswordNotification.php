@@ -46,7 +46,7 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->subject('Reset Your Password — Wanderly')
-            ->greeting('Hello ' . ($notifiable->name ?? 'there') . '!')
+            ->greeting('Hello '.($notifiable->name ?? 'there').'!')
             ->line('You are receiving this email because we received a password reset request for your Wanderly account.')
             ->action('Reset Password', $url)
             ->line('This password reset link will expire in 60 minutes.')

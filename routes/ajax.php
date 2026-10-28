@@ -6,6 +6,7 @@ use App\Http\Controllers\Provider\ProviderDashboardController;
 use App\Http\Controllers\Social\NotificationController;
 use App\Http\Controllers\Social\SocialFeedController;
 use App\Http\Controllers\Trip\ActivityController;
+use App\Http\Controllers\Trip\AiCopilotController;
 use App\Http\Controllers\Trip\BookingController;
 use App\Http\Controllers\Trip\ChecklistController;
 use App\Http\Controllers\Trip\MatchEngineController;
@@ -144,20 +145,20 @@ Route::middleware('auth')->group(function () {
         ->name('trips.settlements.confirm');
 
     // AI Co-pilot & Action Engine AJAX routes (Sprint 4 - F1)
-    Route::get('/ai-copilot/messages', [\App\Http\Controllers\Trip\AiCopilotController::class, 'getGlobalMessages'])
+    Route::get('/ai-copilot/messages', [AiCopilotController::class, 'getGlobalMessages'])
         ->name('ai-copilot.global-messages');
-    Route::post('/ai-copilot/chat', [\App\Http\Controllers\Trip\AiCopilotController::class, 'sendGlobalMessage'])
+    Route::post('/ai-copilot/chat', [AiCopilotController::class, 'sendGlobalMessage'])
         ->name('ai-copilot.global-chat');
 
-    Route::get('/trips/{trip}/ai-copilot/messages', [\App\Http\Controllers\Trip\AiCopilotController::class, 'getMessages'])
+    Route::get('/trips/{trip}/ai-copilot/messages', [AiCopilotController::class, 'getMessages'])
         ->name('trips.ai-copilot.messages');
-    Route::post('/trips/{trip}/ai-copilot/chat', [\App\Http\Controllers\Trip\AiCopilotController::class, 'sendMessage'])
+    Route::post('/trips/{trip}/ai-copilot/chat', [AiCopilotController::class, 'sendMessage'])
         ->name('trips.ai-copilot.chat');
-    Route::post('/trips/{trip}/ai-copilot/apply-action/{message}', [\App\Http\Controllers\Trip\AiCopilotController::class, 'applyAction'])
+    Route::post('/trips/{trip}/ai-copilot/apply-action/{message}', [AiCopilotController::class, 'applyAction'])
         ->name('trips.ai-copilot.apply-action');
-    Route::post('/trips/{trip}/ai-copilot/ingest-review', [\App\Http\Controllers\Trip\AiCopilotController::class, 'ingestReview'])
+    Route::post('/trips/{trip}/ai-copilot/ingest-review', [AiCopilotController::class, 'ingestReview'])
         ->name('trips.ai-copilot.ingest-review');
-    Route::get('/trips/{trip}/ai-copilot/weather-alerts', [\App\Http\Controllers\Trip\AiCopilotController::class, 'getWeatherAlerts'])
+    Route::get('/trips/{trip}/ai-copilot/weather-alerts', [AiCopilotController::class, 'getWeatherAlerts'])
         ->name('trips.ai-copilot.weather-alerts');
 });
 

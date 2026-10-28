@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Destination;
 use App\Models\Poi;
 use App\Models\Zone;
+use App\Support\VietnamProvinces;
 use Illuminate\Database\Seeder;
 
 class DestinationSeeder extends Seeder
@@ -240,11 +241,11 @@ class DestinationSeeder extends Seeder
         }
 
         // Seed all 34 official administrative provinces of Vietnam
-        foreach (\App\Support\VietnamProvinces::PROVINCES as $province) {
+        foreach (VietnamProvinces::PROVINCES as $province) {
             Destination::updateOrCreate(
                 ['name' => $province['name']],
                 [
-                    'description' => $province['note'] . ' (' . $province['region'] . ')',
+                    'description' => $province['note'].' ('.$province['region'].')',
                 ]
             );
         }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminAuditLogController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminDestinationController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -22,6 +24,8 @@ use App\Http\Controllers\Trip\SplitBillController;
 use App\Http\Controllers\Trip\TravelRequestController;
 use App\Http\Controllers\Trip\TripController;
 use App\Http\Controllers\Trip\TripMemberController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -77,13 +81,13 @@ Route::middleware('auth')->group(function () {
             : view('auth.verify-email');
     })->name('verification.notice');
 
-    Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
 
         return redirect('/trips')->with('status', 'email-verified');
     })->middleware(['signed'])->name('verification.verify');
 
-    Route::post('/email/verification-notification', function (\Illuminate\Http\Request $request) {
+    Route::post('/email/verification-notification', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
 
         return back()->with('status', 'verification-link-sent');
@@ -173,8 +177,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/social/posts/{post}', [SocialFeedController::class, 'destroy'])->name('social.posts.destroy');
     Route::post('/social/posts/{post}/clone-trip', [SocialFeedController::class, 'cloneTrip'])->name('social.posts.clone-trip');
 
-    // ─── Admin Destination Management (D4-05 M16) ─────────────────────────────
-    Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
+    // ─── Admin Platform & Operations (Admin Redesign) ────────────────────────
+    Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('root');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
+
+        // Module route placeholders (to be expanded in subsequent steps)
+        Route::get('/users', fn () => redirect()->route('admin.dashboard'))->name('users.index');
+        Route::get('/moderation', fn () => redirect()->route('admin.dashboard'))->name('moderation.index');
+        Route::get('/broadcasts', fn () => redirect()->route('admin.dashboard'))->name('broadcasts.index');
+        Route::get('/backups', fn () => redirect()->route('admin.dashboard'))->name('backups.index');
+
+        // Destinations & POIs
         Route::get('/destinations', [AdminDestinationController::class, 'index'])->name('destinations.index');
         Route::get('/destinations/create', [AdminDestinationController::class, 'createDestination'])->name('destinations.create');
         Route::post('/destinations', [AdminDestinationController::class, 'storeDestination'])->name('destinations.store');

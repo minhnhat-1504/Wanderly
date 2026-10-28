@@ -10,7 +10,6 @@ use App\Services\AiCopilotService;
 use App\Services\WeatherAdaptiveService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class AiCopilotController extends Controller
 {

@@ -2,16 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Models\Activity;
 use App\Models\AiChatMessage;
 use App\Models\Destination;
 use App\Models\Poi;
 use App\Models\Trip;
 use App\Models\User;
 use App\Models\Zone;
-use App\Services\ActionEngineService;
-use App\Services\AiCopilotService;
-use App\Services\WeatherAdaptiveService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -20,7 +16,9 @@ class AiCopilotTest extends TestCase
     use RefreshDatabase;
 
     protected User $leader;
+
     protected User $member;
+
     protected Trip $trip;
 
     protected function setUp(): void
@@ -153,11 +151,11 @@ class AiCopilotTest extends TestCase
 
     public function test_can_ingest_review_text_into_activities(): void
     {
-        $reviewText = "Ngày 1:
+        $reviewText = 'Ngày 1:
         Sáng: Ăn phở gà 50k
         Trưa: Nghỉ ngơi ăn trưa 100k
         Chiều: Đi thăm bảo tàng 40k
-        Tối: Uống bia phố cổ 80k";
+        Tối: Uống bia phố cổ 80k';
 
         $response = $this->actingAs($this->leader)->postJson(route('ajax.trips.ai-copilot.ingest-review', $this->trip), [
             'review_text' => $reviewText,
