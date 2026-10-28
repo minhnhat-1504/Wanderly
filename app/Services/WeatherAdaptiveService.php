@@ -71,7 +71,7 @@ class WeatherAdaptiveService
                 ];
             }
         } catch (\Throwable $e) {
-            Log::info('Open-Meteo call failed, using mock weather data: ' . $e->getMessage());
+            Log::info('Open-Meteo call failed, using mock weather data: '.$e->getMessage());
         }
 
         // Reliable fallback weather

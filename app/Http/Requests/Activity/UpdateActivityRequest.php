@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Activity;
 
+use App\Models\Activity;
 use App\Models\Trip;
+use App\Services\ItineraryService;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -21,6 +23,26 @@ class UpdateActivityRequest extends FormRequest
         }
 
         return $trip && $this->user()?->can('update', $trip);
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $activity = $this->route('activity');
+        if (! $activity instanceof Activity) {
+            $activity = Activity::find($activity);
+        }
+
+        if ($this->has('time_slot') && $activity && $this->input('time_slot') !== $activity->time_slot) {
+            if (! $this->has('start_time') && ! $this->has('end_time')) {
+                $this->merge([
+                    'start_time' => null,
+                    'end_time' => null,
+                ]);
+            }
+        }
     }
 
     /**
@@ -78,5 +100,72 @@ class UpdateActivityRequest extends FormRequest
             'position.integer' => __('The position must be an integer.'),
             'position.min' => __('The position must be at least 0.'),
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     */
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $activity = $this->route('activity');
+            if (! $activity instanceof Activity) {
+                $activity = Activity::find($activity);
+            }
+
+            $startTime = $this->has('start_time') ? $this->input('start_time') : $activity?->start_time;
+            $endTime = $this->has('end_time') ? $this->input('end_time') : $activity?->end_time;
+            $timeSlot = $this->has('time_slot') ? $this->input('time_slot') : $activity?->time_slot;
+            $day = (int) ($this->has('day') ? $this->input('day') : ($activity?->day ?? 1));
+
+            if ($startTime && ! $endTime) {
+                $validator->errors()->add('end_time', __('The end time is required when start time is provided.'));
+
+                return;
+            }
+
+            if (! $startTime && $endTime) {
+                $validator->errors()->add('start_time', __('The start time is required when end time is provided.'));
+
+                return;
+            }
+
+            if ($startTime && $endTime) {
+                $startNorm = substr((string) $startTime, 0, 5);
+                $endNorm = substr((string) $endTime, 0, 5);
+
+                if ($startNorm >= $endNorm) {
+                    $validator->errors()->add('end_time', __('The end time must be after the start time.'));
+
+                    return;
+                }
+
+                if ($timeSlot && isset(ItineraryService::SLOT_BOUNDS[$timeSlot])) {
+                    $bounds = ItineraryService::SLOT_BOUNDS[$timeSlot];
+                    if ($startNorm < $bounds['start'] || $endNorm > $bounds['end']) {
+                        $validator->errors()->add('start_time', __('Times must be within the :slot slot (:start – :end).', [
+                            'slot' => __($timeSlot),
+                            'start' => $bounds['start'],
+                            'end' => $bounds['end'],
+                        ]));
+
+                        return;
+                    }
+                }
+
+                $trip = $this->route('trip');
+                if (! $trip instanceof Trip) {
+                    $trip = Trip::find($trip);
+                }
+
+                if ($trip) {
+                    $itineraryService = app(ItineraryService::class);
+                    $excludeId = $activity?->id;
+                    if ($itineraryService->detectTimeConflict($trip, $day, $startNorm, $endNorm, $excludeId)) {
+                        $validator->errors()->add('start_time', __('The activity time conflicts with an existing activity on this day.'));
+                    }
+                }
+            }
+        });
     }
 }

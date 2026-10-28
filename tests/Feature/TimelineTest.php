@@ -303,4 +303,215 @@ class TimelineTest extends TestCase
             'role' => 'leader',
         ]);
     }
+
+    public function test_activity_creation_validates_timeslot_boundaries(): void
+    {
+        $owner = User::factory()->create();
+        $trip = Trip::factory()->create(['owner_id' => $owner->id]);
+        TripMember::factory()->create([
+            'trip_id' => $trip->id,
+            'user_id' => $owner->id,
+            'role' => 'leader',
+        ]);
+
+        // Attempt morning activity outside 06:00 - 11:00 bounds (05:00 - 07:00)
+        $resEarly = $this->actingAs($owner)->postJson(route('ajax.trips.activities.store', $trip), [
+            'title' => 'Too Early Activity',
+            'day' => 1,
+            'time_slot' => 'morning',
+            'cost' => 10000,
+            'category' => 'sightseeing',
+            'location' => 'Location',
+            'start_time' => '05:00',
+            'end_time' => '07:00',
+        ]);
+        $resEarly->assertStatus(422);
+        $resEarly->assertJsonValidationErrors(['start_time']);
+
+        // Attempt morning activity extending past 11:00 (10:00 - 12:00)
+        $resLate = $this->actingAs($owner)->postJson(route('ajax.trips.activities.store', $trip), [
+            'title' => 'Too Late Activity',
+            'day' => 1,
+            'time_slot' => 'morning',
+            'cost' => 10000,
+            'category' => 'sightseeing',
+            'location' => 'Location',
+            'start_time' => '10:00',
+            'end_time' => '12:00',
+        ]);
+        $resLate->assertStatus(422);
+        $resLate->assertJsonValidationErrors(['start_time']);
+    }
+
+    public function test_activity_creation_requires_start_time_before_end_time(): void
+    {
+        $owner = User::factory()->create();
+        $trip = Trip::factory()->create(['owner_id' => $owner->id]);
+        TripMember::factory()->create([
+            'trip_id' => $trip->id,
+            'user_id' => $owner->id,
+            'role' => 'leader',
+        ]);
+
+        $response = $this->actingAs($owner)->postJson(route('ajax.trips.activities.store', $trip), [
+            'title' => 'Backwards Time Activity',
+            'day' => 1,
+            'time_slot' => 'morning',
+            'cost' => 10000,
+            'category' => 'sightseeing',
+            'location' => 'Location',
+            'start_time' => '10:00',
+            'end_time' => '08:00',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['end_time']);
+    }
+
+    public function test_activity_creation_rejects_overlapping_time_on_same_day(): void
+    {
+        $owner = User::factory()->create();
+        $trip = Trip::factory()->create(['owner_id' => $owner->id]);
+        TripMember::factory()->create([
+            'trip_id' => $trip->id,
+            'user_id' => $owner->id,
+            'role' => 'leader',
+        ]);
+
+        // Existing activity: 08:00 - 09:30
+        Activity::factory()->create([
+            'trip_id' => $trip->id,
+            'day' => 1,
+            'time_slot' => 'morning',
+            'start_time' => '08:00',
+            'end_time' => '09:30',
+        ]);
+
+        // Attempt overlapping activity: 09:00 - 10:30
+        $response = $this->actingAs($owner)->postJson(route('ajax.trips.activities.store', $trip), [
+            'title' => 'Conflicting Activity',
+            'day' => 1,
+            'time_slot' => 'morning',
+            'cost' => 20000,
+            'category' => 'cafe',
+            'location' => 'Location',
+            'start_time' => '09:00',
+            'end_time' => '10:30',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['start_time']);
+
+        // Adjacent activity (09:30 - 10:30) must succeed without error
+        $okResponse = $this->actingAs($owner)->postJson(route('ajax.trips.activities.store', $trip), [
+            'title' => 'Adjacent Activity',
+            'day' => 1,
+            'time_slot' => 'morning',
+            'cost' => 20000,
+            'category' => 'cafe',
+            'location' => 'Location',
+            'start_time' => '09:30',
+            'end_time' => '10:30',
+        ]);
+        $okResponse->assertStatus(201);
+    }
+
+    public function test_multiple_activities_in_timeslot_ordered_chronologically(): void
+    {
+        $owner = User::factory()->create();
+        $trip = Trip::factory()->create(['owner_id' => $owner->id]);
+        TripMember::factory()->create([
+            'trip_id' => $trip->id,
+            'user_id' => $owner->id,
+            'role' => 'leader',
+        ]);
+
+        $service = app(ItineraryService::class);
+
+        // Create later activity first: 09:30 - 10:30
+        $later = $service->createActivity($trip, [
+            'title' => 'Later Activity',
+            'day' => 1,
+            'time_slot' => 'morning',
+            'start_time' => '09:30',
+            'end_time' => '10:30',
+            'cost' => 10000,
+            'category' => 'cafe',
+            'location' => 'Location B',
+        ]);
+
+        // Create earlier activity second: 07:00 - 08:30
+        $earlier = $service->createActivity($trip, [
+            'title' => 'Earlier Activity',
+            'day' => 1,
+            'time_slot' => 'morning',
+            'start_time' => '07:00',
+            'end_time' => '08:30',
+            'cost' => 15000,
+            'category' => 'sightseeing',
+            'location' => 'Location A',
+        ]);
+
+        $timeline = $service->getTripTimeline($trip);
+        $morningActivities = $timeline[1]['morning'];
+
+        $this->assertCount(2, $morningActivities);
+        $this->assertEquals($earlier->id, $morningActivities[0]->id, 'Earlier activity must be placed first');
+        $this->assertEquals($later->id, $morningActivities[1]->id, 'Later activity must be placed second');
+    }
+
+    public function test_trip_show_renders_toggle_for_more_than_two_activities(): void
+    {
+        $owner = User::factory()->create();
+        $trip = Trip::factory()->create([
+            'owner_id' => $owner->id,
+            'start_date' => now()->toDateString(),
+            'end_date' => now()->addDays(2)->toDateString(),
+        ]);
+        TripMember::factory()->create([
+            'trip_id' => $trip->id,
+            'user_id' => $owner->id,
+            'role' => 'leader',
+        ]);
+
+        // Create 2 activities: no toggle button should be displayed
+        Activity::factory()->create([
+            'trip_id' => $trip->id,
+            'day' => 1,
+            'time_slot' => 'morning',
+            'title' => 'Morning 1',
+            'start_time' => '07:00',
+            'end_time' => '08:00',
+            'position' => 0,
+        ]);
+        Activity::factory()->create([
+            'trip_id' => $trip->id,
+            'day' => 1,
+            'time_slot' => 'morning',
+            'title' => 'Morning 2',
+            'start_time' => '08:30',
+            'end_time' => '09:30',
+            'position' => 1,
+        ]);
+
+        $resTwo = $this->actingAs($owner)->get(route('trips.show', $trip));
+        $resTwo->assertStatus(200);
+        $resTwo->assertDontSee('Show all (', false);
+
+        // Add 3rd activity: toggle button must now appear with 3 activities count
+        Activity::factory()->create([
+            'trip_id' => $trip->id,
+            'day' => 1,
+            'time_slot' => 'morning',
+            'title' => 'Morning 3',
+            'start_time' => '09:45',
+            'end_time' => '10:45',
+            'position' => 2,
+        ]);
+
+        $resThree = $this->actingAs($owner)->get(route('trips.show', $trip));
+        $resThree->assertStatus(200);
+        $resThree->assertSee('Show all (3 activities)', false);
+        $resThree->assertSee('Hide (Show 2 only)', false);
+    }
 }

@@ -109,5 +109,20 @@ class Trip extends Model
     {
         return $this->hasMany(AiChatMessage::class);
     }
-}
 
+    /**
+     * Get the total amount spent on activities for this trip.
+     */
+    public function getSpentAttribute(): float
+    {
+        if (array_key_exists('activities_sum_cost', $this->attributes)) {
+            return (float) ($this->attributes['activities_sum_cost'] ?? 0);
+        }
+
+        if ($this->relationLoaded('activities')) {
+            return (float) $this->activities->sum('cost');
+        }
+
+        return (float) $this->activities()->sum('cost');
+    }
+}

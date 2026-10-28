@@ -22,6 +22,8 @@ use App\Http\Controllers\Trip\SplitBillController;
 use App\Http\Controllers\Trip\TravelRequestController;
 use App\Http\Controllers\Trip\TripController;
 use App\Http\Controllers\Trip\TripMemberController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -77,13 +79,13 @@ Route::middleware('auth')->group(function () {
             : view('auth.verify-email');
     })->name('verification.notice');
 
-    Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
 
         return redirect('/trips')->with('status', 'email-verified');
     })->middleware(['signed'])->name('verification.verify');
 
-    Route::post('/email/verification-notification', function (\Illuminate\Http\Request $request) {
+    Route::post('/email/verification-notification', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
 
         return back()->with('status', 'verification-link-sent');

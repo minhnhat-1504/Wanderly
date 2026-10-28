@@ -85,6 +85,7 @@ class TripService
                         $memberQuery->where('user_id', $user->id);
                     });
             })
+            ->withSum('activities', 'cost')
             ->with(['members.user', 'owner']);
 
         if (! empty($search)) {

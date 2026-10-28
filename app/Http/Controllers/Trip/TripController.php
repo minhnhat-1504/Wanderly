@@ -5,13 +5,12 @@ namespace App\Http\Controllers\Trip;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Trip\StoreTripRequest;
 use App\Http\Requests\Trip\UpdateTripRequest;
-use App\Models\Destination;
 use App\Models\Trip;
 use App\Services\TripService;
+use App\Support\VietnamProvinces;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class TripController extends Controller
@@ -38,7 +37,7 @@ class TripController extends Controller
      */
     public function create(): View
     {
-        $provinces = \App\Support\VietnamProvinces::groupedByRegion();
+        $provinces = VietnamProvinces::groupedByRegion();
 
         return view('trips.create', compact('provinces'));
     }
@@ -80,7 +79,7 @@ class TripController extends Controller
     {
         $this->authorize('update', $trip);
 
-        $provinces = \App\Support\VietnamProvinces::groupedByRegion();
+        $provinces = VietnamProvinces::groupedByRegion();
 
         return view('trips.edit', compact('trip', 'provinces'));
     }
