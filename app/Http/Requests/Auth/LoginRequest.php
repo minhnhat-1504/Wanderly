@@ -36,6 +36,19 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        $user = Auth::user();
+        if ($user && $user->isSuspended()) {
+            Auth::logout();
+            $this->session()->invalidate();
+            $this->session()->regenerateToken();
+
+            throw ValidationException::withMessages([
+                'email' => __('Tài khoản của bạn đã bị tạm khóa vì lý do: :reason. Vui lòng liên hệ support.', [
+                    'reason' => $user->suspended_reason ?: __('Vi phạm điều khoản dịch vụ'),
+                ]),
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

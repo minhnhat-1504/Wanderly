@@ -9,13 +9,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected static function booted(): void
     {
@@ -59,6 +61,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'currency',
         'notify_in_app',
         'notify_email',
+        'is_suspended',
+        'suspended_reason',
+        'suspended_at',
     ];
 
     /**
@@ -85,6 +90,9 @@ class User extends Authenticatable implements MustVerifyEmail
             'show_budget_publicly' => 'boolean',
             'notify_in_app' => 'boolean',
             'notify_email' => 'boolean',
+            'is_suspended' => 'boolean',
+            'suspended_at' => 'datetime',
+            'deleted_at' => 'datetime',
         ];
     }
 
@@ -198,5 +206,35 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    public function isSuspended(): bool
+    {
+        return (bool) $this->is_suspended;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isProvider(): bool
+    {
+        return $this->role === 'provider';
+    }
+
+    public function isTraveler(): bool
+    {
+        return $this->role === 'traveler';
+    }
+
+    public function auditLogs(): MorphMany
+    {
+        return $this->morphMany(AuditLog::class, 'subject');
+    }
+
+    public function performedAuditLogs(): HasMany
+    {
+        return $this->hasMany(AuditLog::class, 'admin_id');
     }
 }

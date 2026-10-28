@@ -135,6 +135,55 @@
         </form>
     </div>
 </div>
+
+{{-- Report Content Modal --}}
+<div id="report-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
+                <span>{{ __('Report Content') }}</span>
+            </h2>
+            <button type="button" onclick="document.getElementById('report-modal').classList.add('hidden')"
+                    class="p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <form id="report-form" method="POST" action="" class="space-y-4">
+            @csrf
+            <div>
+                <p id="report-item-title" class="text-xs text-gray-500 mb-2 truncate italic"></p>
+                <label class="block text-xs font-semibold text-gray-700 mb-1.5">{{ __('Select Violation Category') }}</label>
+                <select name="reason" required class="w-full text-xs rounded-xl border border-gray-200 p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500">
+                    <option value="spam">{{ __('Spam or Unsolicited Commercial Content') }}</option>
+                    <option value="inappropriate">{{ __('Inappropriate or Explicit Content') }}</option>
+                    <option value="harassment">{{ __('Harassment, Bullying or Hate Speech') }}</option>
+                    <option value="copyright">{{ __('Intellectual Property / Copyright Violation') }}</option>
+                    <option value="other">{{ __('Other Issue') }}</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">{{ __('Additional Context (Optional)') }}</label>
+                <textarea name="details" rows="3" maxlength="500"
+                          placeholder="{{ __('Provide any additional information that will help our moderation team...') }}"
+                          class="w-full text-xs rounded-xl border border-gray-200 p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500"></textarea>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button type="button" onclick="document.getElementById('report-modal').classList.add('hidden')"
+                        class="px-4 py-2 rounded-xl border border-gray-200 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+                    {{ __('Cancel') }}
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-semibold shadow-sm transition-colors">
+                    {{ __('Submit Report') }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -221,6 +270,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } catch (err) { console.error(err); }
     });
+
+    // ── Open Report Modal Helper ──────────────────────────────────────────
+    window.openReportModal = function(actionUrl, itemTitle) {
+        const modal = document.getElementById('report-modal');
+        const form = document.getElementById('report-form');
+        const titleEl = document.getElementById('report-item-title');
+        if (!modal || !form) return;
+        form.action = actionUrl;
+        if (titleEl) titleEl.textContent = itemTitle ? 'Regarding: ' + itemTitle : '';
+        modal.classList.remove('hidden');
+    };
 });
 </script>
 @endpush

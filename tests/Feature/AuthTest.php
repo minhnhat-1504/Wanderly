@@ -90,6 +90,40 @@ class AuthTest extends TestCase
         $response->assertRedirect('/trips');
     }
 
+    public function test_admin_is_redirected_to_admin_dashboard_on_login(): void
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'email' => 'admin@wanderly.test',
+            'password' => Hash::make('secret123'),
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => 'admin@wanderly.test',
+            'password' => 'secret123',
+        ]);
+
+        $this->assertAuthenticatedAs($admin);
+        $response->assertRedirect(route('admin.dashboard'));
+    }
+
+    public function test_provider_is_redirected_to_provider_dashboard_on_login(): void
+    {
+        $provider = User::factory()->create([
+            'role' => 'provider',
+            'email' => 'provider@wanderly.test',
+            'password' => Hash::make('secret123'),
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => 'provider@wanderly.test',
+            'password' => 'secret123',
+        ]);
+
+        $this->assertAuthenticatedAs($provider);
+        $response->assertRedirect(route('provider.dashboard'));
+    }
+
     public function test_users_cannot_authenticate_with_invalid_password(): void
     {
         $user = User::factory()->create([
