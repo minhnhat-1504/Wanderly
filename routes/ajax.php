@@ -146,6 +146,8 @@ Route::middleware('auth')->group(function () {
     // AI Co-pilot & Action Engine AJAX routes (Sprint 4 - F1)
     Route::get('/ai-copilot/messages', [\App\Http\Controllers\Trip\AiCopilotController::class, 'getGlobalMessages'])
         ->name('ai-copilot.global-messages');
+    Route::delete('/ai-copilot/messages', [\App\Http\Controllers\Trip\AiCopilotController::class, 'clearGlobalMessages'])
+        ->name('ai-copilot.clear-global-messages');
     Route::post('/ai-copilot/chat', [\App\Http\Controllers\Trip\AiCopilotController::class, 'sendGlobalMessage'])
         ->name('ai-copilot.global-chat');
     Route::post('/ai-copilot/create-trip', [\App\Http\Controllers\Trip\AiCopilotController::class, 'createTripFromItinerary'])
@@ -153,6 +155,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/trips/{trip}/ai-copilot/messages', [\App\Http\Controllers\Trip\AiCopilotController::class, 'getMessages'])
         ->name('trips.ai-copilot.messages');
+    Route::delete('/trips/{trip}/ai-copilot/messages', [\App\Http\Controllers\Trip\AiCopilotController::class, 'clearTripMessages'])
+        ->name('trips.ai-copilot.clear-messages');
     Route::post('/trips/{trip}/ai-copilot/chat', [\App\Http\Controllers\Trip\AiCopilotController::class, 'sendMessage'])
         ->name('trips.ai-copilot.chat');
     Route::post('/trips/{trip}/ai-copilot/apply-action/{message}', [\App\Http\Controllers\Trip\AiCopilotController::class, 'applyAction'])

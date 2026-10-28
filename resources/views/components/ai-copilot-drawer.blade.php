@@ -96,9 +96,27 @@
                         </p>
                     </div>
                 </div>
-                <button @click="isOpen = false" class="p-1.5 text-white/70 hover:text-white rounded-lg hover:bg-white/10 transition-colors">
-                    <x-icon name="x" class="w-5 h-5" />
-                </button>
+                <div class="flex items-center gap-1">
+                    <!-- Clear History Button -->
+                    <button @click="clearHistory()" 
+                            type="button"
+                            :disabled="isClearing || messages.length === 0"
+                            class="p-1.5 text-white/70 hover:text-rose-300 disabled:opacity-30 disabled:hover:text-white/70 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+                            title="{{ __('Xóa lịch sử trò chuyện') }}"
+                            aria-label="{{ __('Xóa lịch sử trò chuyện') }}">
+                        <template x-if="!isClearing">
+                            <x-icon name="trash" class="w-4.5 h-4.5" />
+                        </template>
+                        <template x-if="isClearing">
+                            <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin inline-block"></span>
+                        </template>
+                    </button>
+
+                    <!-- Close Button -->
+                    <button @click="isOpen = false" class="p-1.5 text-white/70 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer" title="{{ __('Đóng') }}">
+                        <x-icon name="x" class="w-5 h-5" />
+                    </button>
+                </div>
             </div>
 
             <!-- Weather Alert Bar (Conditional) -->

@@ -144,4 +144,31 @@ class VerifiedItineraryAiCopilotTest extends TestCase
         $assistantMsg = $response->json('assistant_message');
         $this->assertNotEmpty($assistantMsg['content']);
     }
+
+    public function test_can_clear_global_chat_history(): void
+    {
+        $user = User::factory()->create();
+
+        // Send a message first
+        $this->actingAs($user)->postJson(route('ajax.ai-copilot.global-chat'), [
+            'message' => 'Xin chào AI Travel Assistant',
+        ]);
+
+        $this->assertDatabaseHas('ai_chat_messages', [
+            'user_id' => $user->id,
+            'trip_id' => null,
+        ]);
+
+        // Clear history
+        $response = $this->actingAs($user)->deleteJson(route('ajax.ai-copilot.clear-global-messages'));
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => true,
+        ]);
+
+        $this->assertDatabaseMissing('ai_chat_messages', [
+            'user_id' => $user->id,
+            'trip_id' => null,
+        ]);
+    }
 }

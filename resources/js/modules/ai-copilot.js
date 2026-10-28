@@ -7,6 +7,7 @@ document.addEventListener('alpine:init', () => {
         isReviewModalOpen: false,
         isIngesting: false,
         isCreatingTrip: false,
+        isClearing: false,
         inputMessage: '',
         reviewRawText: '',
         messages: [],
@@ -42,6 +43,41 @@ document.addEventListener('alpine:init', () => {
                 }
             } catch (err) {
                 console.error('Failed to load AI messages:', err);
+            }
+        },
+
+        async clearHistory() {
+            if (this.isClearing) return;
+            if (!confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện này không?')) {
+                return;
+            }
+
+            this.isClearing = true;
+            try {
+                const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                const endpoint = this.tripId 
+                    ? `/ajax/trips/${this.tripId}/ai-copilot/messages`
+                    : `/ajax/ai-copilot/messages`;
+
+                const res = await fetch(endpoint, {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    }
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    this.messages = [];
+                } else {
+                    alert(data.message || 'Không thể xóa lịch sử trò chuyện.');
+                }
+            } catch (err) {
+                console.error('Failed to clear chat history:', err);
+                alert('Có lỗi xảy ra khi xóa lịch sử trò chuyện.');
+            } finally {
+                this.isClearing = false;
             }
         },
 

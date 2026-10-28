@@ -44,6 +44,21 @@ class AiCopilotController extends Controller
     }
 
     /**
+     * Clear global chat messages history for user.
+     */
+    public function clearGlobalMessages(Request $request): JsonResponse
+    {
+        AiChatMessage::whereNull('trip_id')
+            ->where('user_id', $request->user()->id)
+            ->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Chat history cleared successfully.'),
+        ]);
+    }
+
+    /**
      * Send global message to AI Travel Assistant.
      */
     public function sendGlobalMessage(Request $request): JsonResponse
@@ -105,6 +120,25 @@ class AiCopilotController extends Controller
         return response()->json([
             'success' => true,
             'messages' => $messages,
+        ]);
+    }
+
+    /**
+     * Clear chat messages history for a trip.
+     */
+    public function clearTripMessages(Request $request, Trip $trip): JsonResponse
+    {
+        $userId = $request->user()->id;
+        $isMember = $trip->members()->where('user_id', $userId)->exists() || $trip->owner_id === $userId;
+        if (! $isMember) {
+            return response()->json(['error' => 'Unauthorized.'], 403);
+        }
+
+        $trip->aiChatMessages()->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Trip chat history cleared successfully.'),
         ]);
     }
 
