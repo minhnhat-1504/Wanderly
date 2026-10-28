@@ -201,6 +201,24 @@ class BroadcastTest extends TestCase
             'target_audience' => 'unknown_group',
         ]);
         $response3->assertSessionHasErrors(['target_audience']);
+
+        // Relative action_url like /trips is allowed
+        $response4 = $this->actingAs($this->admin)->post('/admin/broadcasts', [
+            'title' => 'Valid Announcement',
+            'message' => 'Valid message content of sufficient length.',
+            'target_audience' => 'all',
+            'action_url' => '/trips',
+        ]);
+        $response4->assertSessionDoesntHaveErrors(['action_url']);
+
+        // Invalid action_url format is rejected
+        $response5 = $this->actingAs($this->admin)->post('/admin/broadcasts', [
+            'title' => 'Valid Announcement',
+            'message' => 'Valid message content of sufficient length.',
+            'target_audience' => 'all',
+            'action_url' => 'not-a-valid-url-or-path',
+        ]);
+        $response5->assertSessionHasErrors(['action_url']);
     }
 
     public function test_admin_can_view_broadcast_detail_and_read_rate(): void

@@ -121,10 +121,10 @@ class AdminBroadcastService
                 'sent_at' => now(),
             ]);
 
-            // Chunk user IDs into 500-sized batches to prevent memory overflow and dispatch jobs
+            // Chunk user IDs into 500-sized batches to prevent memory overflow and dispatch synchronously
             $chunks = array_chunk($userIds, 500);
             foreach ($chunks as $chunk) {
-                SendBroadcastNotificationJob::dispatch($broadcast, $chunk);
+                SendBroadcastNotificationJob::dispatchSync($broadcast, $chunk);
             }
 
             // Record immutable audit log

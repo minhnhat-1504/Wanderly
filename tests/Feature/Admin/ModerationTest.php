@@ -324,4 +324,68 @@ class ModerationTest extends TestCase
         $responseComments->assertOk();
         $responseComments->assertSee($this->comment->content);
     }
+
+    public function test_reporter_can_view_report_review_status_page(): void
+    {
+        $report = Report::create([
+            'reporter_id' => $this->reporter->id,
+            'reportable_type' => Post::class,
+            'reportable_id' => $this->post->id,
+            'reason' => 'harassment',
+            'details' => 'Offensive behavior targeting members',
+            'status' => 'resolved',
+            'action_taken' => 'delete',
+            'admin_id' => $this->admin->id,
+            'admin_note' => 'We removed this content. Thank you for reporting.',
+            'resolved_at' => now(),
+        ]);
+
+        $response = $this->actingAs($this->reporter)->get('/social/reports/'.$report->id);
+        $response->assertOk();
+        $response->assertSee('Report Review Details');
+        $response->assertSee('Resolved');
+        $response->assertSee('Content Removed Permanently');
+        $response->assertSee('We removed this content. Thank you for reporting.');
+    }
+
+    public function test_unauthorized_user_cannot_view_report_review_status_page(): void
+    {
+        $report = Report::create([
+            'reporter_id' => $this->reporter->id,
+            'reportable_type' => Post::class,
+            'reportable_id' => $this->post->id,
+            'reason' => 'harassment',
+            'status' => 'resolved',
+            'action_taken' => 'delete',
+            'resolved_at' => now(),
+        ]);
+
+        $otherTraveler = User::factory()->create(['role' => 'traveler']);
+        $response = $this->actingAs($otherTraveler)->get('/social/reports/'.$report->id);
+        $response->assertStatus(403);
+    }
+
+    public function test_resolving_report_notifies_reporter_with_deep_link(): void
+    {
+        $report = Report::create([
+            'reporter_id' => $this->reporter->id,
+            'reportable_type' => Post::class,
+            'reportable_id' => $this->post->id,
+            'reason' => 'spam',
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($this->admin)->post('/admin/moderation/reports/'.$report->id.'/resolve', [
+            'action' => 'hide',
+            'admin_note' => 'Hidden from feed due to spam link.',
+        ]);
+        $response->assertRedirect();
+
+        $notification = \App\Models\Notification::where('user_id', $this->reporter->id)
+            ->where('type', 'report_resolved')
+            ->first();
+
+        $this->assertNotNull($notification);
+        $this->assertStringContainsString('/social/reports/'.$report->id, $notification->action_url);
+    }
 }

@@ -178,12 +178,23 @@ class NotificationService
      */
     public function notifyReportResolved(User $reporter, Report $report): Notification
     {
+        $actionSummary = match ($report->action_taken) {
+            'delete' => __('The reported content was removed.'),
+            'hide' => __('The reported content was hidden from public view.'),
+            'suspend_user' => __('Disciplinary action was taken against the author.'),
+            'dismiss' => __('The report was reviewed and dismissed (no violation found).'),
+            default => __('Your report has been processed by our moderation team.'),
+        };
+
         return $this->notify(
             $reporter,
             self::TYPE_REPORT_RESOLVED,
-            __('Report Reviewed'),
-            __('Thank you for helping keep our community safe. Your report regarding :reason has been processed.', ['reason' => $report->reason]),
-            null,
+            __('Report Reviewed & Resolved'),
+            __('Your report regarding :reason has been reviewed: :action Click to inspect full resolution details.', [
+                'reason' => $report->reason,
+                'action' => $actionSummary,
+            ]),
+            route('social.reports.show', $report->id),
         );
     }
 

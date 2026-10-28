@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SubmitReportRequest;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\Report;
 use App\Services\Admin\AdminModerationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ReportController extends Controller
 {
@@ -60,5 +63,20 @@ class ReportController extends Controller
         }
 
         return back()->with('success', __('Your report has been submitted for review. Thank you for keeping our community safe.'));
+    }
+
+    /**
+     * Display status and moderator resolution details for a submitted report.
+     */
+    public function showReport(Request $request, Report $report): View
+    {
+        // Only the reporter or an admin may view this report
+        if ($report->reporter_id !== $request->user()->id && $request->user()->role !== 'admin') {
+            abort(403, __('You are not authorized to view this report.'));
+        }
+
+        $report->load(['reportable', 'admin', 'reporter']);
+
+        return view('social.report-status', compact('report'));
     }
 }

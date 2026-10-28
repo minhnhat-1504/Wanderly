@@ -338,4 +338,43 @@ class AdminUserTest extends TestCase
         $response->assertSessionHasErrors(['user']);
         $this->assertNotSoftDeleted('users', ['id' => $this->admin->id]);
     }
+
+    public function test_admin_can_suspend_and_unsuspend_user(): void
+    {
+        $target = $this->traveler;
+
+        // 1. Suspend user
+        $suspendResponse = $this->actingAs($this->admin)->post('/admin/users/'.$target->id.'/suspend', [
+            'reason' => 'Violation of community safety terms.',
+        ]);
+        $suspendResponse->assertRedirect();
+        $suspendResponse->assertSessionHas('success');
+
+        $target->refresh();
+        $this->assertTrue($target->isSuspended());
+        $this->assertEquals('Violation of community safety terms.', $target->suspended_reason);
+
+        // 2. Unsuspend user
+        $unsuspendResponse = $this->actingAs($this->admin)->post('/admin/users/'.$target->id.'/unsuspend');
+        $unsuspendResponse->assertRedirect();
+        $unsuspendResponse->assertSessionHas('success');
+
+        $target->refresh();
+        $this->assertFalse($target->isSuspended());
+        $this->assertNull($target->suspended_reason);
+        $this->assertNull($target->suspended_at);
+
+        // Check audit logs
+        $this->assertDatabaseHas('audit_logs', [
+            'admin_id' => $this->admin->id,
+            'action' => 'user.unsuspend',
+            'subject_id' => $target->id,
+        ]);
+
+        // Check account restored notification delivered to user
+        $this->assertDatabaseHas('notifications', [
+            'user_id' => $target->id,
+            'type' => 'account_unsuspended',
+        ]);
+    }
 }

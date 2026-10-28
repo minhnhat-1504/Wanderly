@@ -98,9 +98,8 @@ Route::middleware('auth')->group(function () {
         return back()->with('status', 'verification-link-sent');
     })->middleware(['throttle:6,1'])->name('verification.send');
 });
-
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->withoutMiddleware('verified');
+    Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout')->withoutMiddleware('verified');
     Route::post('/trips/{trip}/duplicate', [TripController::class, 'duplicate'])->name('trips.duplicate');
     Route::post('/trips/{trip}/members/invite', [TripMemberController::class, 'generateInvite'])->name('trips.members.invite');
     Route::delete('/trips/{trip}/members/{user}', [TripMemberController::class, 'destroy'])->name('trips.members.destroy');
@@ -183,6 +182,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/social/posts/{post}/clone-trip', [SocialFeedController::class, 'cloneTrip'])->name('social.posts.clone-trip');
     Route::post('/social/posts/{post}/report', [ReportController::class, 'reportPost'])->name('social.posts.report')->middleware('throttle:10,1');
     Route::post('/social/comments/{comment}/report', [ReportController::class, 'reportComment'])->name('social.comments.report')->middleware('throttle:10,1');
+    Route::get('/social/reports/{report}', [ReportController::class, 'showReport'])->name('social.reports.show');
 
     // ─── Admin Platform & Operations (Admin Redesign) ────────────────────────
     Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
@@ -195,7 +195,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/users/{id}', [AdminUserController::class, 'show'])->name('users.show');
         Route::post('/users/{user}/role', [AdminUserController::class, 'changeRole'])->name('users.role');
         Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');
-        Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])->name('users.unsuspend');
+        Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])->name('users.unsuspend')->withTrashed();
         Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
         Route::post('/users/{id}/restore', [AdminUserController::class, 'restore'])->name('users.restore');
 

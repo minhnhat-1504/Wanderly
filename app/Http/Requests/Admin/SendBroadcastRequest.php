@@ -26,7 +26,20 @@ class SendBroadcastRequest extends FormRequest
             'title' => ['required', 'string', 'min:3', 'max:255'],
             'message' => ['required', 'string', 'min:10', 'max:2000'],
             'target_audience' => ['required', 'string', 'in:all,travelers,providers'],
-            'action_url' => ['nullable', 'url', 'max:500'],
+            'action_url' => [
+                'nullable',
+                'string',
+                'max:500',
+                function ($attribute, $value, $fail) {
+                    if (!empty($value)) {
+                        $isValidPath = str_starts_with($value, '/');
+                        $isValidUrl = filter_var($value, FILTER_VALIDATE_URL) !== false;
+                        if (!$isValidPath && !$isValidUrl) {
+                            $fail(__('The action URL must be a valid URL (e.g. https://example.com) or a relative path starting with / (e.g. /trips).'));
+                        }
+                    }
+                },
+            ],
         ];
     }
 
@@ -44,7 +57,6 @@ class SendBroadcastRequest extends FormRequest
             'message.min' => __('The message must be at least 10 characters.'),
             'target_audience.required' => __('Please select a target recipient audience.'),
             'target_audience.in' => __('The selected audience is invalid.'),
-            'action_url.url' => __('The action URL must be a valid URL.'),
         ];
     }
 }

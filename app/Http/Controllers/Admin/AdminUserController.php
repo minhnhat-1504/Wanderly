@@ -81,14 +81,16 @@ class AdminUserController extends Controller
     /**
      * Unsuspend a suspended user account.
      */
-    public function unsuspend(Request $request, User $user): RedirectResponse
+    public function unsuspend(Request $request, $user): RedirectResponse
     {
+        $target = $user instanceof User ? $user : User::withTrashed()->findOrFail($user);
+
         $this->userService->unsuspend(
             admin: $request->user(),
-            target: $user,
+            target: $target,
         );
 
-        return back()->with('success', __('User account suspension has been lifted.'));
+        return back()->with('success', __('User account suspension has been lifted for :name.', ['name' => $target->name]));
     }
 
     /**

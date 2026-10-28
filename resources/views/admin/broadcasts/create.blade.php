@@ -35,9 +35,19 @@
                 </p>
             </div>
 
-            <form method="POST" action="{{ route('admin.broadcasts.store') }}" class="space-y-5"
-                  onsubmit="return confirm('{{ __('Dispatch this broadcast now? It will be sent to all selected recipients immediately.') }}')">
+            <form method="POST" action="{{ route('admin.broadcasts.store') }}" class="space-y-5">
                 @csrf
+
+                @if ($errors->any())
+                    <div class="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs space-y-1">
+                        <div class="font-bold">{{ __('Please correct the following errors:') }}</div>
+                        <ul class="list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 {{-- Target Audience Cards --}}
                 <div>
@@ -114,7 +124,7 @@
                     <label class="block text-xs font-semibold text-slate-700 mb-1">
                         {{ __('Action URL / Deep Link (Optional)') }}
                     </label>
-                    <input type="url" name="action_url" x-model="actionUrl" maxlength="500"
+                    <input type="text" name="action_url" x-model="actionUrl" maxlength="500"
                            placeholder="{{ __('https://wanderly.test/social or /trips') }}"
                            class="w-full text-xs rounded-xl border-slate-200 focus:border-teal-500 focus:ring-teal-500/20">
                     <p class="text-[10px] text-slate-400 mt-1">
@@ -127,9 +137,10 @@
                         {{ __('Cancel') }}
                     </a>
                     <button type="submit"
-                            :disabled="title.trim().length < 3 || message.trim().length < 10"
-                            class="py-2.5 px-5 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-xs font-semibold shadow-sm transition-colors">
-                        {{ __('Dispatch Announcement') }} &rarr;
+                            id="btn-dispatch-broadcast"
+                            class="py-2.5 px-5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-semibold shadow-sm transition-colors flex items-center gap-1.5 cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                        <span>{{ __('Dispatch Announcement') }}</span>
                     </button>
                 </div>
             </form>

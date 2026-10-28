@@ -129,6 +129,8 @@
                                 'bg-violet-100': notif.type === 'new_proposal',
                                 'bg-green-100': notif.type === 'booking_update',
                                 'bg-yellow-100': notif.type === 'post_like' || notif.type === 'new_comment',
+                                'bg-emerald-100': notif.type === 'report_resolved',
+                                'bg-teal-100': notif.type === 'broadcast',
                                 'bg-gray-100': notif.type === 'general' || notif.type === 'new_message',
                              }">
                             <span x-text="{
@@ -139,6 +141,8 @@
                                 new_message: '💬',
                                 new_comment: '💬',
                                 post_like: '❤️',
+                                report_resolved: '🛡️',
+                                broadcast: '📢',
                                 general: '🔔'
                             }[notif.type] || '🔔'"></span>
                         </div>

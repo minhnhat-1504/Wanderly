@@ -19,6 +19,10 @@
     deleteTargetUser: null,
     deleteTargetName: '',
 
+    unsuspendModalOpen: false,
+    unsuspendTargetUser: null,
+    unsuspendTargetName: '',
+
     openRoleModal(user) {
         this.roleTargetUser = user.id;
         this.roleTargetName = user.name;
@@ -37,6 +41,12 @@
         this.deleteTargetUser = user.id;
         this.deleteTargetName = user.name;
         this.deleteModalOpen = true;
+    },
+
+    openUnsuspendModal(user) {
+        this.unsuspendTargetUser = user.id;
+        this.unsuspendTargetName = user.name;
+        this.unsuspendModalOpen = true;
     }
 }">
 
@@ -238,14 +248,11 @@
 
                                     @if(!$user->trashed())
                                         @if($user->isSuspended())
-                                            <form method="POST" action="{{ route('admin.users.unsuspend', $user->id) }}" class="inline">
-                                                @csrf
-                                                <button type="submit"
-                                                        onclick="return confirm('{{ __('Are you sure you want to lift suspension for this user?') }}')"
-                                                        class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-[11px] font-semibold transition-colors">
-                                                    {{ __('Unsuspend') }}
-                                                </button>
-                                            </form>
+                                            <button type="button"
+                                                    @click="openUnsuspendModal({{ json_encode(['id' => $user->id, 'name' => $user->name]) }})"
+                                                    class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-[11px] font-semibold transition-colors">
+                                                {{ __('Unsuspend') }}
+                                            </button>
                                         @elseif($user->id !== auth()->id())
                                             <button type="button"
                                                     @click="openSuspendModal({{ json_encode(['id' => $user->id, 'name' => $user->name]) }})"
@@ -435,6 +442,48 @@
                         </button>
                         <button type="submit" class="py-2 px-4 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold shadow-sm">
                             {{ __('Delete Account') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- MODAL: Unsuspend User --}}
+    <div x-show="unsuspendModalOpen"
+         style="display: none;"
+         class="fixed inset-0 z-50 overflow-y-auto"
+         aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" @click="unsuspendModalOpen = false"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full border border-slate-200">
+                <form :action="'{{ url('/admin/users') }}/' + unsuspendTargetUser + '/unsuspend'" method="POST">
+                    @csrf
+                    <div class="p-6 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-slate-900">{{ __('Lift Account Suspension') }}</h3>
+                                <p class="text-xs text-slate-500">{{ __('Restore login access for this account.') }}</p>
+                            </div>
+                        </div>
+
+                        <p class="text-xs text-slate-600">
+                            {{ __('Are you sure you want to lift suspension for') }} <span class="font-bold text-slate-900" x-text="unsuspendTargetName"></span>?
+                            {{ __('The user will be immediately allowed to log back in and use all platform features.') }}
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-50 px-6 py-3.5 flex justify-end gap-2 border-t border-slate-200/80">
+                        <button type="button" @click="unsuspendModalOpen = false" class="py-2 px-3.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold">
+                            {{ __('Cancel') }}
+                        </button>
+                        <button type="submit" class="py-2 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-sm">
+                            {{ __('Confirm Unsuspend') }}
                         </button>
                     </div>
                 </form>
