@@ -105,12 +105,63 @@ class SplitBillController extends Controller
 
         $this->splitBillService->assignParticipants($activity, $userIds, $payerId, $customAmounts);
 
-        $updatedDetails = $this->splitBillService->getActivitySplitDetails($activity->fresh());
+        $freshActivity = $activity->fresh(['participants']);
+        $updatedDetails = $this->splitBillService->getActivitySplitDetails($freshActivity);
+        $totalSpent = $freshActivity->calculateTotalSpent();
+        $budgetStatus = app(\App\Services\BudgetService::class)->calculateBudgetStatus($trip->fresh());
 
         return response()->json([
             'success' => true,
             'message' => __('Activity split-bill updated successfully.'),
             'split_details' => $updatedDetails,
+            'total_spent' => $totalSpent,
+            'budget_status' => $budgetStatus,
+        ]);
+    }
+
+    /**
+     * Toggle the current authenticated user's participation in an activity.
+     */
+    public function toggleJoin(Request $request, Trip $trip, Activity $activity): JsonResponse
+    {
+        $this->ensureTripMember($trip);
+
+        if ($activity->trip_id !== $trip->id) {
+            abort(404);
+        }
+
+        $userId = $request->user()->id;
+
+        $existing = \App\Models\ActivityParticipant::where('activity_id', $activity->id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if ($existing) {
+            $existing->delete();
+            $joined = false;
+        } else {
+            \App\Models\ActivityParticipant::create([
+                'activity_id' => $activity->id,
+                'user_id' => $userId,
+                'custom_amount' => null,
+            ]);
+            $joined = true;
+        }
+
+        $freshActivity = $activity->fresh(['participants.user']);
+        $participantsCount = $freshActivity->participants->count();
+        $totalSpent = $freshActivity->calculateTotalSpent();
+        $budgetStatus = app(\App\Services\BudgetService::class)->calculateBudgetStatus($trip->fresh());
+
+        return response()->json([
+            'success' => true,
+            'joined' => $joined,
+            'participants_count' => $participantsCount,
+            'unit_cost' => (float) $freshActivity->cost,
+            'total_spent' => $totalSpent,
+            'total_spent_formatted' => number_format($totalSpent, 0, ',', '.') . ' ₫',
+            'budget_status' => $budgetStatus,
+            'message' => $joined ? __('You selected to join this activity.') : __('You unselected this activity.'),
         ]);
     }
 

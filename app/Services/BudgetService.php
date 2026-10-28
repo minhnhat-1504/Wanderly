@@ -24,10 +24,18 @@ class BudgetService
     {
         $budget = (float) $trip->budget;
 
-        // Calculate activities cost safely (if activities table exists and model is available)
+        // Calculate activities cost based on selected participants
+        // If 0 participants, cost counted toward budget is 0.
+        // If N participants, cost is N * unit cost (or sum of custom amounts).
         $activitiesCost = 0.00;
         if (Schema::hasTable('activities')) {
-            $activitiesCost = (float) $trip->activities()->sum('cost');
+            $activities = $trip->relationLoaded('activities')
+                ? $trip->activities
+                : $trip->activities()->with('participants')->get();
+
+            foreach ($activities as $act) {
+                $activitiesCost += $act->calculateTotalSpent();
+            }
         }
 
         // Calculate room cost for rooms where is_budget_included is true
