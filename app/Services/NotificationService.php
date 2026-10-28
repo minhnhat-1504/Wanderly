@@ -194,7 +194,7 @@ class NotificationService
                 'reason' => $report->reason,
                 'action' => $actionSummary,
             ]),
-            route('social.reports.show', $report->id),
+            '/social/reports/'.$report->id,
         );
     }
 

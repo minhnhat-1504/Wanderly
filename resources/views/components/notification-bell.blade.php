@@ -40,8 +40,16 @@
             headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
         });
         this.notifications = this.notifications.map(n => n.id === id ? { ...n, is_read: true } : n);
-        if (this.unread > 0) this.unread--;
-        if (url) window.location.href = url;
+        if (url) {
+            try {
+                const parsed = new URL(url, window.location.origin);
+                if (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1' || parsed.hostname === window.location.hostname) {
+                    window.location.href = parsed.pathname + parsed.search + parsed.hash;
+                    return;
+                }
+            } catch (e) {}
+            window.location.href = url;
+        }
     }
 }"
      @click.outside="open = false"
